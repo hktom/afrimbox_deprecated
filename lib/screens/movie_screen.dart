@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_netflix_ui_redesign/models/movie_model.dart';
-import 'package:flutter_netflix_ui_redesign/widgets/circular_clipper.dart';
-import 'package:flutter_netflix_ui_redesign/widgets/content_scroll.dart';
+import 'package:afrimbox/models/movie_model.dart';
+import 'package:afrimbox/widgets/circular_clipper.dart';
+import 'package:afrimbox/widgets/content_scroll.dart';
 
 class MovieScreen extends StatefulWidget {
   final Movie movie;
@@ -48,7 +48,7 @@ class _MovieScreenState extends State<MovieScreen> {
                     color: Colors.black,
                   ),
                   Image(
-                    image: AssetImage('assets/images/netflix_logo.png'),
+                    image: AssetImage('assets/images/logo_afrimbox.png'),
                     height: 60.0,
                     width: 150.0,
                   ),
