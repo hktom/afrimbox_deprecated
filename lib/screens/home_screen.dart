@@ -100,7 +100,8 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: Colors.white,
         elevation: 0.0,
         title: Image(
-          image: AssetImage('assets/images/netflix_logo.png'),
+          image: AssetImage('assets/images/logo_afrimbox.png'),
+          width: 150,
         ),
         leading: IconButton(
           padding: EdgeInsets.only(left: 30.0),
