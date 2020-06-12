@@ -1,14 +1,13 @@
 import 'package:afrimbox/components/inputText.dart';
 import 'package:flutter/material.dart';
-import 'package:international_phone_input/international_phone_input.dart';
 import 'package:get/get.dart';
 
-class LoginScreen extends StatefulWidget {
+class ConfirmationScreen extends StatefulWidget {
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  _ConfirmationScreenState createState() => _ConfirmationScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _ConfirmationScreenState extends State<ConfirmationScreen> {
   final _formKey = GlobalKey<FormState>();
   String phoneNumber;
   String phoneIsoCode;
@@ -49,21 +48,19 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Widget _internationalNumber(){
-    return InternationalPhoneInput(
-          onPhoneNumberChange: onPhoneNumberChange, 
-          initialPhoneNumber: phoneNumber,
-          initialSelection: phoneIsoCode,
-          //enabledCountries: ['+233', '+1', '+243']
-       );
-  }
-
     Widget _renderLoginForm() {
     return Form(
       key: _formKey,
       child: Column(
         children: <Widget>[
-          _internationalNumber(),
+          //Tex.p(text: "Se connecter", color: Colors.white),
+          InputText(
+            field: 'mobile', 
+            fieldIcon: Icons.phone, 
+            fieldHint: 'Taper le code de confirmation'
+            ),
+
+          // _internationalNumber(),
           // button submit
           SizedBox(
             width: MediaQuery.of(context).physicalDepth,
@@ -71,12 +68,12 @@ class _LoginScreenState extends State<LoginScreen> {
               color: Color.fromRGBO(255, 174, 54, 1),
               textColor: Colors.white,
               onPressed: () async {
-                if (_formKey.currentState.validate()) {
-                  //await _login();
-                  Get.toNamed('/confirmation');
-                }
+                // if (_formKey.currentState.validate()) {
+                //   //await _login();
+                // }
+                Get.offAllNamed('/home');
               },
-              child: Text("SE CONNECTER"),
+              child: Text("CONFIRMER"),
             ),
           ),
 
