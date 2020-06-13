@@ -1,4 +1,5 @@
 import 'package:afrimbox/helpers/style.dart';
+import 'package:afrimbox/provider/itemsProvider.dart';
 import 'package:afrimbox/provider/loginProvider.dart';
 import 'package:afrimbox/provider/streamingProvider.dart';
 import 'package:afrimbox/routes/routes.dart';
@@ -19,6 +20,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MultiProvider(
         providers: [
+          ChangeNotifierProvider(create: (_) => ItemsProvider()),
           ChangeNotifierProvider(create: (_) => LoginProvider()),
           ChangeNotifierProvider(create: (_) => StreamingProvider()),
         ],

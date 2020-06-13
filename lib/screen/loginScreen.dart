@@ -54,7 +54,7 @@ class _LoginScreenState extends State<LoginScreen> {
           onPhoneNumberChange: onPhoneNumberChange, 
           initialPhoneNumber: phoneNumber,
           initialSelection: phoneIsoCode,
-          //enabledCountries: ['+233', '+1', '+243']
+          enabledCountries: ['+226','+228', '+229', '+235', '+243']
        );
   }
 
