@@ -8,7 +8,7 @@ import '../screen/Landingscreen.dart';
 
 class Routes {
   static Map<String, WidgetBuilder> list={
-    '/': (context) => SplashScreen(),
+    '/splash': (context) => SplashScreen(),
     '/landing': (context) => LandingScreen(),
     '/home': (context) => HomeScreen(),
     '/login':(context) => LoginScreen(),

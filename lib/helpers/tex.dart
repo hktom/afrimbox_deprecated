@@ -4,8 +4,10 @@ class Tex extends StatefulWidget {
   final String content;
   final Color color;
   final String size;
+  final FontWeight bold;
+  final TextAlign align;
 
-  Tex({Key key, this.color, this.size: 'p', this.content}) : super(key: key);
+  Tex({Key key, this.color, this.size: 'p', this.content, this.bold:FontWeight.normal, this.align:TextAlign.left}) : super(key: key);
 
   @override
   _TexState createState() => _TexState();
@@ -25,7 +27,8 @@ class _TexState extends State<Tex> {
   Widget build(BuildContext context) {
     return Text(
       widget.content,
-      style: TextStyle(fontSize: size[widget.size], color: widget.color),
+      style: TextStyle(fontSize: size[widget.size], color: widget.color, fontWeight: widget.bold),
+      textAlign: widget.align,
     );
   }
 }

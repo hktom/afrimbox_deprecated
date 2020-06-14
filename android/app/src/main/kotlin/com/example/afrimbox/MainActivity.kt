@@ -1,4 +1,4 @@
-package com.example.afrimbox
+package com.afrim.box
 
 import io.flutter.embedding.android.FlutterActivity
 

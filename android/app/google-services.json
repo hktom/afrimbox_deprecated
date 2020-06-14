@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "881365110742",
+    "firebase_url": "https://skyship-bd599.firebaseio.com",
+    "project_id": "skyship-bd599",
+    "storage_bucket": "skyship-bd599.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:881365110742:android:ba6cd0ffc4537516e45e77",
+        "android_client_info": {
+          "package_name": "com.afrim.box"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "881365110742-26q679ge9kga3m9p3kj8qlousbt9qvhr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAPgQowFh7E4CLKTin8qGoTpm_r6gyAFnc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "881365110742-26q679ge9kga3m9p3kj8qlousbt9qvhr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
