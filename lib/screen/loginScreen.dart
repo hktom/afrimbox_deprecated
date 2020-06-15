@@ -4,6 +4,7 @@ import '../helpers/tex.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:afrimbox/provider/loginProvider.dart';
+import 'package:custom_progress_dialog/custom_progress_dialog.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -16,6 +17,8 @@ class _LoginScreenState extends State<LoginScreen> {
   String phoneIsoCode;
   PhoneNumber number = PhoneNumber(isoCode: 'NG');
   final TextEditingController controller = TextEditingController();
+  bool pending=false;
+  ProgressDialog _progressDialog = ProgressDialog();
 
   void onPhoneNumberChange(String number, String internationalizedPhoneNumber, String isoCode) {
     setState(() {
@@ -26,14 +29,20 @@ class _LoginScreenState extends State<LoginScreen> {
 
 Future<void> verifyPhoneNumber(phone)async{
   //print("MY PHONE NUMBER $phone");
+  this.setState(()=>pending=true);
   await Provider.of<LoginProvider>(context, listen: false).verifyPhoneNumber(phone: phone);
-  if(Provider.of<LoginProvider>(context, listen: false).status==200){
-    Get.toNamed('/confirmation');
-  }
+  _progressDialog.dismissProgressDialog(context);
+  this.setState(()=>pending=false);
+  Get.toNamed('/confirmation');
+}
+
+void showProgressDialog(){
+  _progressDialog.showProgressDialog(context,textToBeDisplayed:'En cours...');
 }
 
   @override
   Widget build(BuildContext context) {
+    if(pending) showProgressDialog();
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -58,8 +67,12 @@ Future<void> verifyPhoneNumber(phone)async{
 
   Widget _internationalNumber(){
     return  InternationalPhoneNumberInput(
+              countries:["CD", "BJ"] ,
+              isEnabled: !pending,
               onInputChanged: (PhoneNumber number) {
-                phoneNumber=number.phoneNumber;
+                setState(() {
+                phoneNumber=number.phoneNumber.toString().trim();
+                });
               },
               onInputValidated: (bool value) {
               },
@@ -95,7 +108,7 @@ Future<void> verifyPhoneNumber(phone)async{
               textColor: Colors.white,
               onPressed: () async {
                 if (_formKey.currentState.validate()) {
-                  verifyPhoneNumber(phoneNumber);
+                 if(!pending) verifyPhoneNumber(phoneNumber);
                 }
               },
               child: Tex(content: "SUIVANT", size: 'p',),

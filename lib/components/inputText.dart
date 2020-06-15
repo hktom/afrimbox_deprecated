@@ -10,9 +10,11 @@ class InputText extends StatefulWidget {
   bool autofocus;
   bool confirmPassword;
   String initialValue;
+  TextInputType type;
 
   InputText(
       {Key key,
+      this.type:TextInputType.text,
       this.initialValue = "",
       this.field,
       this.fieldIcon,
@@ -58,7 +60,7 @@ class _InputTextState extends State<InputText> {
         },
         style: TextStyle(color: Colors.white),
         obscureText: widget.password,
-        keyboardType: TextInputType.text,
+        keyboardType: widget.type,
         decoration: InputDecoration(
           //hasFloatingPlaceholder: true,
           prefixIcon: Icon(

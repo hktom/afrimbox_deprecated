@@ -30,7 +30,7 @@ class _MyAppState extends State<MyApp> {
             themedWidgetBuilder: (context, theme) {
               return GetMaterialApp(
                 theme: theme,
-                initialRoute: '/landing',
+                initialRoute: '/splash',
                 routes: Routes.list,
               );
             }));
