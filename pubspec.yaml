@@ -40,6 +40,9 @@ dependencies:
   custom_progress_dialog: ^1.0.5
   html_unescape: ^1.0.1+3
   flutter_widget_from_html_core: ^0.3.3+4
+  smooth_star_rating: ^1.1.1
+  badges: ^1.1.1
+  avatar_letter: ^1.0.1
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^0.1.3

@@ -1,8 +1,11 @@
 class ApiUrl {
   static Map<String, String> apiurl = {
     'movies': 'http://afrimbox.groukam.com/wp-json/wp/v2/movies',
-    'moviesBy': 'http://afrimbox.groukam.com/wp-json/wp/v2/movies?genres=',
+    'genres': 'https://afrimbox.groukam.com/wp-json/wp/v2/genres?post=',
     'channels': 'http://afrimbox.groukam.com/wp-json/wp/v2/chaine_tv',
+    'actors': 'https://afrimbox.groukam.com/wp-json/wp/v2/dtcast?post=',
+    'moviesBy': 'http://afrimbox.groukam.com/wp-json/wp/v2/movies?genres=',
+    //'genres': 'http://afrimbox.groukam.com/wp-json/wp/v2/movies?genres=',
   };
 
   static Map<String, int> category = {
@@ -26,3 +29,4 @@ class ApiUrl {
     'Thriller': 3293,
   };
 }
+

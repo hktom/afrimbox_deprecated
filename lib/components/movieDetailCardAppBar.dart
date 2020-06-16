@@ -3,10 +3,12 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:afrimbox/helpers/tex.dart';
 import 'package:get/get.dart';
+import 'package:html_unescape/html_unescape.dart';
 
 class MovieDetailCardAppBar extends StatefulWidget {
   final Map movie;
-  MovieDetailCardAppBar({Key key, this.movie}) : super(key: key);
+  final List genres;
+  MovieDetailCardAppBar({Key key, this.movie, this.genres}) : super(key: key);
 
   @override
   _MovieDetailCardAppBarState createState() => _MovieDetailCardAppBarState();
@@ -15,7 +17,7 @@ class MovieDetailCardAppBar extends StatefulWidget {
 class _MovieDetailCardAppBarState extends State<MovieDetailCardAppBar> {
   String imageUrlPrefix =
       "https://afrimbox.groukam.com/App/wp-content/uploads/2020/06/";
-
+      var unescape = new HtmlUnescape();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -65,7 +67,7 @@ class _MovieDetailCardAppBarState extends State<MovieDetailCardAppBar> {
           width: MediaQuery.of(context).size.width * 0.80,
           margin: EdgeInsets.only(bottom:100, left:10),
           child: Tex(
-            content: widget.movie['title']['rendered'],
+            content: unescape.convert(widget.movie['title']['rendered']),
             size: 'h2',
             bold:FontWeight.bold,
             color: Colors.white,
@@ -114,4 +116,5 @@ class _MovieDetailCardAppBarState extends State<MovieDetailCardAppBar> {
       ),
     );
   }
+
 }

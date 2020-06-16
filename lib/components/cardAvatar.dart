@@ -1,14 +1,11 @@
 import 'package:afrimbox/helpers/tex.dart';
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class CircularAvatar extends StatefulWidget {
-  final String image;
-  final String title;
-  final double id;
-  final double height;
+  final Map data;
 
-  CircularAvatar({Key key, this.id, this.title:'', this.image, this.height:double.infinity}) : super(key: key);
+  CircularAvatar({Key key, this.data}) : super(key: key);
 
   @override
   _CircularAvatarState createState() => _CircularAvatarState();
@@ -19,16 +16,15 @@ class _CircularAvatarState extends State<CircularAvatar> {
   Widget build(BuildContext context) {
     return GestureDetector(
           child: Container(
-        width: double.infinity,
-        height: widget.height,
+          margin: EdgeInsets.symmetric(horizontal:5),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children:<Widget>[
-            CircleAvatar(
-              backgroundImage: NetworkImage(widget.image),
-            ),
-            Tex(content: widget.title,)
+            FaIcon(FontAwesomeIcons.userCircle, size: 50,),
+            Container(
+              width: 70,
+              child: Tex(content: widget.data['name'], align: TextAlign.center,))
           ]
         )
       ),

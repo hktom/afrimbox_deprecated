@@ -19,4 +19,18 @@ class ItemsProvider extends ChangeNotifier {
       print("API REQUEST STATUS 404");
     }
   }
+
+  Future<List> req({field, int id}) async {
+    var url=ApiUrl.apiurl[field]+id.toString();
+    var data=[];
+    print("URL $url");
+    var response = await http.get(url);
+    if (response.statusCode == 200) {
+      var jsonResponse = convert.jsonDecode(response.body);
+      data=jsonResponse;
+      return data;
+    } else {
+      return data;
+    }
+  }
 }
