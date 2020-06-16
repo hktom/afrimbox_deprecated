@@ -1,61 +1,75 @@
 import 'package:flutter/material.dart';
 import '../components/customCard.dart';
+import '../components/cardRounded.dart';
 
 class MoviesController {
-
-  static String urlPoster="https://afrimbox.groukam.com/App/wp-content/uploads/2020/06/";
-
-  static List myCard({int offset, double limit, data, double height, double width, bool overlay:false, bool hideTitle:false}){
+  // large card on the top
+  static List myCard({
+    int offset,
+    double limit,
+    data,
+  }) {
     List<Widget> items = [];
 
     for (var i = offset; i < data.length; i++) {
-      if(data.length<=0) {
-    items.add(Text(''));
-    }
+      if (data.length <= 0) {
+        items.add(Text(''));
+      }
 
-      items.add(
-        Container(
-            width: width,
-            child: CustomCard(
-            overlay: overlay,
-            height: height,
-            id: data[i]['id'],
-            title: !hideTitle?data[i]['title']['rendered']:'',
-            image: urlPoster+data[i]['dt_poster'],
-          ),
-        )
-      );
+      items.add(CustomCard(
+        movie: data[i],
+      ));
 
       if (i >= limit) break;
     }
     return items;
   }
 
-  static List myChannels({int offset, double limit, data, double height, double width, bool overlay:false}){
+  // channel card
+  static List myChannels(
+      {int offset,
+      double limit,
+      data,
+      }) {
     List<Widget> items = [];
 
-    if(data.length<=0) {
-    items.add(Text(''));
+    if (data.length <= 0) {
+      items.add(Text(''));
     }
 
     for (var i = offset; i < data.length; i++) {
-      items.add(
-        Container(
-          padding: EdgeInsets.all(5),
-          margin: EdgeInsets.symmetric(horizontal:5),
-          decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
-           ),
-            width: width,
-            child: CustomCard(
-            height: height,
-            id: data[i]['id'],
-            //title: data[i]['title']['rendered'],
-            image: data[i]['better_featured_image']['source_url'],
-          ),
-        )
-      );
+      items.add(CardRounded(
+        height: 100,
+        width: 200,
+        margin: EdgeInsets.symmetric(horizontal:5),
+        movie: data[i],
+        isChannel: true,
+      ));
+
+      if (i >= limit) break;
+    }
+    return items;
+  }
+
+  //movies card
+  static List poster(
+      {int offset,
+      double limit,
+      data,
+      }) {
+    List<Widget> items = [];
+
+    if (data.length <= 0) {
+      items.add(Text(''));
+    }
+
+    for (var i = offset; i < data.length; i++) {
+      items.add(CardRounded(
+        height: 150,
+        width: 100,
+        margin: EdgeInsets.symmetric(horizontal:5),
+        movie: data[i],
+      ));
 
       if (i >= limit) break;
     }

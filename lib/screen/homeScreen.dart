@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:afrimbox/provider/itemsProvider.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -81,17 +82,13 @@ class _HomeScreenState extends State<HomeScreen> {
         slivers: <Widget>[
           // large card
           lastMovie(),
-
           // channel
           sliverTitle("Nos chaines"),
           listChannels(),
-
           // actors
-
           //movies Action
           sliverTitle("Actions"),
           listActionsMovies(),
-
           //movies Animation
           sliverTitle("Animations"),
           listAnimationMovies()
@@ -102,24 +99,28 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget sliverTitle(String title) {
     return SliverPadding(
-        padding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+        padding: EdgeInsets.symmetric(vertical: 2, horizontal: 0),
         sliver: SliverToBoxAdapter(
-            child: Tex(
-          content: title,
-          size: 'h5',
+            child: ListTile(
+          leading: Tex(
+            content: title,
+            size: 'h5',
+          ),
+          trailing: GestureDetector(
+            child: FaIcon(FontAwesomeIcons.th),
+          ),
         )));
   }
 
+// display on the top
   Widget lastMovie() {
     return SliverList(
       delegate: SliverChildListDelegate(
         MoviesController.myCard(
-            offset: 0,
-            limit: 0,
-            height: 300,
-            width: double.infinity,
-            data: movies,
-            overlay: true),
+          offset: 0,
+          limit: 0,
+          data: movies,
+        ),
       ),
     );
   }
@@ -132,7 +133,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: ListView(
           scrollDirection: Axis.horizontal,
           children: MoviesController.myChannels(
-              offset: 0, limit: double.infinity, width: 200, data: channels),
+              offset: 0, limit: double.infinity, data: channels),
         ),
       ),
     );
@@ -145,12 +146,8 @@ class _HomeScreenState extends State<HomeScreen> {
         height: 200,
         child: ListView(
           scrollDirection: Axis.horizontal,
-          children: MoviesController.myCard(
-              hideTitle: true,
-              offset: 0,
-              limit: double.infinity,
-              width: 100,
-              data: actions),
+          children: MoviesController.poster(
+              offset: 0, limit: double.infinity, data: actions),
         ),
       ),
     );
@@ -163,12 +160,8 @@ class _HomeScreenState extends State<HomeScreen> {
         height: 200,
         child: ListView(
           scrollDirection: Axis.horizontal,
-          children: MoviesController.myCard(
-              hideTitle: true,
-              offset: 0,
-              limit: double.infinity,
-              width: 100,
-              data: animations),
+          children: MoviesController.poster(
+              offset: 0, limit: double.infinity, data: animations),
         ),
       ),
     );
