@@ -118,6 +118,7 @@ class _DetailsMovieScreenState extends State<DetailsMovieScreen> {
                         .toString()
                         .replaceAll('[', '')
                         .replaceAll(']', '');
+                    print("DEBBUG YOUTUBE URL $url");
                     Get.to(TrailerPlayerScreen(trailerUrl: url.trim()));
                   }
                   else

@@ -85,21 +85,21 @@ class _HomeScreenState extends State<HomeScreen> {
           // large card
           lastMovie(),
           // channel
-          sliverTitle("Nos chaines", 0),
+          sliverTitle("Nos chaines", "Null"),
           listChannels(),
           // actors
           //movies Action
-          sliverTitle("Actions", 3295),
+          sliverTitle("Actions", "Action"),
           listActionsMovies(),
           //movies Animation
-          sliverTitle("Animations", 3302),
+          sliverTitle("Animations", "Animation"),
           listAnimationMovies()
         ],
       ),
     );
   }
 
-  Widget sliverTitle(String title, int genre) {
+  Widget sliverTitle(String title, String genre ) {
     return SliverPadding(
         padding: EdgeInsets.symmetric(vertical: 2, horizontal: 0),
         sliver: SliverToBoxAdapter(
@@ -110,7 +110,9 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           trailing: IconButton(
             onPressed: (){
-              Get.to(GenreScreen(genre:genre));
+              if(genre!="Null"){
+                Get.to(GenreScreen(genre:genre));
+              }
             },
             icon: FaIcon(FontAwesomeIcons.th),
           ),

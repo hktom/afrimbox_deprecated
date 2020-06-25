@@ -8,15 +8,14 @@ class ItemsProvider extends ChangeNotifier {
 
   Future<void> getItems({field, filter:'null'}) async {
     var url=filter=='null'?ApiUrl.apiurl[field]:ApiUrl.apiurl['moviesBy']+ApiUrl.category[filter].toString();
-    print("URL $url");
+    //print("URL $url");
     var response = await http.get(url);
     if (response.statusCode == 200) {
       var jsonResponse = convert.jsonDecode(response.body);
       items[field]=jsonResponse;
-      
-      print("API REQUEST STATUS 200");
+      //print("API REQUEST STATUS 200");
     } else {
-      print("API REQUEST STATUS 404");
+      //print("API REQUEST STATUS 404");
     }
   }
 

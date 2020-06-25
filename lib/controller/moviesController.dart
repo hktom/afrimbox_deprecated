@@ -78,6 +78,31 @@ class MoviesController {
     return items;
   }
 
+  //movie posterGrid
+  static List posterGrid(
+      {int offset,
+      double limit,
+      data,
+      }) {
+    List<Widget> items = [];
+
+    if (data.length <= 0) {
+      items.add(Text(''));
+    }
+
+    for (var i = offset; i < data.length; i++) {
+      items.add(CardRounded(
+        height: 150,
+        width: 100,
+        margin: EdgeInsets.symmetric(horizontal:5, vertical: 5),
+        movie: data[i],
+      ));
+
+      if (i >= limit) break;
+    }
+    return items;
+  }
+
   static List avatar(
       {int offset,
       double limit,
