@@ -1,8 +1,10 @@
 import 'package:afrimbox/components/menu.dart';
 import 'package:afrimbox/controller/moviesController.dart';
 import 'package:afrimbox/helpers/tex.dart';
+import 'package:afrimbox/screen/genreScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:afrimbox/provider/itemsProvider.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -69,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
         elevation: 0,
         title: Text('AFRIMBOX'),
       ),
-      drawer: Menu(),
+      //drawer: Menu(),
       body: Container(
         child: loadData ? content() : loadingContent(),
       ),
@@ -83,21 +85,21 @@ class _HomeScreenState extends State<HomeScreen> {
           // large card
           lastMovie(),
           // channel
-          sliverTitle("Nos chaines"),
+          sliverTitle("Nos chaines", 0),
           listChannels(),
           // actors
           //movies Action
-          sliverTitle("Actions"),
+          sliverTitle("Actions", 3295),
           listActionsMovies(),
           //movies Animation
-          sliverTitle("Animations"),
+          sliverTitle("Animations", 3302),
           listAnimationMovies()
         ],
       ),
     );
   }
 
-  Widget sliverTitle(String title) {
+  Widget sliverTitle(String title, int genre) {
     return SliverPadding(
         padding: EdgeInsets.symmetric(vertical: 2, horizontal: 0),
         sliver: SliverToBoxAdapter(
@@ -106,8 +108,11 @@ class _HomeScreenState extends State<HomeScreen> {
             content: title,
             size: 'h5',
           ),
-          trailing: GestureDetector(
-            child: FaIcon(FontAwesomeIcons.th),
+          trailing: IconButton(
+            onPressed: (){
+              Get.to(GenreScreen(genre:genre));
+            },
+            icon: FaIcon(FontAwesomeIcons.th),
           ),
         )));
   }

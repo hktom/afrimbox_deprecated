@@ -1,4 +1,5 @@
 import 'package:afrimbox/screen/confirmationScreen.dart';
+import 'package:afrimbox/screen/genreScreen.dart';
 import 'package:flutter/material.dart';
 import '../screen/splashScreen.dart';
 import '../screen/Homescreen.dart';
@@ -14,6 +15,7 @@ class Routes {
     '/login':(context) => LoginScreen(),
     '/player':(context) => PlayerScreen(),
     '/confirmation':(context) => ConfirmationScreen(),
+    '/genre':(context) => GenreScreen(),
   };
 
 }

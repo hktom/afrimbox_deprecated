@@ -26,7 +26,8 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
     if (Provider.of<LoginProvider>(context, listen: false).status == 200) {
       _progressDialog.dismissProgressDialog(context);
       this.setState(() => pending = false);
-      Get.toNamed('/home');
+      //Get.toNamed('/home');
+      Get.offAllNamed('/home');
     }
   }
 

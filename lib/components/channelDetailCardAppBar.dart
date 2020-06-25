@@ -8,18 +8,16 @@ import 'package:get/get.dart';
 import 'package:html_unescape/html_unescape.dart';
 import 'package:badges/badges.dart';
 
-class MovieDetailCardAppBar extends StatefulWidget {
-  final Map movie;
+class ChannelDetailCardAppBar extends StatefulWidget {
+  final Map channel;
   final List genres;
-  MovieDetailCardAppBar({Key key, this.movie, this.genres}) : super(key: key);
+  ChannelDetailCardAppBar({Key key, this.channel, this.genres}) : super(key: key);
 
   @override
-  _MovieDetailCardAppBarState createState() => _MovieDetailCardAppBarState();
+  _ChannelDetailCardAppBarState createState() => _ChannelDetailCardAppBarState();
 }
 
-class _MovieDetailCardAppBarState extends State<MovieDetailCardAppBar> {
-  String imageUrlPrefix =
-      "https://afrimbox.groukam.com/App/wp-content/uploads/2020/06/";
+class _ChannelDetailCardAppBarState extends State<ChannelDetailCardAppBar> {
   var unescape = new HtmlUnescape();
 
   @override
@@ -32,7 +30,7 @@ class _MovieDetailCardAppBarState extends State<MovieDetailCardAppBar> {
           _filter(),
           _appBar(),
           _title(),
-          _listGenres(),
+          //_listGenres(),
           _floatButton(),
         ],
       ),
@@ -45,6 +43,7 @@ class _MovieDetailCardAppBarState extends State<MovieDetailCardAppBar> {
       child: Container(
         margin: EdgeInsets.only(bottom: 24, right: 10),
         child: FloatingActionButton(
+          //backgroundColor: Colors.yellow,
           onPressed: () {},
           child: Icon(Icons.play_arrow),
         ),
@@ -52,23 +51,23 @@ class _MovieDetailCardAppBarState extends State<MovieDetailCardAppBar> {
     );
   }
 
-  Widget _listGenres() {
-    return Align(
-      alignment: Alignment.bottomLeft,
-      child: Container(
-        height: 40,
-        padding: EdgeInsets.zero,
-        margin: EdgeInsets.only(left: 10, right: 10, bottom: 60),
-        child: ListView(
-          padding: EdgeInsets.zero,
-          //shrinkWrap: true,
-          scrollDirection: Axis.horizontal,
-          children: MoviesController.genres(
-              offset: 0, limit: double.infinity, data: widget.genres),
-        ),
-      ),
-    );
-  }
+  // Widget _listGenres() {
+  //   return Align(
+  //     alignment: Alignment.bottomLeft,
+  //     child: Container(
+  //       height: 40,
+  //       padding: EdgeInsets.zero,
+  //       margin: EdgeInsets.only(left: 10, right: 10, bottom: 60),
+  //       child: ListView(
+  //         padding: EdgeInsets.zero,
+  //         //shrinkWrap: true,
+  //         scrollDirection: Axis.horizontal,
+  //         children: channelsController.genres(
+  //             offset: 0, limit: double.infinity, data: widget.genres),
+  //       ),
+  //     ),
+  //   );
+  // }
 
   Widget _title() {
     return Align(
@@ -77,7 +76,7 @@ class _MovieDetailCardAppBarState extends State<MovieDetailCardAppBar> {
           width: MediaQuery.of(context).size.width * 0.80,
           margin: EdgeInsets.only(bottom: 100, left: 10),
           child: Tex(
-            content: unescape.convert(widget.movie['title']['rendered']),
+            content: unescape.convert(widget.channel['title']['rendered']),
             size: 'h2',
             bold: FontWeight.bold,
             color: Colors.white,
@@ -91,7 +90,7 @@ class _MovieDetailCardAppBarState extends State<MovieDetailCardAppBar> {
       height: 300,
       fit: BoxFit.cover,
       alignment: Alignment.topCenter,
-      imageUrl: imageUrlPrefix + widget.movie['dt_poster'],
+      imageUrl: widget.channel['better_featured_image']['source_url'],
       placeholder: (context, url) => Container(
         color: Colors.grey[300],
       ),

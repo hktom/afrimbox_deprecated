@@ -1,4 +1,4 @@
-import 'package:afrimbox/components/movieDetailCardAppBar.dart';
+import 'package:afrimbox/components/channelDetailCardAppBar.dart';
 import 'package:afrimbox/screen/trailerPlayerScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:afrimbox/helpers/tex.dart';
@@ -9,48 +9,34 @@ import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'package:afrimbox/provider/itemsProvider.dart';
 import 'package:provider/provider.dart';
 import 'package:afrimbox/controller/moviesController.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-class DetailsMovieScreen extends StatefulWidget {
-  final Map movie;
-  DetailsMovieScreen({Key key, this.movie}) : super(key: key);
+class ChannelDetailScreen extends StatefulWidget {
+  final Map channel;
+  ChannelDetailScreen({Key key, this.channel}) : super(key: key);
   @override
-  _DetailsMovieScreenState createState() => _DetailsMovieScreenState();
+  _ChannelDetailScreenState createState() => _ChannelDetailScreenState();
 }
 
-class _DetailsMovieScreenState extends State<DetailsMovieScreen> {
+class _ChannelDetailScreenState extends State<ChannelDetailScreen> {
   var unescape = new HtmlUnescape();
-  var genres = [];
-  var actors = [];
   var favorites = [];
-
-  // get genres
-  Future<void> getGenres() async {
-    genres = await Provider.of<ItemsProvider>(context, listen: false)
-        .req(field: 'genres', id: widget.movie['id']);
-    setState(() {});
-  }
-
-  //get actors
-  Future<void> getActors() async {
-    actors = await Provider.of<ItemsProvider>(context, listen: false)
-        .req(field: 'actors', id: widget.movie['id']);
-    setState(() {});
-  }
 
   //get favorite
   Future<void> getFavorites() async {
+    // await Provider.of<ItemsProvider>(context, listen: false)
+    //     .getItems(field: 'actions', filter: 'Action');
     await Provider.of<ItemsProvider>(context, listen: false)
-        .getItems(field: 'actions', filter: 'Action');
+        .getItems(field: 'channels');
     setState(() {
       favorites =
-          Provider.of<ItemsProvider>(context, listen: false).items['actions'];
+          Provider.of<ItemsProvider>(context, listen: false).items['channels'];
     });
   }
 
   @override
   void initState() {
-    getGenres();
-    getActors();
     getFavorites();
     super.initState();
   }
@@ -68,27 +54,12 @@ class _DetailsMovieScreenState extends State<DetailsMovieScreen> {
         SliverToBoxAdapter(
           child: _listActionsButton(),
         ),
-        sliverTitle("Cast"),
-        listActors(),
         sliverTitle("Pour toi"),
-        listFavoriteMovies()
+        listFavoritechannels()
       ]),
     );
   }
 
-  Widget listActors() {
-    return SliverToBoxAdapter(
-      child: Container(
-        padding: EdgeInsets.all(5),
-        height: 180,
-        child: ListView(
-          scrollDirection: Axis.horizontal,
-          children: MoviesController.avatar(
-              offset: 0, limit: double.infinity, data: actors),
-        ),
-      ),
-    );
-  }
 
   Widget sliverTitle(String title) {
     return SliverPadding(
@@ -107,32 +78,25 @@ class _DetailsMovieScreenState extends State<DetailsMovieScreen> {
       padding: EdgeInsets.symmetric(horizontal: 20),
       child: Row(
         children: <Widget>[
+          
           Expanded(
             flex: 1,
             child: FlatButton(
                 padding: EdgeInsets.zero,
-                child: _buttonIcon(icon: Icons.camera_roll, text: 'Trailer'),
-                onPressed: () {
-                  if (widget.movie["youtube_id"] != "") {
-                    var url = widget.movie["youtube_id"]
-                        .toString()
-                        .replaceAll('[', '')
-                        .replaceAll(']', '');
-                    Get.to(TrailerPlayerScreen(trailerUrl: url.trim()));
-                  }
-                  else
-                  {
-                    Get.snackbar('Erreur', 'Trailer non trouvé', snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.black, colorText: Colors.white, duration: Duration(seconds:1));
-                    
-                  }
+                child:
+                    _buttonIcon(icon: Icons.language, text: 'Website'),
+                onPressed: (){
+                  _launchURL(widget.channel['link']);
                 }),
           ),
+
           Expanded(
             flex: 1,
             child: FlatButton(
                 padding: EdgeInsets.zero,
                 child: _buttonIcon(icon: Icons.share, text: 'Partager'),
-                onPressed: () {}),
+                onPressed: (){}
+                ),
           ),
           Expanded(
             flex: 1,
@@ -146,14 +110,6 @@ class _DetailsMovieScreenState extends State<DetailsMovieScreen> {
             child: FlatButton(
                 padding: EdgeInsets.zero,
                 child: _buttonIcon(icon: Icons.thumb_up, text: "j'aime"),
-                onPressed: () {}),
-          ),
-          Expanded(
-            flex: 1,
-            child: FlatButton(
-                padding: EdgeInsets.zero,
-                child:
-                    _buttonIcon(icon: Icons.file_download, text: 'Télecharger'),
                 onPressed: () {}),
           ),
         ],
@@ -187,39 +143,38 @@ class _DetailsMovieScreenState extends State<DetailsMovieScreen> {
                   padding: EdgeInsets.symmetric(horizontal: 10),
                   child: Tex(
                       content:
-                          unescape.convert(widget.movie['title']['rendered']))),
-              _caracteristics(),
-              HtmlWidget(widget.movie['content']['rendered']),
+                          unescape.convert(widget.channel['title']['rendered']))),
+              //_caracteristics(),
+              //HtmlWidget(widget.channel['content']['rendered']),
               //Tex(content: .toString()), //description
             ]));
   }
 
-  Widget _caracteristics() {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10),
-      child: Row(
-        children: <Widget>[
-          Expanded(
-              flex: 0,
-              child: Tex(
-                content: widget.movie['release_date'] + ' | ',
-              )),
-          Expanded(flex: 0, child: _time()),
-          Expanded(flex: 0, child: _rating()),
-        ],
-      ),
-    );
-  }
+  // Widget _caracteristics() {
+  //   return Container(
+  //     padding: EdgeInsets.symmetric(horizontal: 10),
+  //     child: Row(
+  //       children: <Widget>[
+  //         Expanded(
+  //             flex: 0,
+  //             child: Tex(
+  //               content: widget.channel['release_date'] + ' | ',
+  //             )),
+  //         Expanded(flex: 0, child: _time()),
+  //         Expanded(flex: 0, child: _rating()),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   Widget _appBar() {
-    return MovieDetailCardAppBar(
-      movie: widget.movie,
-      genres: this.genres,
+    return ChannelDetailCardAppBar(
+      channel: widget.channel,
     );
   }
 
   Widget _time() {
-    double runtime = double.parse(widget.movie['runtime']);
+    double runtime = double.parse(widget.channel['runtime']);
     int h = runtime ~/ 60;
     double m = runtime % 60;
 
@@ -228,30 +183,39 @@ class _DetailsMovieScreenState extends State<DetailsMovieScreen> {
     );
   }
 
-  Widget _rating() {
-    return SmoothStarRating(
-        allowHalfRating: true,
-        onRated: (v) {},
-        starCount: 5,
-        rating: double.parse(widget.movie['vote_average']),
-        size: 20.0,
-        isReadOnly: true,
-        color: Colors.yellow,
-        borderColor: Colors.yellow,
-        spacing: 0.0);
-  }
+  // Widget _rating() {
+  //   return SmoothStarRating(
+  //       allowHalfRating: true,
+  //       onRated: (v) {},
+  //       starCount: 5,
+  //       rating: double.parse(widget.channel['vote_average']),
+  //       size: 20.0,
+  //       isReadOnly: true,
+  //       color: Colors.yellow,
+  //       borderColor: Colors.yellow,
+  //       spacing: 0.0);
+  // }
 
-  Widget listFavoriteMovies() {
+  Widget listFavoritechannels() {
     return SliverToBoxAdapter(
       child: Container(
         padding: EdgeInsets.all(5),
-        height: 200,
+        height: 100,
         child: ListView(
           scrollDirection: Axis.horizontal,
-          children: MoviesController.poster(
+          children: MoviesController.myChannels(
               offset: 0, limit: double.infinity, data: favorites),
         ),
       ),
     );
   }
+
+ Future<void> _launchURL(url) async {
+  if (await canLaunch(url)) {
+    await launch(url);
+  } else {
+    throw 'Could not launch $url';
+  }
+}
+
 }

@@ -1,3 +1,4 @@
+import 'package:afrimbox/screen/channelDetailScreen.dart';
 import 'package:afrimbox/screen/detailsMovieScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -39,7 +40,15 @@ class _CardRoundedState extends State<CardRounded> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-        onTap: ()=>Get.to(DetailsMovieScreen(movie: widget.movie)),
+        onTap: (){
+          if(widget.isChannel){
+            Get.to(ChannelDetailScreen(channel: widget.movie));
+          }
+          else
+          {
+            Get.to(DetailsMovieScreen(movie: widget.movie));
+          }
+        },
         child: Container(
         margin: widget.margin,
         height: widget.height,
