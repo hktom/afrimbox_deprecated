@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:flutter/services.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
 class TrailerPlayerScreen extends StatefulWidget {
   final String trailerUrl;
@@ -33,25 +33,20 @@ class _TrailerPlayerScreenState extends State<TrailerPlayerScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return  WillPopScope(
-      onWillPop: ()async{
+    return WillPopScope(
+      onWillPop: () async {
         Get.back();
         return true;
       },
-          child: Scaffold(
+      child: Scaffold(
+        backgroundColor: Colors.black,
         body: Container(
-            color: Colors.black,
-            child: YoutubePlayerBuilder(
-              player:
-                  YoutubePlayer(controller: _controller),
-              builder: (context, player) {
-                return Column(
-                  children: <Widget>[
-                    player,
-                  ],
-                );
-              },
-            )),
+          color: Colors.black,
+          child: YoutubePlayer(
+            controller: _controller,
+            //liveUIColor: Colors.amber,
+          ),
+        ),
       ),
     );
   }

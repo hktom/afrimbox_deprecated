@@ -1,10 +1,14 @@
 import 'package:afrimbox/helpers/tex.dart';
+import 'package:afrimbox/screen/genreScreen.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 // import 'package:ouraganx/components/t.dart';
 // import 'package:ouraganx/providers/audioProvider.dart';
 import 'package:provider/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
+import 'package:provider/provider.dart';
+import 'package:afrimbox/provider/loginProvider.dart';
 
 class Menu extends StatefulWidget {
   @override
@@ -82,6 +86,9 @@ class _MenuState extends State<Menu> {
                 height: 40,
               ),
               _items(title: 'Accueil', icon: FontAwesomeIcons.store),
+              _items(title: 'Films', icon: FontAwesomeIcons.film),
+              _items(title: 'Séries', icon: FontAwesomeIcons.boxOpen),
+              _items(title: 'Chaines', icon: FontAwesomeIcons.diceD20),
               _items(title: 'Connexion', icon: FontAwesomeIcons.userLock),
               _items(title: 'Paramètres', icon: FontAwesomeIcons.cog),
               _items(title: "S'abonner", icon: FontAwesomeIcons.crown),
@@ -111,12 +118,27 @@ class _MenuState extends State<Menu> {
     );
   }
 
+  void _itemOnTap(title){
+    switch (title) {
+      case 'Accueil':
+      Get.offAllNamed('/home');
+        break;
+      case 'Films':
+      Get.to(GenreScreen(genre:"Tout genres"));
+        break;
+      case 'Quitter':
+      Provider.of<LoginProvider>(context, listen: false).signOut();
+      Get.offAllNamed('/splash');
+        break;
+      default:
+    }
+  } 
+
   ListTile _items({String title, IconData icon}) {
     return ListTile(
       dense: true,
       onTap: () {
-        // Navigator.popAndPushNamed(context, '/menuPage',
-        //     arguments: {'field': field, 'title': title});
+        _itemOnTap(title);
       },
       leading: FaIcon(
         icon,

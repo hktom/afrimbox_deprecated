@@ -1,6 +1,8 @@
 import 'package:afrimbox/components/filterByGenre.dart';
 import 'package:afrimbox/components/loadingSpinner.dart';
+import 'package:afrimbox/components/menu.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:afrimbox/provider/itemsProvider.dart';
 import 'package:afrimbox/controller/moviesController.dart';
@@ -13,6 +15,8 @@ class GenreScreen extends StatefulWidget {
 }
 
 class _GenreScreenState extends State<GenreScreen> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
   var movies = [];
   double itemHeight;
   double itemWidth;
@@ -60,10 +64,17 @@ class _GenreScreenState extends State<GenreScreen> {
     print("REFRESH DATA");
 
     return Scaffold(
+      key: _scaffoldKey,
       appBar: AppBar(
+        leading: IconButton(icon: Icon(Icons.arrow_back, color: Colors.white,), onPressed: ()=>Get.back()),
         elevation: 0,
-        title: Text(this.title),
+        title: Text(this.title=="Tout genres"?"Films":this.title),
+        actions: <Widget>[
+          IconButton(icon: Icon(Icons.menu, color: Colors.white,), 
+          onPressed: ()=>_scaffoldKey.currentState.openDrawer()  )
+        ],
       ),
+       drawer: Menu(),
       body:loadData ? buildStack() : LoadingSpinner(),
     );
   }

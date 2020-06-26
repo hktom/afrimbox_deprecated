@@ -105,4 +105,13 @@ class LoginProvider extends ChangeNotifier {
       print(e.toString());
     }
   }
+
+  Future<void> signOut() async {
+    try {
+      await FirebaseAuth.instance.signOut();    
+    } catch (e) {
+      this.err = e.toString();
+      print(e.toString());
+    }
+  }
 }

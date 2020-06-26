@@ -13,6 +13,7 @@ class _LandingScreenState extends State<LandingScreen> {
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
+        backgroundColor: Colors.transparent
       ),
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: 40),
