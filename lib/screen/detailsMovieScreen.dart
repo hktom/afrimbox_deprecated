@@ -40,10 +40,10 @@ class _DetailsMovieScreenState extends State<DetailsMovieScreen> {
   //get favorite
   Future<void> getFavorites() async {
     await Provider.of<ItemsProvider>(context, listen: false)
-        .getItems(field: 'actions', filter: 'Action');
+        .getMovieByGenre(genre: 'Action');
     setState(() {
       favorites =
-          Provider.of<ItemsProvider>(context, listen: false).items['actions'];
+          Provider.of<ItemsProvider>(context, listen: false).items['Action'];
     });
   }
 

@@ -104,14 +104,14 @@ void showProgressDialog(){
           SizedBox(
             width: MediaQuery.of(context).size.width * 0.30,
             child: RaisedButton(
-              color: Color.fromRGBO(255, 174, 54, 1),
+              color: Theme.of(context).primaryColor,
               textColor: Colors.white,
               onPressed: () async {
                 if (_formKey.currentState.validate()) {
                  if(!pending) verifyPhoneNumber(phoneNumber);
                 }
               },
-              child: Tex(content: "SUIVANT", size: 'p',),
+              child: Tex(content: "SUIVANT", size: 'p', color: Colors.white,),
             ),
           ),
 

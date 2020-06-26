@@ -1,3 +1,4 @@
+import 'package:afrimbox/components/loadingSpinner.dart';
 import 'package:afrimbox/components/menu.dart';
 import 'package:afrimbox/controller/moviesController.dart';
 import 'package:afrimbox/helpers/tex.dart';
@@ -23,15 +24,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Future<void> getMovies() async {
     await Provider.of<ItemsProvider>(context, listen: false)
-        .getItems(field: 'movies');
+        .getAllMovies();
     await Provider.of<ItemsProvider>(context, listen: false)
-        .getItems(field: 'channels');
+        .getAllChannels();
 
     await Provider.of<ItemsProvider>(context, listen: false)
-        .getItems(field: 'animations', filter: 'Animation');
+        .getMovieByGenre(genre: 'Animation');
 
     await Provider.of<ItemsProvider>(context, listen: false)
-        .getItems(field: 'actions', filter: 'Action');
+        .getMovieByGenre(genre: 'Action');
 
     setState(() {
       movies =
@@ -47,13 +48,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
     setState(() {
       actions =
-          Provider.of<ItemsProvider>(context, listen: false).items['actions'];
+          Provider.of<ItemsProvider>(context, listen: false).items['Action'];
       loadData = true;
     });
 
     setState(() {
       animations = Provider.of<ItemsProvider>(context, listen: false)
-          .items['animations'];
+          .items['Animation'];
       loadData = true;
     });
   }
@@ -68,12 +69,26 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        elevation: 0,
+        //elevation: 0,
         title: Text('AFRIMBOX'),
+        actions: <Widget>[
+          IconButton(
+            padding: EdgeInsets.zero,
+          onPressed: () {},
+          icon: Icon(Icons.cast, color: Colors.white, size: 25),
+        ),
+
+        IconButton(
+          padding: EdgeInsets.zero,
+          onPressed: () {},
+          icon: Icon(Icons.search, color: Colors.white, size: 25),
+        ),
+
+        ],
       ),
-      //drawer: Menu(),
+      drawer: Menu(),
       body: Container(
-        child: loadData ? content() : loadingContent(),
+        child: loadData ? content() : LoadingSpinner(),
       ),
     );
   }
@@ -107,6 +122,7 @@ class _HomeScreenState extends State<HomeScreen> {
           leading: Tex(
             content: title,
             size: 'h5',
+            color: Theme.of(context).primaryColor
           ),
           trailing: IconButton(
             onPressed: (){
@@ -114,7 +130,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Get.to(GenreScreen(genre:genre));
               }
             },
-            icon: FaIcon(FontAwesomeIcons.th),
+            icon: FaIcon(FontAwesomeIcons.th, color: Theme.of(context).primaryColor,),
           ),
         )));
   }
@@ -170,15 +186,6 @@ class _HomeScreenState extends State<HomeScreen> {
           children: MoviesController.poster(
               offset: 0, limit: double.infinity, data: animations),
         ),
-      ),
-    );
-  }
-
-  Widget loadingContent() {
-    return Center(
-      child: SpinKitChasingDots(
-        size: 60,
-        color: Theme.of(context).accentColor,
       ),
     );
   }

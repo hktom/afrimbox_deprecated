@@ -42,11 +42,11 @@ class _LandingScreenState extends State<LandingScreen> {
                 child: SizedBox(
                    width:MediaQuery.of(context).physicalDepth,
                     child: RaisedButton(
-                    color:Color.fromRGBO(255, 174, 54, 1),
+                    color:Theme.of(context).primaryColor,
                     onPressed: () {
                       Get.toNamed('/login');
                     },
-                    child: Text("Entrez"),
+                    child: Tex(content: "ENTRE", color: Colors.white,),
                   ),
                 ),
               ),

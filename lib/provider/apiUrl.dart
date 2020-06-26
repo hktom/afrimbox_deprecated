@@ -1,10 +1,10 @@
 class ApiUrl {
   static Map<String, String> apiurl = {
     'movies': 'http://afrimbox.groukam.com/wp-json/wp/v2/movies',
-    'genres': 'https://afrimbox.groukam.com/wp-json/wp/v2/genres?post=',
     'channels': 'http://afrimbox.groukam.com/wp-json/wp/v2/chaine_tv',
-    'actors': 'https://afrimbox.groukam.com/wp-json/wp/v2/dtcast?post=',
     'moviesBy': 'http://afrimbox.groukam.com/wp-json/wp/v2/movies?genres=',
+    'genres': 'https://afrimbox.groukam.com/wp-json/wp/v2/genres?post=',
+    'actors': 'https://afrimbox.groukam.com/wp-json/wp/v2/dtcast?post=',
     //'genres': 'http://afrimbox.groukam.com/wp-json/wp/v2/movies?genres=',
   };
 
@@ -28,5 +28,26 @@ class ApiUrl {
     'Téléfilm': 3552,
     'Thriller': 3293,
   };
-}
 
+  static List<String> genres = [
+    'Tout genres',
+    'Action',
+    'Animation',
+    'Aventure',
+    'Comédie',
+    'Crime',
+    'Documentaire',
+    'Drame',
+    'Familial',
+    'Fantastique',
+    'Guerre',
+    'Histoire',
+    'Horreur',
+    'Musique',
+    'Mystère',
+    'Romance',
+    'Science-Fiction',
+    'Téléfilm',
+    'Thriller'
+  ];
+}

@@ -28,7 +28,7 @@ class _ChannelDetailScreenState extends State<ChannelDetailScreen> {
     // await Provider.of<ItemsProvider>(context, listen: false)
     //     .getItems(field: 'actions', filter: 'Action');
     await Provider.of<ItemsProvider>(context, listen: false)
-        .getItems(field: 'channels');
+        .getAllChannels();
     setState(() {
       favorites =
           Provider.of<ItemsProvider>(context, listen: false).items['channels'];

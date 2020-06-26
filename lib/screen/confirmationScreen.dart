@@ -116,7 +116,7 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
           SizedBox(
             width: MediaQuery.of(context).size.width * 0.50,
             child: RaisedButton(
-              color: Color.fromRGBO(255, 174, 54, 1),
+              color: Theme.of(context).primaryColor,
               textColor: Colors.white,
               onPressed: () async {
                 if (_formKey.currentState.validate()) {
@@ -124,7 +124,7 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
                 }
                 //Get.offAllNamed('/home');
               },
-              child: Text("CONFIRMER"),
+              child: Tex(content:"CONFIRMER", color: Colors.white),
             ),
           ),
 
