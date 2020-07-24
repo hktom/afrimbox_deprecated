@@ -1,4 +1,5 @@
 import 'package:afrimbox/controller/moviesController.dart';
+import 'package:afrimbox/screen/channelPlayer.dart';
 import 'package:afrimbox/screen/trailerPlayerScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -44,7 +45,14 @@ class _ChannelDetailCardAppBarState extends State<ChannelDetailCardAppBar> {
         margin: EdgeInsets.only(bottom: 24, right: 10),
         child: FloatingActionButton(
           //backgroundColor: Colors.yellow,
-          onPressed: () {},
+          onPressed: () {
+            print("SHOw Channel");
+            if(widget.channel['acf']['m3u']!='')
+            {
+              Get.to(ChannelPlayer(channelUrl: widget.channel['acf']['m3u'],));
+            }
+            
+          },
           child: Icon(Icons.play_arrow),
         ),
       ),
