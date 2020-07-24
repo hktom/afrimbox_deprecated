@@ -34,9 +34,15 @@ dependencies:
   flutter_placeholder_textlines: ^1.0.4
   flutter_spinkit: ^4.1.2+1
   intl_phone_number_input: ^0.4.5
+  #firebase
   firebase_core: ^0.4.5
   firebase_auth: ^0.16.1
+  google_sign_in: ^4.5.1
+  cloud_firestore: ^0.13.7
+  firebase_storage: ^3.1.6
   flutter_automation: ^1.3.3
+  flutter_facebook_login: ^3.0.0
+  #firebase
   custom_progress_dialog: ^1.0.5
   html_unescape: ^1.0.1+3
   flutter_widget_from_html_core: ^0.3.3+4
@@ -46,6 +52,7 @@ dependencies:
   youtube_player_flutter: ^6.1.1
   url_launcher: ^5.4.11
   video_player: ^0.10.11+1
+  flutter_signin_button: ^1.0.0
   #flutter_youtube_view: ^1.1.8
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
