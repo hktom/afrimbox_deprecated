@@ -13,9 +13,9 @@ class ConfirmationScreen extends StatefulWidget {
 
 class _ConfirmationScreenState extends State<ConfirmationScreen> {
   final _formKey = GlobalKey<FormState>();
-  int confirmationCode=0;
+  int confirmationCode = 0;
   bool phoneNumberIsinThePhone = false;
-  bool pending=false;
+  bool pending = false;
   ProgressDialog _progressDialog = ProgressDialog();
 
   Future<void> login() async {
@@ -43,10 +43,10 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
     }
   }
 
-  void showProgressDialog(){
-  _progressDialog.showProgressDialog(context,textToBeDisplayed:'En cours...');
-}
-
+  void showProgressDialog() {
+    _progressDialog.showProgressDialog(context,
+        textToBeDisplayed: 'En cours...');
+  }
 
   @override
   void initState() {
@@ -56,7 +56,7 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if(pending) showProgressDialog();
+    if (pending) showProgressDialog();
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -86,7 +86,8 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
         children: <Widget>[
           TextFormField(
             enabled: !pending,
-            initialValue: confirmationCode==0?"":confirmationCode.toString().trim(),
+            initialValue:
+                confirmationCode == 0 ? "" : confirmationCode.toString().trim(),
             onChanged: (value) {
               this.confirmationCode = int.parse(value);
             },
@@ -120,11 +121,11 @@ class _ConfirmationScreenState extends State<ConfirmationScreen> {
               textColor: Colors.white,
               onPressed: () async {
                 if (_formKey.currentState.validate()) {
-                  if(!pending) await login();
+                  if (!pending) await login();
                 }
                 //Get.offAllNamed('/home');
               },
-              child: Tex(content:"CONFIRMER", color: Colors.white),
+              child: Tex(content: "CONFIRMER", color: Colors.white),
             ),
           ),
 

@@ -1,3 +1,4 @@
+import 'package:afrimbox/components/progressModal.dart';
 import 'package:afrimbox/controller/fbLoginController.dart';
 import 'package:afrimbox/controller/googleLoginController.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,40 @@ class _LandingScreenState extends State<LandingScreen> {
   FacebookLoginController facebookLoginController =
       new FacebookLoginController();
   FirebaseUser user;
+  String errLogin = "";
+
+  Future<void> progressModal() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: false, // user must tap button!
+      builder: (BuildContext context) {
+        return ProgressModal();
+      },
+    );
+  }
+
+  Future<void> _auth(String type) async {
+    progressModal();
+    if (type == "google")
+      user = await googleLoginController.auth();
+    else
+      user = await facebookLoginController.auth();
+
+    if (user.email != null) {
+      Get.back();
+      Get.offAllNamed('/home');
+    } else {
+      Get.back();
+      setState(() {
+        errLogin = "Nous avons rencontré une erreur, veuillez ressayer";
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +89,15 @@ class _LandingScreenState extends State<LandingScreen> {
                 ),
               ),
               Padding(
+                padding: EdgeInsets.only(bottom: 5),
+                child: Tex(
+                  align: TextAlign.center,
+                  bold: FontWeight.bold,
+                  color: Colors.red,
+                  content: errLogin,
+                ),
+              ),
+              Padding(
                 padding: EdgeInsets.only(bottom: 1),
                 child: SignInButtonBuilder(
                   text: 'Son numero de télephone',
@@ -68,28 +112,18 @@ class _LandingScreenState extends State<LandingScreen> {
                     Buttons.Google,
                     text: "Son compte Google",
                     onPressed: () async {
-                      user = await googleLoginController.auth();
-                      print("DEBBUG USER GOOGLE ${user.toString()}");
+                      _auth('google');
                     },
                   )),
               Padding(
-                  padding: EdgeInsets.only(bottom: 1),
+                  padding: EdgeInsets.only(bottom: 40),
                   child: SignInButton(
                     Buttons.Facebook,
-                    text: "Se profile Facebook",
+                    text: "Son profile Facebook",
                     onPressed: () async {
-                      user = await facebookLoginController.auth();
-                      print("DEBBUG USER GOOGLE ${user.toString()}");
+                      _auth('facebook');
                     },
                   )),
-              Padding(
-                padding: EdgeInsets.only(bottom: 20),
-                child: SignInButton(
-                  Buttons.Email,
-                  text: "Son adresse Email",
-                  onPressed: () {},
-                ),
-              ),
             ]),
       ),
     );

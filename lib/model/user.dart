@@ -1,31 +1,34 @@
 class User {
-  final String name, profile, mobile, subscription, signMethod;
-  final bool activate;
+  final String name, userAvatar, phoneNumber, authMethod, email;
+  final DateTime createdAt;
+  final DateTime updateAt;
   final List favoritesMovies;
   final List favoritesChannels;
+  final Map subscription;
 
   User(
       {this.name,
-      this.activate,
+      this.email,
+      this.createdAt,
+      this.updateAt,
+      this.phoneNumber,
       this.favoritesChannels,
       this.favoritesMovies,
-      this.mobile,
-      this.profile,
+      this.userAvatar,
       this.subscription,
-      this.signMethod});
+      this.authMethod});
 
   Map toMap() {
     Map _user = {
       'name': this.name,
-      'isProfileActive': this.activate,
       'favoritesChannels': this.favoritesChannels,
       'favoritesMovies': this.favoritesMovies,
-      'mobile': this.mobile,
-      'profile': this.profile,
+      'phoneNumber': this.phoneNumber,
+      'userAvatar': this.userAvatar,
       'subscription': this.subscription,
-      'signMethod': this.signMethod,
-      'created_at': '',
-      'updated_at': ''
+      'signMethod': this.authMethod,
+      'created_at': this.createdAt,
+      'updated_at': this.updateAt
     };
     return _user;
   }

@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class FirebaseController {
+class FireStoreController {
   final _db = Firestore.instance;
 
   // GET DOCUMENTS SNAPSHOT

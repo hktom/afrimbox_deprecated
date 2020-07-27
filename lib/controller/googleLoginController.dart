@@ -1,9 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:afrimbox/controller/firestoreController.dart';
+import 'package:afrimbox/model/user.dart';
 
 class GoogleLoginController {
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  FireStoreController fireStoreController = new FireStoreController();
 
   Future<FirebaseUser> auth() async {
     // hold the instance of the authenticated user
@@ -23,6 +26,17 @@ class GoogleLoginController {
           accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
       user = (await _auth.signInWithCredential(credential)).user;
     }
+
+    User usermodel = new User(
+        authMethod: 'google',
+        name: user.displayName,
+        email: user.email,
+        createdAt: DateTime.now(),
+        updateAt: DateTime.now());
+
+    Map datauser = usermodel.toMap();
+    fireStoreController.insertDocument(collection: 'users', data: datauser);
+
     return user;
   }
 }
