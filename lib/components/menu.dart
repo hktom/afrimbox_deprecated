@@ -55,12 +55,15 @@ class _MenuState extends State<Menu> {
               SizedBox(
                 height: 10,
               ),
-              Align(
-                alignment: Alignment.center,
-                child: ClipRRect(
-                    borderRadius: BorderRadius.circular(100),
-                    child: Image.asset('assets/Portrait_Placeholder.png',
-                        height: 100, width: 100)),
+              GestureDetector(
+                onTap: () => Get.toNamed('/profile'),
+                child: Align(
+                  alignment: Alignment.center,
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.circular(100),
+                      child: Image.asset('assets/Portrait_Placeholder.png',
+                          height: 100, width: 100)),
+                ),
               ),
               SizedBox(
                 height: 5,
@@ -68,9 +71,9 @@ class _MenuState extends State<Menu> {
               Align(
                   alignment: Alignment.center,
                   child: FlatButton(
-                      onPressed: () {},
+                      onPressed: () => Get.toNamed('/profile'),
                       child: Tex(
-                        content: "Se connecter à son compte",
+                        content: "userName",
                         color: Colors.white,
                       ))),
               SizedBox(
@@ -118,21 +121,24 @@ class _MenuState extends State<Menu> {
     );
   }
 
-  void _itemOnTap(title){
+  void _itemOnTap(title) {
     switch (title) {
       case 'Accueil':
-      Get.offAllNamed('/home');
+        Get.offAllNamed('/home');
         break;
       case 'Films':
-      Get.to(GenreScreen(genre:"Tout genres"));
+        Get.to(GenreScreen(genre: "Tout genres"));
+        break;
+      case "S'abonner":
+        Get.toNamed('/subscription');
         break;
       case 'Quitter':
-      Provider.of<LoginProvider>(context, listen: false).signOut();
-      Get.offAllNamed('/splash');
+        Provider.of<LoginProvider>(context, listen: false).signOut();
+        Get.offAllNamed('/splash');
         break;
       default:
     }
-  } 
+  }
 
   ListTile _items({String title, IconData icon}) {
     return ListTile(

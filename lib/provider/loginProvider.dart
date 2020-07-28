@@ -3,18 +3,18 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class LoginProvider extends ChangeNotifier {
   FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-  FirebaseUser _firebaseUser;
+  FirebaseUser firebaseUser;
   AuthCredential _phoneAuthCredential;
   String _verificationId;
   //String phone;
   int confirmationCodeSent;
   String err;
   double status;
-  bool phoneNumberIsinThePhone=false;
+  bool phoneNumberIsinThePhone = false;
 
   Future<void> getFirebaseUser() async {
-    this._firebaseUser = await FirebaseAuth.instance.currentUser();
-    this.status = (_firebaseUser == null) ? 403 : 200;
+    this.firebaseUser = await FirebaseAuth.instance.currentUser();
+    this.status = (firebaseUser == null) ? 403 : 200;
   }
 
 // verify my number
@@ -39,16 +39,18 @@ class LoginProvider extends ChangeNotifier {
     final PhoneVerificationFailed verificationFailed = (AuthException error) {
       this.err = error.toString();
       this.status = 500;
-      this.phoneNumberIsinThePhone=false;
-      print("DEBBUG THE PHONE NUMBER IS THIS CURRENT PHONE ${this.phoneNumberIsinThePhone}");
+      this.phoneNumberIsinThePhone = false;
+      print(
+          "DEBBUG THE PHONE NUMBER IS THIS CURRENT PHONE ${this.phoneNumberIsinThePhone}");
     };
 
     // verification completed
     final PhoneVerificationCompleted verificationCompleted =
         (AuthCredential auth) {
       //this.login();
-      this.phoneNumberIsinThePhone=true;
-      print("DEBBUG THE PHONE NUMBER IS THIS CURRENT PHONE ${this.phoneNumberIsinThePhone}");
+      this.phoneNumberIsinThePhone = true;
+      print(
+          "DEBBUG THE PHONE NUMBER IS THIS CURRENT PHONE ${this.phoneNumberIsinThePhone}");
     };
 
     _firebaseAuth.verifyPhoneNumber(
@@ -81,10 +83,9 @@ class LoginProvider extends ChangeNotifier {
   // }
 
 // when the user use a number that is not in the current device
-  Future<void> submitOTP({int smsCode})async{
+  Future<void> submitOTP({int smsCode}) async {
     this._phoneAuthCredential = PhoneAuthProvider.getCredential(
-        verificationId: this._verificationId,
-        smsCode: smsCode.toString());
+        verificationId: this._verificationId, smsCode: smsCode.toString());
 
     await login();
   }
@@ -95,10 +96,10 @@ class LoginProvider extends ChangeNotifier {
       await FirebaseAuth.instance
           .signInWithCredential(this._phoneAuthCredential)
           .then((AuthResult authRes) {
-        _firebaseUser = authRes.user;
+        firebaseUser = authRes.user;
         this.status = 200;
         print("LOG ME AUTOMATICALLY");
-        //print(_firebaseUser.toString());
+        //print(firebaseUser.toString());
       });
     } catch (e) {
       this.err = e.toString();
@@ -108,7 +109,7 @@ class LoginProvider extends ChangeNotifier {
 
   Future<void> signOut() async {
     try {
-      await FirebaseAuth.instance.signOut();    
+      await FirebaseAuth.instance.signOut();
     } catch (e) {
       this.err = e.toString();
       print(e.toString());

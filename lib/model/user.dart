@@ -19,7 +19,7 @@ class User {
       this.authMethod});
 
   Map toMap() {
-    Map _user = {
+    Map<String, dynamic> _user = {
       'name': this.name,
       'favoritesChannels': this.favoritesChannels,
       'favoritesMovies': this.favoritesMovies,

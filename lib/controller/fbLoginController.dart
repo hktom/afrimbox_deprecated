@@ -8,6 +8,16 @@ class FacebookLoginController {
   final FacebookLogin facebookSignIn = new FacebookLogin();
   FireStoreController fireStoreController = new FireStoreController();
 
+  Future<bool> signOut() async {
+    try {
+      await facebookSignIn.logOut();
+      return true;
+    } catch (e) {
+      print("FACEBOOK SIGNOUT ERR ${e.toString()}");
+      return false;
+    }
+  }
+
   Future<FirebaseUser> auth() async {
     FirebaseUser user;
     bool isSignedIn = await facebookSignIn.isLoggedIn;
@@ -33,14 +43,16 @@ class FacebookLoginController {
         createdAt: DateTime.now(),
         updateAt: DateTime.now());
 
-    Map datauser = usermodel.toMap();
-    fireStoreController.insertDocument(collection: 'users', data: datauser);
+    Map<String, dynamic> datauser = usermodel.toMap();
+    var fireStoreUser = await fireStoreController.getDocument(
+        collection: 'users', doc: user.email);
+
+    if (fireStoreUser.isEmpty) {
+      bool saveprofile = await fireStoreController.insertDocument(
+          collection: 'users', data: datauser, doc: user.email);
+      print("PROFILE ON FIRESTORE ${saveprofile.toString()}");
+    }
 
     return user;
-  }
-
-  Future<void> signOut() async {
-    await facebookSignIn.logOut();
-    return true;
   }
 }

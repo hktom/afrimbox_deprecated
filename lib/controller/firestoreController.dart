@@ -34,8 +34,14 @@ class FireStoreController {
   }
 
   //DELETE DOCUMENTS
-  Future<void> removeDocument({collection, doc}) async {
-    await _db.collection(collection).document(doc).delete();
+  Future<bool> removeDocument({collection, doc}) async {
+    try {
+      await _db.collection(collection).document(doc).delete();
+      return true;
+    } catch (e) {
+      print("REMOVE DOCUMENT ERR ${e.toString()}");
+      return false;
+    }
   }
 
 //GET SPECIFIC DOCUMENTS WITH QUERY WHERE IS EQUAL

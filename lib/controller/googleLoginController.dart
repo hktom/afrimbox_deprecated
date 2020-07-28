@@ -8,6 +8,16 @@ class GoogleLoginController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   FireStoreController fireStoreController = new FireStoreController();
 
+  Future<bool> signOut() async {
+    try {
+      await _googleSignIn.signOut();
+      return true;
+    } catch (e) {
+      print("GOOGLE SIGNOUT ERR ${e.toString()}");
+      return false;
+    }
+  }
+
   Future<FirebaseUser> auth() async {
     // hold the instance of the authenticated user
     FirebaseUser user;
@@ -34,8 +44,15 @@ class GoogleLoginController {
         createdAt: DateTime.now(),
         updateAt: DateTime.now());
 
-    Map datauser = usermodel.toMap();
-    fireStoreController.insertDocument(collection: 'users', data: datauser);
+    Map<String, dynamic> datauser = usermodel.toMap();
+    var fireStoreUser = await fireStoreController.getDocument(
+        collection: 'users', doc: user.email);
+
+    if (fireStoreUser.isEmpty) {
+      bool saveprofile = await fireStoreController.insertDocument(
+          collection: 'users', data: datauser, doc: user.email);
+      print("PROFILE ON FIRESTORE ${saveprofile.toString()}");
+    }
 
     return user;
   }
