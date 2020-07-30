@@ -1,4 +1,6 @@
+import 'package:afrimbox/controller/firestoreController.dart';
 import 'package:afrimbox/provider/userProvider.dart';
+import 'package:afrimbox/screen/user/createProfile.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:afrimbox/provider/loginProvider.dart';
@@ -10,33 +12,33 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  FireStoreController fireStoreController = new FireStoreController();
+  // check if user is logged
   Future<void> _checkSession() async {
-    await Provider.of<LoginProvider>(context, listen: false).getFirebaseUser();
-    if (Provider.of<LoginProvider>(context, listen: false).status == 200) {
-      var user =
-          Provider.of<LoginProvider>(context, listen: false).firebaseUser;
-      var provider = user.providerData;
-
-      // Check if auth method is google or facebook or mobile
-      bool getProfile = false;
-      for (var userInfo in provider) {
-        if (userInfo.providerId == "google.com" ||
-            userInfo.providerId == "facebook.com") getProfile = true;
-      }
-
-      // if auth method is google or facebook get by email or try by mobile
-      if (getProfile)
-        await Provider.of<UserProvider>(context, listen: false)
-            .getCurrentUserProfile(
-                userId: user.email, auth: user, mobileProvider: false);
-      else
-        await Provider.of<UserProvider>(context, listen: false)
-            .getCurrentUserProfile(
-                userId: user.phoneNumber, auth: user, mobileProvider: true);
-
-      Get.offAllNamed('/home');
-    } else {
+    var result =
+        await Provider.of<UserProvider>(context, listen: false).checkLogin();
+    // user is not logged
+    if (result == null) {
       Get.offAllNamed('/landing');
+    } else {
+      //user is logged
+      var userId = result.email != null ? result.email : result.phonAeNumber;
+      String authMethod =
+          result.email != null ? "google.com" : "mobile provider";
+      var fireStoreUser = await fireStoreController.getDocument(
+          collection: 'users', doc: userId);
+
+      // check if user profile exist
+      if (fireStoreUser[0] == null) {
+        Get.offAll(CreateProfile(
+          user: result,
+          authMethod: authMethod,
+        ));
+      } else {
+        await Provider.of<UserProvider>(context, listen: false)
+            .getCurrentUser(fireStoreUser);
+        Get.offAllNamed('/home');
+      }
     }
   }
 

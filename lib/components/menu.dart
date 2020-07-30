@@ -1,6 +1,9 @@
 import 'package:afrimbox/helpers/tex.dart';
+import 'package:afrimbox/provider/userProvider.dart';
 import 'package:afrimbox/screen/genreScreen.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 // import 'package:ouraganx/components/t.dart';
 // import 'package:ouraganx/providers/audioProvider.dart';
@@ -9,6 +12,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:provider/provider.dart';
 import 'package:afrimbox/provider/loginProvider.dart';
+import 'dart:io';
 
 class Menu extends StatefulWidget {
   @override
@@ -55,27 +59,40 @@ class _MenuState extends State<Menu> {
               SizedBox(
                 height: 10,
               ),
-              GestureDetector(
-                onTap: () => Get.toNamed('/profile'),
-                child: Align(
-                  alignment: Alignment.center,
-                  child: ClipRRect(
-                      borderRadius: BorderRadius.circular(100),
-                      child: Image.asset('assets/Portrait_Placeholder.png',
-                          height: 100, width: 100)),
+              Consumer<UserProvider>(
+                builder: (context, model, child) => GestureDetector(
+                  onTap: () => Get.toNamed('/profile'),
+                  child: Column(
+                    children: <Widget>[
+                      Align(
+                        alignment: Alignment.center,
+                        child: ClipRRect(
+                            borderRadius: BorderRadius.circular(100),
+                            child: CachedNetworkImage(
+                              width: 100,
+                              height: 100,
+                              fit: BoxFit.cover,
+                              imageUrl: model.currentUser[0]['photoUrl'],
+                              placeholder: (context, url) => Container(
+                                color: Colors.grey,
+                              ),
+                              errorWidget: (context, url, error) =>
+                                  Icon(Icons.error),
+                            )),
+                      ),
+                      SizedBox(
+                        height: 5,
+                      ),
+                      Align(
+                          alignment: Alignment.center,
+                          child: Tex(
+                            content: model.currentUser[0]['name'],
+                            color: Colors.white,
+                          )),
+                    ],
+                  ),
                 ),
               ),
-              SizedBox(
-                height: 5,
-              ),
-              Align(
-                  alignment: Alignment.center,
-                  child: FlatButton(
-                      onPressed: () => Get.toNamed('/profile'),
-                      child: Tex(
-                        content: "userName",
-                        color: Colors.white,
-                      ))),
               SizedBox(
                 height: 5,
               ),
@@ -92,7 +109,7 @@ class _MenuState extends State<Menu> {
               _items(title: 'Films', icon: FontAwesomeIcons.film),
               _items(title: 'Séries', icon: FontAwesomeIcons.boxOpen),
               _items(title: 'Chaines', icon: FontAwesomeIcons.diceD20),
-              _items(title: 'Connexion', icon: FontAwesomeIcons.userLock),
+              //_items(title: 'Connexion', icon: FontAwesomeIcons.userLock),
               _items(title: 'Paramètres', icon: FontAwesomeIcons.cog),
               _items(title: "S'abonner", icon: FontAwesomeIcons.crown),
               Divider(
@@ -133,8 +150,7 @@ class _MenuState extends State<Menu> {
         Get.toNamed('/subscription');
         break;
       case 'Quitter':
-        Provider.of<LoginProvider>(context, listen: false).signOut();
-        Get.offAllNamed('/splash');
+        SystemChannels.platform.invokeMethod<void>('SystemNavigator.pop');
         break;
       default:
     }

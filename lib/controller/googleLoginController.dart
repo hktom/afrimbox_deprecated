@@ -37,22 +37,22 @@ class GoogleLoginController {
       user = (await _auth.signInWithCredential(credential)).user;
     }
 
-    User usermodel = new User(
-        authMethod: 'google',
-        name: user.displayName,
-        email: user.email,
-        createdAt: DateTime.now(),
-        updateAt: DateTime.now());
+    // User usermodel = new User(
+    //     authMethod: 'google',
+    //     name: user.displayName,
+    //     email: user.email,
+    //     createdAt: DateTime.now(),
+    //     updateAt: DateTime.now());
 
-    Map<String, dynamic> datauser = usermodel.toMap();
-    var fireStoreUser = await fireStoreController.getDocument(
-        collection: 'users', doc: user.email);
+    // Map<String, dynamic> datauser = usermodel.toMap();
+    // var fireStoreUser = await fireStoreController.getDocument(
+    //     collection: 'users', doc: user.email);
 
-    if (fireStoreUser.isEmpty) {
-      bool saveprofile = await fireStoreController.insertDocument(
-          collection: 'users', data: datauser, doc: user.email);
-      print("PROFILE ON FIRESTORE ${saveprofile.toString()}");
-    }
+    // if (fireStoreUser.isEmpty) {
+    //   bool saveprofile = await fireStoreController.insertDocument(
+    //       collection: 'users', data: datauser, doc: user.email);
+    //   print("PROFILE ON FIRESTORE ${saveprofile.toString()}");
+    // }
 
     return user;
   }

@@ -26,7 +26,7 @@ class User {
       'phoneNumber': this.phoneNumber,
       'userAvatar': this.userAvatar,
       'subscription': this.subscription,
-      'signMethod': this.authMethod,
+      'authMethod': this.authMethod,
       'created_at': this.createdAt,
       'updated_at': this.updateAt
     };

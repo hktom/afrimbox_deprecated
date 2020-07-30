@@ -1,5 +1,6 @@
 import 'package:afrimbox/helpers/tex.dart';
 import 'package:afrimbox/screen/user/updateProfile.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'dart:async';
@@ -26,36 +27,36 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  Map profile = {};
-  bool isProfileAlreadyExist = false;
+  //Map profile = {};
+  //bool isProfileAlreadyExist = false;
 
   // get current user
-  void _getCurrentUser() {
-    var currentUser =
-        Provider.of<UserProvider>(context, listen: false).currentUser;
+  // void _getCurrentUser() {
+  //   var currentUser =
+  //       Provider.of<UserProvider>(context, listen: false).currentUser;
 
-    var authUser = Provider.of<UserProvider>(context, listen: false).authUser;
+  //   var authUser = Provider.of<UserProvider>(context, listen: false).authUser;
 
-    if (currentUser.contains(null)) {
-      profile = authUser;
-      profile['favoritesChannels'] = 0;
-      profile['favoritesMovies'] = 0;
-      profile['isProfileAlreadyExist'] = false;
-    } else {
-      print("DEBBUG $currentUser");
-      profile = currentUser[0];
-      if (!profile.containsKey('name')) profile['name'] = 'Ajouter Nom';
-      if (!profile.containsKey('email')) profile['email'] = 'Ajouter Email';
-      if (!profile.containsKey('phone')) profile['phone'] = 'Ajouter Télephone';
-      //profile = authUser;
-      isProfileAlreadyExist = true;
-      profile['isProfileAlreadyExist'] = true;
-    }
-  }
+  //   if (currentUser.contains(null)) {
+  //     profile = authUser;
+  //     profile['favoritesChannels'] = 0;
+  //     profile['favoritesMovies'] = 0;
+  //     profile['isProfileAlreadyExist'] = false;
+  //   } else {
+  //     print("DEBBUG $currentUser");
+  //     profile = currentUser[0];
+  //     if (!profile.containsKey('name')) profile['name'] = 'Ajouter Nom';
+  //     if (!profile.containsKey('email')) profile['email'] = 'Ajouter Email';
+  //     if (!profile.containsKey('phone')) profile['phone'] = 'Ajouter Télephone';
+  //     //profile = authUser;
+  //     isProfileAlreadyExist = true;
+  //     profile['isProfileAlreadyExist'] = true;
+  //   }
+  // }
 
   @override
   void initState() {
-    _getCurrentUser();
+    //_getCurrentUser();
     super.initState();
   }
 
@@ -77,57 +78,58 @@ class _ProfileState extends State<Profile> {
         padding: EdgeInsets.symmetric(horizontal: 0),
         child: ListView(
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Card(
-                child: ListTile(
-                  trailing: IconButton(icon: Icon(Icons.edit), onPressed: null),
-                  leading: ClipRRect(
-                      borderRadius: BorderRadius.circular(100),
-                      child: Image.asset('assets/Portrait_Placeholder.png',
-                          height: 40, width: 40)),
-                ),
-              ),
-            ),
-            RowLayout.cards(children: <Widget>[
-              Card(
-                child: RowLayout.body(children: <Widget>[
-                  RowItem.clickable(
-                    'Nom',
-                    profile['name'],
-                    onTap: () => Get.to(UpdateProfile(
-                      typeField: 1,
-                      defaultValue: profile['name'],
-                      profile: profile,
+            Consumer<UserProvider>(
+                builder: (context, model, child) => Column(
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: Card(
+                            child: ListTile(
+                              trailing: IconButton(
+                                  icon: Icon(Icons.edit), onPressed: null),
+                              leading: ClipRRect(
+                                  borderRadius: BorderRadius.circular(100),
+                                  child: CachedNetworkImage(
+                                    width: 50,
+                                    height: 50,
+                                    fit: BoxFit.cover,
+                                    imageUrl: model.currentUser[0]['photoUrl'],
+                                    placeholder: (context, url) => Container(
+                                      color: Colors.grey,
+                                    ),
+                                    errorWidget: (context, url, error) =>
+                                        Icon(Icons.error),
+                                  )),
+                            ),
+                          ),
+                        ),
+                        RowLayout.cards(children: <Widget>[
+                          Card(
+                            child: RowLayout.body(children: <Widget>[
+                              RowItem.clickable(
+                                'Nom',
+                                model.currentUser[0]['name'],
+                                onTap: () => Get.to(UpdateProfile(
+                                  typeField: 1,
+                                  defaultValue: model.currentUser[0]['name'],
+                                  profile: model.currentUser[0],
+                                )),
+                              ),
+                              RowItem.text(
+                                'Email',
+                                model.currentUser[0]['email'],
+                              ),
+                              RowItem.text(
+                                'Télephone',
+                                model.currentUser[0]['phone'],
+                              ),
+                              Separator.divider(),
+                              RowItem.text('Compte status', 'Active'),
+                            ]),
+                          ),
+                        ]),
+                      ],
                     )),
-                  ),
-                  RowItem.clickable(
-                    'Email',
-                    profile['email'],
-                    onTap: () {
-                      Get.to(UpdateProfile(
-                        typeField: 2,
-                        defaultValue: profile['email'],
-                        profile: profile,
-                      ));
-                    },
-                  ),
-                  RowItem.clickable(
-                    'Télephone',
-                    profile['phone'],
-                    onTap: () {
-                      Get.to(UpdateProfile(
-                        typeField: 3,
-                        defaultValue: profile['phone'],
-                        profile: profile,
-                      ));
-                    },
-                  ),
-                  Separator.divider(),
-                  RowItem.text('Compte status', 'Active'),
-                ]),
-              ),
-            ]),
 
             RowLayout.cards(children: <Widget>[
               Card(
@@ -157,6 +159,25 @@ class _ProfileState extends State<Profile> {
                     "Séries préferés",
                     "0",
                     onTap: () {},
+                  ),
+                ]),
+              ),
+            ]),
+
+            RowLayout.cards(children: <Widget>[
+              Card(
+                child: RowLayout.body(children: <Widget>[
+                  RowItem.clickable(
+                    "Mon profile",
+                    "Se deconnecter",
+                    onTap: () {
+                      var authMethod =
+                          Provider.of<UserProvider>(context, listen: false)
+                              .currentUser[0]['email'];
+                      Provider.of<UserProvider>(context, listen: false)
+                          .signOut(authMethod);
+                      Get.offAllNamed('/splash');
+                    },
                   ),
                 ]),
               ),

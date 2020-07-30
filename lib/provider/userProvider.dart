@@ -13,37 +13,16 @@ class UserProvider extends ChangeNotifier {
   var currentUser;
   Map authUser;
 
-  // get current user profile
-  Future<void> getCurrentUserProfile(
-      {String userId, auth, bool mobileProvider}) async {
-    currentUser =
-        await fireStoreController.getDocument(collection: 'users', doc: userId);
-
-    if (mobileProvider) {
-      authUser = {
-        'name': 'Ajouter Nom',
-        'email': 'Ajouter Email',
-        'phone': auth.phoneNumber,
-        'status': 'active',
-        'authMethod': 'phone provider'
-      };
-    } else {
-      authUser = {
-        'name': auth.displayName,
-        'email': auth.email,
-        'phone': 'Ajouter télephone',
-        'status': 'active',
-        'authMethod': 'facebook.com, google.com'
-      };
-    }
-
+  //setupCurrentUser
+  Future<void> getCurrentUser(currentUser) async {
+    this.currentUser = currentUser;
     notifyListeners();
   }
 
   //createProfile
-  Future<bool> creatProfile(Map data) async {
+  Future<bool> creatProfile(Map<String, dynamic> data) async {
     bool result = await fireStoreController.insertDocument(
-        collection: 'users', doc: data['email'], data: data);
+        collection: 'users', doc: data['phone'], data: data);
     notifyListeners();
     return result;
   }
@@ -77,12 +56,12 @@ class UserProvider extends ChangeNotifier {
   Future<bool> signOut(String authMethod) async {
     bool result;
     switch (authMethod) {
-      case 'google':
+      case 'google.com':
         result = await googleLoginController.signOut();
 
         break;
 
-      case 'facebook':
+      case 'facebook.com':
         result = await facebookLoginController.signOut();
         break;
 
@@ -93,5 +72,10 @@ class UserProvider extends ChangeNotifier {
 
     if (result) await _firebaseAuth.signOut();
     return result;
+  }
+
+  Future<dynamic> checkLogin() async {
+    var auth = await FirebaseAuth.instance.currentUser();
+    return auth;
   }
 }

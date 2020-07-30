@@ -1,13 +1,15 @@
 import 'package:afrimbox/helpers/tex.dart';
+import 'package:afrimbox/provider/userProvider.dart';
 import 'package:afrimbox/screen/subscription/subscriptionSuccess.dart';
 import 'package:flutter/material.dart';
-import 'package:expansion_card/expansion_card.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
+//import 'package:expansion_card/expansion_card.dart';
 // kkiapay
-import 'package:kkiapay_flutter_sdk/kkiapayConf.sample.dart';
+//import 'package:kkiapay_flutter_sdk/kkiapayConf.sample.dart';
 import 'package:kkiapay_flutter_sdk/kkiapayWebview.dart';
-import 'package:kkiapay_flutter_sdk/utils/Kkiapay.dart';
+//import 'package:kkiapay_flutter_sdk/utils/Kkiapay.dart';
 
 class Subscription extends StatefulWidget {
   @override
@@ -82,7 +84,10 @@ class _SubscriptionState extends State<Subscription> {
           Get.to(KKiaPay(
             apikey: 'bb4c2370cbc011ea84cb097ce4c306b7',
             amount: price,
-            phone: '97000000',
+            phone: Provider.of<UserProvider>(context, listen: false)
+                .currentUser[0]['phone']
+                .toString()
+                .substring(4),
             data: description,
             sandbox: true,
             callback: sucessCallback,

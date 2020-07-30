@@ -11,7 +11,7 @@ import 'package:afrimbox/controller/firestoreController.dart';
 class UpdateProfile extends StatefulWidget {
   final int typeField;
   final String defaultValue;
-  final Map profile;
+  final Map<String, dynamic> profile;
   UpdateProfile({Key key, this.typeField, this.defaultValue, this.profile})
       : super(key: key);
   @override
@@ -38,58 +38,25 @@ class _UpdateProfileState extends State<UpdateProfile> {
       context: context,
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
-        return ProgressModal();
+        return ProgressModal(
+          title: "Progression en cours",
+        );
       },
     );
   }
 
-  Future<void> refreshProfile() async {
-    await Provider.of<LoginProvider>(context, listen: false).getFirebaseUser();
-    var user = Provider.of<LoginProvider>(context, listen: false).firebaseUser;
-    var provider = user.providerData;
-    // Check if auth method is google or facebook or mobile
-    bool getProfile = false;
-    for (var userInfo in provider) {
-      if (userInfo.providerId == "google.com" ||
-          userInfo.providerId == "facebook.com") getProfile = true;
-    }
-
-    // if auth method is google or facebook get by email or try by mobile
-    if (getProfile)
-      await Provider.of<UserProvider>(context, listen: false)
-          .getCurrentUserProfile(
-              userId: user.email, auth: user, mobileProvider: false);
-    else
-      await Provider.of<UserProvider>(context, listen: false)
-          .getCurrentUserProfile(
-              userId: user.phoneNumber, auth: user, mobileProvider: true);
-  }
-
   Future<bool> updateProfile({field, value}) async {
-    String doc;
-    Map<String, dynamic> data = {};
-    data[field] = value;
-    bool result;
+    widget.profile[field] = value;
+    widget.profile['updated_at'] = DateTime.now();
 
-    if (widget.profile['authMethod'] == "phone provider") {
-      doc = widget.profile['phone'];
-    } else {
-      doc = widget.profile['email'];
-      if (field != 'email') data['email'] = widget.profile['email'];
-    }
+    var result = await fireStoreController.updateDocument(
+        collection: 'users',
+        data: widget.profile,
+        doc: widget.profile['email']);
 
-    if (widget.profile['isProfileAlreadyExist']) {
-      data['updated_at'] = DateTime.now();
+    await Provider.of<UserProvider>(context, listen: false)
+        .getCurrentUser([widget.profile]);
 
-      result = await fireStoreController.updateDocument(
-          collection: 'users', data: data, doc: doc);
-    } else {
-      data['created_at'] = DateTime.now();
-      data['updated_at'] = DateTime.now();
-      result = await fireStoreController.insertDocument(
-          collection: 'users', data: data, doc: doc);
-    }
-    await refreshProfile();
     return result;
   }
 
