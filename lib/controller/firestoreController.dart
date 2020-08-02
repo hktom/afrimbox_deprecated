@@ -3,6 +3,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class FireStoreController {
   final _db = Firestore.instance;
 
+  //CHECK IS DOCUMENT EXIST
+  Future<bool> checkIfDocumentExist({collection, userId}) async {
+    var fireStoreUser =
+        await this.getDocument(collection: collection, doc: userId);
+    return fireStoreUser[0] == null ? false : true;
+  }
+
   // GET DOCUMENTS SNAPSHOT
   Future<List<DocumentSnapshot>> getDocuments(collection) async {
     QuerySnapshot snapshot = await _db.collection(collection).getDocuments();

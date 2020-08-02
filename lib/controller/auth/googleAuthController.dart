@@ -3,7 +3,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:afrimbox/controller/firestoreController.dart';
 import 'package:afrimbox/model/user.dart';
 
-class GoogleLoginController {
+class GoogleAuthController {
   final GoogleSignIn _googleSignIn = GoogleSignIn();
   final FirebaseAuth _auth = FirebaseAuth.instance;
   FireStoreController fireStoreController = new FireStoreController();
@@ -36,23 +36,6 @@ class GoogleLoginController {
           accessToken: googleAuth.accessToken, idToken: googleAuth.idToken);
       user = (await _auth.signInWithCredential(credential)).user;
     }
-
-    // User usermodel = new User(
-    //     authMethod: 'google',
-    //     name: user.displayName,
-    //     email: user.email,
-    //     createdAt: DateTime.now(),
-    //     updateAt: DateTime.now());
-
-    // Map<String, dynamic> datauser = usermodel.toMap();
-    // var fireStoreUser = await fireStoreController.getDocument(
-    //     collection: 'users', doc: user.email);
-
-    // if (fireStoreUser.isEmpty) {
-    //   bool saveprofile = await fireStoreController.insertDocument(
-    //       collection: 'users', data: datauser, doc: user.email);
-    //   print("PROFILE ON FIRESTORE ${saveprofile.toString()}");
-    // }
 
     return user;
   }

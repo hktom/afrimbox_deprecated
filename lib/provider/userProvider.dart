@@ -1,20 +1,24 @@
-import 'package:afrimbox/controller/fbLoginController.dart';
-import 'package:afrimbox/controller/googleLoginController.dart';
+import 'package:afrimbox/controller/auth/facebookAuthController.dart';
+import 'package:afrimbox/controller/auth/googleAuthController.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:afrimbox/controller/firestoreController.dart';
 
 class UserProvider extends ChangeNotifier {
   FireStoreController fireStoreController = new FireStoreController();
-  GoogleLoginController googleLoginController = new GoogleLoginController();
-  FacebookLoginController facebookLoginController =
-      new FacebookLoginController();
+  GoogleAuthController googleAuthController = new GoogleAuthController();
+  FacebookAuthController facebookAuthController = new FacebookAuthController();
   FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   var currentUser;
   Map authUser;
+  var payload;
+
+  setPayload(payload) {
+    this.payload = payload;
+  }
 
   //setupCurrentUser
-  Future<void> getCurrentUser(currentUser) async {
+  getCurrentUser(currentUser) {
     this.currentUser = currentUser;
     notifyListeners();
   }
@@ -57,12 +61,12 @@ class UserProvider extends ChangeNotifier {
     bool result;
     switch (authMethod) {
       case 'google.com':
-        result = await googleLoginController.signOut();
+        result = await googleAuthController.signOut();
 
         break;
 
       case 'facebook.com':
-        result = await facebookLoginController.signOut();
+        result = await facebookAuthController.signOut();
         break;
 
       default:

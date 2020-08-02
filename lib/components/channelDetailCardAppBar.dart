@@ -1,5 +1,6 @@
 import 'package:afrimbox/controller/moviesController.dart';
 import 'package:afrimbox/screen/channelPlayer.dart';
+import 'package:afrimbox/screen/stream/StreamChannel.dart';
 import 'package:afrimbox/screen/trailerPlayerScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -12,10 +13,12 @@ import 'package:badges/badges.dart';
 class ChannelDetailCardAppBar extends StatefulWidget {
   final Map channel;
   final List genres;
-  ChannelDetailCardAppBar({Key key, this.channel, this.genres}) : super(key: key);
+  ChannelDetailCardAppBar({Key key, this.channel, this.genres})
+      : super(key: key);
 
   @override
-  _ChannelDetailCardAppBarState createState() => _ChannelDetailCardAppBarState();
+  _ChannelDetailCardAppBarState createState() =>
+      _ChannelDetailCardAppBarState();
 }
 
 class _ChannelDetailCardAppBarState extends State<ChannelDetailCardAppBar> {
@@ -47,11 +50,11 @@ class _ChannelDetailCardAppBarState extends State<ChannelDetailCardAppBar> {
           //backgroundColor: Colors.yellow,
           onPressed: () {
             print("SHOw Channel");
-            if(widget.channel['acf']['m3u']!='')
-            {
-              Get.to(ChannelPlayer(channelUrl: widget.channel['acf']['m3u'],));
+            if (widget.channel['acf']['m3u'] != '') {
+              Get.to(StreamChannel(
+                channelUrl: widget.channel['acf']['m3u'],
+              ));
             }
-            
           },
           child: Icon(Icons.play_arrow),
         ),

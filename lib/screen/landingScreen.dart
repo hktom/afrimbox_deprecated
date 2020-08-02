@@ -1,7 +1,7 @@
 import 'package:afrimbox/components/progressModal.dart';
-import 'package:afrimbox/controller/fbLoginController.dart';
+import 'package:afrimbox/controller/auth/facebookAuthController.dart';
+import 'package:afrimbox/controller/auth/googleAuthController.dart';
 import 'package:afrimbox/controller/firestoreController.dart';
-import 'package:afrimbox/controller/googleLoginController.dart';
 import 'package:afrimbox/screen/user/createProfile.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -16,10 +16,9 @@ class LandingScreen extends StatefulWidget {
 }
 
 class _LandingScreenState extends State<LandingScreen> {
-  GoogleLoginController googleLoginController = new GoogleLoginController();
+  GoogleAuthController googleAuthController = new GoogleAuthController();
   FireStoreController fireStoreController = new FireStoreController();
-  FacebookLoginController facebookLoginController =
-      new FacebookLoginController();
+  FacebookAuthController facebookAuthController = new FacebookAuthController();
   FirebaseUser user;
   String errLogin = "";
 
@@ -35,16 +34,22 @@ class _LandingScreenState extends State<LandingScreen> {
     );
   }
 
-  Future<void> _auth(String type) async {
+  Future<void> _authGoogleFacebook(String type) async {
     progressModal();
     if (type == "google.com")
-      user = await googleLoginController.auth();
+      user = await googleAuthController.auth();
     else
-      user = await facebookLoginController.auth();
+      user = await facebookAuthController.auth();
 
+    //check if auth succed
     if (user.email != null) {
       Get.back();
-      await _createProfile(user.email, user, type);
+      bool checkIfProfileExist = await fireStoreController.checkIfDocumentExist(
+          userId: user.email, collection: 'users');
+      if (checkIfProfileExist)
+        await _redirectToProfileEdit(user, type);
+      else
+        return Get.offAllNamed('/home');
     } else {
       Get.back();
       setState(() {
@@ -53,18 +58,11 @@ class _LandingScreenState extends State<LandingScreen> {
     }
   }
 
-  Future<void> _createProfile(userId, user, authMethod) async {
-    var fireStoreUser =
-        await fireStoreController.getDocument(collection: 'users', doc: userId);
-    if (fireStoreUser[0] == null) {
-      Get.offAll(CreateProfile(
-        authMethod: authMethod,
-        user: user,
-      ));
-    } else {
-      print("NOT NULL");
-      Get.offAllNamed('/home');
-    }
+  Future<void> _redirectToProfileEdit(user, authMethod) async {
+    return Get.offAll(CreateProfile(
+      authMethod: authMethod,
+      user: user,
+    ));
   }
 
   @override
@@ -117,22 +115,22 @@ class _LandingScreenState extends State<LandingScreen> {
                   content: errLogin,
                 ),
               ),
-              // Padding(
-              //   padding: EdgeInsets.only(bottom: 1),
-              //   child: SignInButtonBuilder(
-              //     text: 'Son numero de télephone',
-              //     icon: FontAwesomeIcons.mobile,
-              //     onPressed: () => Get.toNamed('/login'),
-              //     backgroundColor: Colors.blueGrey[700],
-              //   ),
-              // ),
+              Padding(
+                padding: EdgeInsets.only(bottom: 1),
+                child: SignInButtonBuilder(
+                  text: 'Son numero de télephone',
+                  icon: FontAwesomeIcons.mobile,
+                  onPressed: () => Get.toNamed('/login'),
+                  backgroundColor: Colors.blueGrey[700],
+                ),
+              ),
               Padding(
                   padding: EdgeInsets.only(bottom: 1),
                   child: SignInButton(
                     Buttons.Google,
                     text: "Son compte Google",
                     onPressed: () async {
-                      _auth('google.com');
+                      _authGoogleFacebook('google.com');
                     },
                   )),
               Padding(
@@ -141,7 +139,7 @@ class _LandingScreenState extends State<LandingScreen> {
                     Buttons.Facebook,
                     text: "Son profile Facebook",
                     onPressed: () async {
-                      _auth('facebook.com');
+                      _authGoogleFacebook('facebook.com');
                     },
                   )),
             ]),

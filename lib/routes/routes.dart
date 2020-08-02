@@ -1,4 +1,4 @@
-import 'package:afrimbox/screen/confirmationScreen.dart';
+import 'package:afrimbox/screen/mobileAuth/mobileAuthConfirmationScreen.dart';
 import 'package:afrimbox/screen/genreScreen.dart';
 import 'package:afrimbox/screen/subscription/subscription.dart';
 import 'package:afrimbox/screen/user/payment.dart';
@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import '../screen/splashScreen.dart';
 import '../screen/Homescreen.dart';
 import '../screen/Playerscreen.dart';
-import '../screen/Loginscreen.dart';
+import '../screen/mobileAuth/MobileAuthScreen.dart';
 import '../screen/Landingscreen.dart';
 
 class Routes {
@@ -16,9 +16,9 @@ class Routes {
     '/splash': (context) => SplashScreen(),
     '/landing': (context) => LandingScreen(),
     '/home': (context) => HomeScreen(),
-    '/login': (context) => LoginScreen(),
+    '/login': (context) => MobileAuthScreen(),
     '/player': (context) => PlayerScreen(),
-    '/confirmation': (context) => ConfirmationScreen(),
+    '/confirmation': (context) => MobileAuthConfirmationScreen(),
     '/genre': (context) => GenreScreen(),
     '/profile': (context) => Profile(),
     '/Payment': (context) => Payment(),
