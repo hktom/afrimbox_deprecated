@@ -56,11 +56,11 @@ dependencies:
   flutter_form_builder: ^3.12.0
   cool_stepper: ^1.1.0
   #kkiapay
-  kkiapay_flutter_sdk: ^0.5.0
-  # kkiapay_flutter_sdk:
-  #   git:
-  #     url: git://github.com/hktom/kkiapay-flutter-sdk.git
-  #     ref: feature-customize-theme-title
+  #kkiapay_flutter_sdk: ^0.5.0
+  kkiapay_flutter_sdk:
+    git:
+      url: git://github.com/hktom/kkiapay-flutter-sdk.git
+      ref: hktom-webview-removed
   row_collection: ^0.2.4
   expansion_card: ^0.1.0
   #flutter_youtube_view: ^1.1.8

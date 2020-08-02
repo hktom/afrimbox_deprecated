@@ -516,10 +516,12 @@ packages:
   kkiapay_flutter_sdk:
     dependency: "direct main"
     description:
-      name: kkiapay_flutter_sdk
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.5.0"
+      path: "."
+      ref: hktom-webview-removed
+      resolved-ref: "967536062128b6d2d67175f824012fb9035b6ab1"
+      url: "git://github.com/hktom/kkiapay-flutter-sdk.git"
+    source: git
+    version: "0.4.0"
   libphonenumber:
     dependency: transitive
     description:
@@ -889,13 +891,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.1.2"
-  webview_flutter:
-    dependency: transitive
-    description:
-      name: webview_flutter
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.3.22+1"
   webview_media:
     dependency: transitive
     description:
