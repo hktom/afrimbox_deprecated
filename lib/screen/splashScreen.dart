@@ -22,17 +22,13 @@ class _SplashScreenState extends State<SplashScreen> {
       Get.offAllNamed('/landing');
     } else {
       //user is logged
-      var userId = result.email != null ? result.email : result.phonAeNumber;
-      String authMethod =
-          result.email != null ? "google.com" : "mobile provider";
       var fireStoreUser = await fireStoreController.getDocument(
-          collection: 'users', doc: userId);
+          collection: 'users', doc: result.uid);
 
       // check if user profile exist
       if (fireStoreUser[0] == null) {
         Get.offAll(CreateProfile(
           user: result,
-          authMethod: authMethod,
         ));
       } else {
         await Provider.of<UserProvider>(context, listen: false)

@@ -1,5 +1,6 @@
 import 'package:afrimbox/components/cardAvatar.dart';
 import 'package:afrimbox/components/cardGenre.dart';
+import 'package:afrimbox/components/placeHolders.dart';
 import 'package:flutter/material.dart';
 import '../components/customCard.dart';
 import '../components/cardRounded.dart';
@@ -13,11 +14,11 @@ class MoviesController {
   }) {
     List<Widget> items = [];
 
-    for (var i = offset; i < data.length; i++) {
-      if (data.length <= 0) {
-        items.add(Text(''));
-      }
+    if (data.length <= 0) {
+      items.add(PlaceHolders(type: 1));
+    }
 
+    for (var i = offset; i < data.length; i++) {
       items.add(CustomCard(
         movie: data[i],
       ));
@@ -28,22 +29,24 @@ class MoviesController {
   }
 
   // channel card
-  static List myChannels(
-      {int offset,
-      double limit,
-      data,
-      }) {
+  static List myChannels({
+    int offset,
+    double limit,
+    data,
+  }) {
     List<Widget> items = [];
 
     if (data.length <= 0) {
-      items.add(Text(''));
+      for (var i = 0; i < 5; i++) {
+        items.add(PlaceHolders(type: 2));
+      }
     }
 
     for (var i = offset; i < data.length; i++) {
       items.add(CardRounded(
         height: 100,
         width: 200,
-        margin: EdgeInsets.symmetric(horizontal:5),
+        margin: EdgeInsets.symmetric(horizontal: 5),
         movie: data[i],
         isChannel: true,
       ));
@@ -54,23 +57,53 @@ class MoviesController {
   }
 
   //movies card
-  static List poster(
-      {int offset,
-      double limit,
-      data,
-      }) {
+  static List poster({
+    int offset,
+    double limit,
+    data,
+  }) {
     List<Widget> items = [];
 
     if (data.length <= 0) {
-      items.add(Text(''));
+      for (var i = 0; i < 5; i++) {
+        items.add(PlaceHolders(type: 3));
+      }
     }
 
     for (var i = offset; i < data.length; i++) {
       items.add(CardRounded(
         height: 150,
         width: 100,
-        margin: EdgeInsets.symmetric(horizontal:5),
+        margin: EdgeInsets.symmetric(horizontal: 5),
         movie: data[i],
+      ));
+
+      if (i >= limit) break;
+    }
+    return items;
+  }
+
+  //channell posterGrid
+  static List channelPosterGrid({
+    int offset,
+    double limit,
+    data,
+  }) {
+    List<Widget> items = [];
+
+    if (data.length <= 0) {
+      for (var i = 0; i < 10; i++) {
+        items.add(PlaceHolders(type: 4));
+      }
+    }
+
+    for (var i = offset; i < data.length; i++) {
+      items.add(CardRounded(
+        height: 150,
+        width: 100,
+        margin: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
+        movie: data[i],
+        isChannel: true,
       ));
 
       if (i >= limit) break;
@@ -79,22 +112,24 @@ class MoviesController {
   }
 
   //movie posterGrid
-  static List posterGrid(
-      {int offset,
-      double limit,
-      data,
-      }) {
+  static List posterGrid({
+    int offset,
+    double limit,
+    data,
+  }) {
     List<Widget> items = [];
 
     if (data.length <= 0) {
-      items.add(Text(''));
+      for (var i = 0; i < 10; i++) {
+        items.add(PlaceHolders(type: 4));
+      }
     }
 
     for (var i = offset; i < data.length; i++) {
       items.add(CardRounded(
         height: 150,
         width: 100,
-        margin: EdgeInsets.symmetric(horizontal:5, vertical: 5),
+        margin: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
         movie: data[i],
       ));
 
@@ -103,11 +138,11 @@ class MoviesController {
     return items;
   }
 
-  static List avatar(
-      {int offset,
-      double limit,
-      data,
-      }) {
+  static List avatar({
+    int offset,
+    double limit,
+    data,
+  }) {
     List<Widget> items = [];
 
     if (data.length <= 0) {
@@ -124,11 +159,11 @@ class MoviesController {
     return items;
   }
 
-    static List genres(
-      {int offset,
-      double limit,
-      data,
-      }) {
+  static List genres({
+    int offset,
+    double limit,
+    data,
+  }) {
     List<Widget> items = [];
 
     if (data.length <= 0) {
@@ -136,11 +171,12 @@ class MoviesController {
     }
 
     for (var i = offset; i < data.length; i++) {
-      items.add(
-        Align(alignment: Alignment.centerLeft, child: CardGenre(
-        data: data[i],
-      ),)
-      );
+      items.add(Align(
+        alignment: Alignment.centerLeft,
+        child: CardGenre(
+          data: data[i],
+        ),
+      ));
 
       if (i >= limit) break;
     }

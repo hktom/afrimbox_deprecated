@@ -27,8 +27,7 @@ class _ChannelDetailScreenState extends State<ChannelDetailScreen> {
   Future<void> getFavorites() async {
     // await Provider.of<ItemsProvider>(context, listen: false)
     //     .getItems(field: 'actions', filter: 'Action');
-    await Provider.of<ItemsProvider>(context, listen: false)
-        .getAllChannels();
+    await Provider.of<ItemsProvider>(context, listen: false).getAllChannels();
     setState(() {
       favorites =
           Provider.of<ItemsProvider>(context, listen: false).items['channels'];
@@ -60,7 +59,6 @@ class _ChannelDetailScreenState extends State<ChannelDetailScreen> {
     );
   }
 
-
   Widget sliverTitle(String title) {
     return SliverPadding(
         padding: EdgeInsets.symmetric(vertical: 2, horizontal: 0),
@@ -78,31 +76,27 @@ class _ChannelDetailScreenState extends State<ChannelDetailScreen> {
       padding: EdgeInsets.symmetric(horizontal: 20),
       child: Row(
         children: <Widget>[
-          
           Expanded(
             flex: 1,
             child: FlatButton(
                 padding: EdgeInsets.zero,
-                child:
-                    _buttonIcon(icon: Icons.language, text: 'Website'),
-                onPressed: (){
+                child: _buttonIcon(icon: Icons.language, text: 'Website'),
+                onPressed: () {
                   _launchURL(widget.channel['link']);
                 }),
           ),
-
           Expanded(
             flex: 1,
             child: FlatButton(
                 padding: EdgeInsets.zero,
                 child: _buttonIcon(icon: Icons.share, text: 'Partager'),
-                onPressed: (){}
-                ),
+                onPressed: () {}),
           ),
           Expanded(
             flex: 1,
             child: FlatButton(
                 padding: EdgeInsets.zero,
-                child: _buttonIcon(icon: Icons.check, text: 'Ma liste'),
+                child: _buttonIcon(icon: Icons.list, text: 'Ma liste'),
                 onPressed: () {}),
           ),
           Expanded(
@@ -142,8 +136,8 @@ class _ChannelDetailScreenState extends State<ChannelDetailScreen> {
               Container(
                   padding: EdgeInsets.symmetric(horizontal: 10),
                   child: Tex(
-                      content:
-                          unescape.convert(widget.channel['title']['rendered']))),
+                      content: unescape
+                          .convert(widget.channel['title']['rendered']))),
               //_caracteristics(),
               //HtmlWidget(widget.channel['content']['rendered']),
               //Tex(content: .toString()), //description
@@ -210,12 +204,11 @@ class _ChannelDetailScreenState extends State<ChannelDetailScreen> {
     );
   }
 
- Future<void> _launchURL(url) async {
-  if (await canLaunch(url)) {
-    await launch(url);
-  } else {
-    throw 'Could not launch $url';
+  Future<void> _launchURL(url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
-}
-
 }

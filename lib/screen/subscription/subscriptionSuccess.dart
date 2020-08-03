@@ -55,13 +55,14 @@ class _SubscriptionSuccessState extends State<SubscriptionSuccess> {
     Map<String, dynamic> dataUser =
         Provider.of<UserProvider>(context, listen: false).currentUser[0];
     dataUser['subscription'] = {
+      'duration': duration,
       'debuteDate': DateTime.now(),
       'endDate': endData,
       'transactionId': widget.transactionId
     };
 
     await fireStoreController.updateDocument(
-        collection: 'users', doc: dataUser['email'], data: dataUser);
+        collection: 'users', doc: dataUser['id'].trim(), data: dataUser);
 
     //refresh dataUser
     await Provider.of<UserProvider>(context, listen: false)

@@ -7,44 +7,44 @@ import 'package:provider/provider.dart';
 import 'package:afrimbox/provider/itemsProvider.dart';
 import 'package:afrimbox/controller/moviesController.dart';
 
-class GenreScreen extends StatefulWidget {
+class MovieArchive extends StatefulWidget {
   final String genre;
-  GenreScreen({Key key, this.genre}) : super(key: key);
+  MovieArchive({Key key, this.genre}) : super(key: key);
   @override
-  _GenreScreenState createState() => _GenreScreenState();
+  _MovieArchiveState createState() => _MovieArchiveState();
 }
 
-class _GenreScreenState extends State<GenreScreen> {
+class _MovieArchiveState extends State<MovieArchive> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   var movies = [];
   double itemHeight;
   double itemWidth;
   bool loadData = false;
-  String title='';
+  String title = '';
 
   Future<void> getMovies(genre) async {
     setState(() {
-       loadData = false;
-       title=genre;
+      loadData = false;
+      title = genre;
     });
-    
+
     if (genre == "Tout genres") {
       await Provider.of<ItemsProvider>(context, listen: false).getAllMovies();
       setState(() {
-      movies = Provider.of<ItemsProvider>(context, listen: false)
-          .items["movies"];
-      loadData = true;
-    });
+        movies =
+            Provider.of<ItemsProvider>(context, listen: false).items["movies"];
+        loadData = true;
+      });
     } else {
       await Provider.of<ItemsProvider>(context, listen: false)
-          .getMovieByGenre(genre:genre, genreScreen: true);
+          .getMovieByGenre(genre: genre, MovieArchive: true);
 
       setState(() {
-      movies = Provider.of<ItemsProvider>(context, listen: false)
-          .items["genreMovie"];
-      loadData = true;
-    });
+        movies = Provider.of<ItemsProvider>(context, listen: false)
+            .items["genreMovie"];
+        loadData = true;
+      });
     }
   }
 
@@ -66,16 +66,25 @@ class _GenreScreenState extends State<GenreScreen> {
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        leading: IconButton(icon: Icon(Icons.arrow_back, color: Colors.white,), onPressed: ()=>Get.back()),
+        leading: IconButton(
+            icon: Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            ),
+            onPressed: () => Get.back()),
         elevation: 0,
-        title: Text(this.title=="Tout genres"?"Films":this.title),
+        title: Text(this.title == "Tout genres" ? "Films" : this.title),
         actions: <Widget>[
-          IconButton(icon: Icon(Icons.menu, color: Colors.white,), 
-          onPressed: ()=>_scaffoldKey.currentState.openDrawer()  )
+          IconButton(
+              icon: Icon(
+                Icons.menu,
+                color: Colors.white,
+              ),
+              onPressed: () => _scaffoldKey.currentState.openDrawer())
         ],
       ),
-       drawer: Menu(),
-      body:loadData ? buildStack() : LoadingSpinner(),
+      drawer: Menu(),
+      body: buildStack(),
     );
   }
 
@@ -87,7 +96,9 @@ class _GenreScreenState extends State<GenreScreen> {
           alignment: Alignment.topRight,
           child: Padding(
             padding: EdgeInsets.all(10),
-            child: FilterByGenre(getMovies: this.getMovies,),
+            child: FilterByGenre(
+              getMovies: this.getMovies,
+            ),
           ),
         ),
       ],
@@ -97,8 +108,9 @@ class _GenreScreenState extends State<GenreScreen> {
   Widget _listMovie() {
     return GridView.count(
       crossAxisCount: 3,
-       childAspectRatio: (itemWidth / itemHeight),
-      children: MoviesController.posterGrid(offset: 0, limit: double.infinity, data: movies),
+      childAspectRatio: (itemWidth / itemHeight),
+      children: MoviesController.posterGrid(
+          offset: 0, limit: double.infinity, data: movies),
     );
   }
 }

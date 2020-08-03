@@ -2,7 +2,7 @@ import 'package:afrimbox/components/loadingSpinner.dart';
 import 'package:afrimbox/components/menu.dart';
 import 'package:afrimbox/controller/moviesController.dart';
 import 'package:afrimbox/helpers/tex.dart';
-import 'package:afrimbox/screen/genreScreen.dart';
+import 'package:afrimbox/screen/archive/movieArchive.dart';
 import 'package:flutter/material.dart';
 import 'package:afrimbox/provider/itemsProvider.dart';
 import 'package:get/get.dart';
@@ -23,40 +23,18 @@ class _HomeScreenState extends State<HomeScreen> {
   bool loadData = false;
 
   Future<void> getMovies() async {
-    await Provider.of<ItemsProvider>(context, listen: false)
-        .getAllMovies();
-    await Provider.of<ItemsProvider>(context, listen: false)
-        .getAllChannels();
+    var model = Provider.of<ItemsProvider>(context, listen: false);
+    await model.getAllMovies();
+    await model.getAllChannels();
+    await model.getMovieByGenre(genre: 'Animation');
+    await model.getMovieByGenre(genre: 'Action');
 
-    await Provider.of<ItemsProvider>(context, listen: false)
-        .getMovieByGenre(genre: 'Animation');
+    movies = model.items['movies'];
+    channels = model.items['channels'];
+    actions = model.items['Action'];
+    animations = model.items['Animation'];
 
-    await Provider.of<ItemsProvider>(context, listen: false)
-        .getMovieByGenre(genre: 'Action');
-
-    setState(() {
-      movies =
-          Provider.of<ItemsProvider>(context, listen: false).items['movies'];
-      loadData = true;
-    });
-
-    setState(() {
-      channels =
-          Provider.of<ItemsProvider>(context, listen: false).items['channels'];
-      loadData = true;
-    });
-
-    setState(() {
-      actions =
-          Provider.of<ItemsProvider>(context, listen: false).items['Action'];
-      loadData = true;
-    });
-
-    setState(() {
-      animations = Provider.of<ItemsProvider>(context, listen: false)
-          .items['Animation'];
-      loadData = true;
-    });
+    setState(() {});
   }
 
   @override
@@ -74,21 +52,19 @@ class _HomeScreenState extends State<HomeScreen> {
         actions: <Widget>[
           IconButton(
             padding: EdgeInsets.zero,
-          onPressed: () {},
-          icon: Icon(Icons.cast, color: Colors.white, size: 25),
-        ),
-
-        IconButton(
-          padding: EdgeInsets.zero,
-          onPressed: () {},
-          icon: Icon(Icons.search, color: Colors.white, size: 25),
-        ),
-
+            onPressed: () {},
+            icon: Icon(Icons.cast, color: Colors.white, size: 25),
+          ),
+          IconButton(
+            padding: EdgeInsets.zero,
+            onPressed: () {},
+            icon: Icon(Icons.search, color: Colors.white, size: 25),
+          ),
         ],
       ),
       drawer: Menu(),
       body: Container(
-        child: loadData ? content() : LoadingSpinner(),
+        child: content(),
       ),
     );
   }
@@ -114,23 +90,27 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget sliverTitle(String title, String genre ) {
+  Widget sliverTitle(String title, String genre) {
     return SliverPadding(
         padding: EdgeInsets.symmetric(vertical: 2, horizontal: 0),
         sliver: SliverToBoxAdapter(
             child: ListTile(
           leading: Tex(
-            content: title,
-            size: 'h5',
-            color: Theme.of(context).primaryColor
-          ),
+              content: title,
+              size: 'h5',
+              color: Theme.of(context).primaryColor),
           trailing: IconButton(
-            onPressed: (){
-              if(genre!="Null"){
-                Get.to(GenreScreen(genre:genre));
+            onPressed: () {
+              if (genre != "Null") {
+                Get.to(MovieArchive(genre: genre));
+              } else {
+                Get.toNamed('/channelArchive');
               }
             },
-            icon: FaIcon(FontAwesomeIcons.th, color: Theme.of(context).primaryColor,),
+            icon: FaIcon(
+              FontAwesomeIcons.th,
+              color: Theme.of(context).primaryColor,
+            ),
           ),
         )));
   }

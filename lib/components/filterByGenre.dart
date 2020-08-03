@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 
 class FilterByGenre extends StatefulWidget {
   final Function getMovies;
-  FilterByGenre({Key key, @required this.getMovies}):super(key:key);
+  FilterByGenre({Key key, @required this.getMovies}) : super(key: key);
 
   @override
   _FilterByGenreState createState() => _FilterByGenreState();
@@ -27,7 +27,7 @@ class _FilterByGenreState extends State<FilterByGenre> {
       await Provider.of<ItemsProvider>(context, listen: false).getAllMovies();
     } else {
       await Provider.of<ItemsProvider>(context, listen: false)
-          .getMovieByGenre(genre:genre, genreScreen: true);
+          .getMovieByGenre(genre: genre, MovieArchive: true);
     }
 
     setState(() {

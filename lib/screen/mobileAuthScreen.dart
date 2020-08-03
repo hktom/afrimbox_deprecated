@@ -3,14 +3,13 @@ import 'dart:async';
 import 'package:afrimbox/components/progressModal.dart';
 import 'package:afrimbox/controller/auth/mobileAuthController.dart';
 import 'package:afrimbox/controller/firestoreController.dart';
-import 'package:afrimbox/provider/userProvider.dart';
-import 'package:afrimbox/screen/mobileAuth/mobileAuthConfirmationScreen.dart';
 import 'package:afrimbox/screen/user/createProfile.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
-import '../../helpers/tex.dart';
+import '../helpers/tex.dart';
 import 'package:get/get.dart';
+import 'package:afrimbox/provider/userProvider.dart';
 import 'package:provider/provider.dart';
 
 class MobileAuthScreen extends StatefulWidget {
@@ -75,12 +74,20 @@ class _MobileAuthScreenState extends State<MobileAuthScreen> {
     bool checkIfProfileExist = await fireStoreController.checkIfDocumentExist(
         userId: user.email, collection: user.phoneNumber);
 
-    Get.back();
     if (checkIfProfileExist) {
-      Get.offAllNamed('/home');
+      //get current profile
+      bool result = await Provider.of<UserProvider>(context, listen: false)
+          .getProfile(user.phoneNumber);
+      Get.back();
+      if (result) {
+        Get.offAllNamed('/home');
+      } else {
+        this.setState(
+            () => err = "Une erreur est arrivée pendant l'authentification");
+      }
     } else {
       Get.offAll(CreateProfile(
-        authMethod: 'mobile',
+        //authMethod: 'mobile',
         user: user,
       ));
     }

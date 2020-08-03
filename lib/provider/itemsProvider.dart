@@ -5,26 +5,28 @@ import 'dart:convert' as convert;
 
 class ItemsProvider extends ChangeNotifier {
   var items = {};
-  List<String> genres=ApiUrl.genres;
+  List<String> genres = ApiUrl.genres;
 
   Future<void> getAllMovies() async {
     var response = await http.get(ApiUrl.apiurl['movies']);
     if (response.statusCode == 200) {
       var jsonResponse = convert.jsonDecode(response.body);
-      items['movies']=jsonResponse;
+      items['movies'] = jsonResponse;
       print("API REQUEST STATUS 200");
     } else {
       print("API REQUEST STATUS 404");
     }
   }
 
-  Future<void> getMovieByGenre({String genre, bool genreScreen:false}) async {
-    var url=ApiUrl.apiurl['moviesBy']+ApiUrl.category[genre].toString();
+  Future<void> getMovieByGenre({String genre, bool MovieArchive: false}) async {
+    var url = ApiUrl.apiurl['moviesBy'] + ApiUrl.category[genre].toString();
     var response = await http.get(url);
     if (response.statusCode == 200) {
       var jsonResponse = convert.jsonDecode(response.body);
-      
-      genreScreen?items['genreMovie']=jsonResponse:items[genre]=jsonResponse;
+
+      MovieArchive
+          ? items['genreMovie'] = jsonResponse
+          : items[genre] = jsonResponse;
       print("API REQUEST STATUS 200");
     } else {
       print("API REQUEST STATUS 404");
@@ -35,7 +37,7 @@ class ItemsProvider extends ChangeNotifier {
     var response = await http.get(ApiUrl.apiurl['channels']);
     if (response.statusCode == 200) {
       var jsonResponse = convert.jsonDecode(response.body);
-      items['channels']=jsonResponse;
+      items['channels'] = jsonResponse;
       print("API REQUEST STATUS 200");
     } else {
       print("API REQUEST STATUS 404");
@@ -56,13 +58,13 @@ class ItemsProvider extends ChangeNotifier {
   // }
 
   Future<List> req({field, int id}) async {
-    var url=ApiUrl.apiurl[field]+id.toString();
-    var data=[];
+    var url = ApiUrl.apiurl[field] + id.toString();
+    var data = [];
     print("URL $url");
     var response = await http.get(url);
     if (response.statusCode == 200) {
       var jsonResponse = convert.jsonDecode(response.body);
-      data=jsonResponse;
+      data = jsonResponse;
       return data;
     } else {
       return data;

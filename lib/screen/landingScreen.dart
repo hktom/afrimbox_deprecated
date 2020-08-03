@@ -2,10 +2,12 @@ import 'package:afrimbox/components/progressModal.dart';
 import 'package:afrimbox/controller/auth/facebookAuthController.dart';
 import 'package:afrimbox/controller/auth/googleAuthController.dart';
 import 'package:afrimbox/controller/firestoreController.dart';
+import 'package:afrimbox/provider/userProvider.dart';
 import 'package:afrimbox/screen/user/createProfile.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 import '../helpers/tex.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -42,14 +44,23 @@ class _LandingScreenState extends State<LandingScreen> {
       user = await facebookAuthController.auth();
 
     //check if auth succed
-    if (user.email != null) {
+    if (user.uid != null) {
       Get.back();
       bool checkIfProfileExist = await fireStoreController.checkIfDocumentExist(
           userId: user.email, collection: 'users');
       if (checkIfProfileExist)
         await _redirectToProfileEdit(user, type);
-      else
-        return Get.offAllNamed('/home');
+      else {
+        //get current profile
+        bool result = await Provider.of<UserProvider>(context, listen: false)
+            .getProfile(user.uid);
+        if (result)
+          Get.offAllNamed('/home');
+        else
+          setState(() {
+            errLogin = "Nous avons rencontré une erreur, veuillez ressayer";
+          });
+      }
     } else {
       Get.back();
       setState(() {
@@ -60,7 +71,7 @@ class _LandingScreenState extends State<LandingScreen> {
 
   Future<void> _redirectToProfileEdit(user, authMethod) async {
     return Get.offAll(CreateProfile(
-      authMethod: authMethod,
+      //authMethod: authMethod,
       user: user,
     ));
   }

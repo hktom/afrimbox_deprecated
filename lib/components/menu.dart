@@ -1,6 +1,6 @@
 import 'package:afrimbox/helpers/tex.dart';
 import 'package:afrimbox/provider/userProvider.dart';
-import 'package:afrimbox/screen/genreScreen.dart';
+import 'package:afrimbox/screen/archive/movieArchive.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -72,7 +72,9 @@ class _MenuState extends State<Menu> {
                               width: 100,
                               height: 100,
                               fit: BoxFit.cover,
-                              imageUrl: model.currentUser[0]['photoUrl'],
+                              imageUrl: model.currentUser[0]['photoUrl'] == null
+                                  ? model.userDefaultPhoto
+                                  : model.currentUser[0]['photoUrl'],
                               placeholder: (context, url) => Container(
                                 color: Colors.grey,
                               ),
@@ -105,10 +107,10 @@ class _MenuState extends State<Menu> {
               SizedBox(
                 height: 40,
               ),
-              _items(title: 'Accueil', icon: FontAwesomeIcons.store),
+              _items(title: 'Accueil', icon: FontAwesomeIcons.home),
               _items(title: 'Films', icon: FontAwesomeIcons.film),
-              _items(title: 'Séries', icon: FontAwesomeIcons.boxOpen),
-              _items(title: 'Chaines', icon: FontAwesomeIcons.diceD20),
+              //_items(title: 'Séries', icon: FontAwesomeIcons.boxOpen),
+              _items(title: 'Chaines', icon: FontAwesomeIcons.tv),
               //_items(title: 'Connexion', icon: FontAwesomeIcons.userLock),
               _items(title: 'Paramètres', icon: FontAwesomeIcons.cog),
               _items(title: "S'abonner", icon: FontAwesomeIcons.crown),
@@ -122,7 +124,7 @@ class _MenuState extends State<Menu> {
                   color: Colors.grey,
                 ),
               ),
-              _items(title: "Rate", icon: FontAwesomeIcons.star),
+              //_items(title: "Rate", icon: FontAwesomeIcons.star),
               _items(title: "Partager", icon: FontAwesomeIcons.shareAlt),
               _items(
                   title: "Rapport Bugs et Aide",
@@ -143,8 +145,11 @@ class _MenuState extends State<Menu> {
       case 'Accueil':
         Get.offAllNamed('/home');
         break;
+      case 'Chaines':
+        Get.offAllNamed('/channelArchive');
+        break;
       case 'Films':
-        Get.to(GenreScreen(genre: "Tout genres"));
+        Get.to(MovieArchive(genre: "Tout genres"));
         break;
       case "S'abonner":
         Get.toNamed('/subscription');

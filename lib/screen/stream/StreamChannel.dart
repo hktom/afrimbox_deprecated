@@ -20,8 +20,8 @@ class _StreamChannelState extends State<StreamChannel> {
 
   _initEngine(url) async {
     //await Cdnbye.init("7r0wbwVMg", config: P2pConfig.byDefault());
-    var _url = await Cdnbye.parseStreamURL(url);
-    player = VideoPlayerController.network(_url);
+    //var cdnUrl = await Cdnbye.parseStreamURL(url);
+    player = VideoPlayerController.network(url);
     _initializeVideoPlayerFuture = player.initialize();
   }
 
@@ -35,6 +35,7 @@ class _StreamChannelState extends State<StreamChannel> {
   @override
   void initState() {
     _initEngine(widget.channelUrl);
+    print("URL CHANNEL ${widget.channelUrl}");
     //SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft]);
     super.initState();
   }
@@ -53,7 +54,6 @@ class _StreamChannelState extends State<StreamChannel> {
             future: _initializeVideoPlayerFuture,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
-                //return _loadVideo(widget.channelUrl);
                 return AspectRatio(
                   aspectRatio: player.value.aspectRatio,
                   child: showPlayer(),

@@ -93,7 +93,10 @@ class _ProfileState extends State<Profile> {
                                     width: 50,
                                     height: 50,
                                     fit: BoxFit.cover,
-                                    imageUrl: model.currentUser[0]['photoUrl'],
+                                    imageUrl:
+                                        model.currentUser[0]['photoUrl'] == null
+                                            ? model.userDefaultPhoto
+                                            : model.currentUser[0]['photoUrl'],
                                     placeholder: (context, url) => Container(
                                       color: Colors.grey,
                                     ),

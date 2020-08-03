@@ -5,13 +5,16 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
+import 'package:kkiapay_flutter_sdk/kkiapayWebview.dart';
 //import 'package:expansion_card/expansion_card.dart';
 // kkiapay
 //import 'package:kkiapay_flutter_sdk/kkiapayConf.sample.dart';
-import 'package:kkiapay_flutter_sdk/kkiapayWebview.dart';
 //import 'package:kkiapay_flutter_sdk/utils/Kkiapay.dart';
 
 class Subscription extends StatefulWidget {
+  final bool firstStep;
+  Subscription({Key key, this.firstStep: false}) : super(key: key);
+  //final
   @override
   _SubscriptionState createState() => _SubscriptionState();
 }
@@ -67,6 +70,21 @@ class _SubscriptionState extends State<Subscription> {
                 description:
                     "Abonnement Premium + \n Uniquement pour les films et séries plus: Bons carburant, Bons restaurant, Bons Momo",
                 session: '10 jours'),
+            SizedBox(
+              height: 100,
+            ),
+            widget.firstStep
+                ? RaisedButton(
+                    onPressed: () {
+                      Get.offAllNamed('/home');
+                    },
+                    color: Theme.of(context).primaryColor,
+                    child: Tex(
+                      content: "Remettre à plus tard",
+                      color: Colors.white,
+                    ),
+                  )
+                : SizedBox.shrink()
             // _subscription(price: 1000.0),
             // _subscription(price: 2500.00),
           ],

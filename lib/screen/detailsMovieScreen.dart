@@ -50,7 +50,7 @@ class _DetailsMovieScreenState extends State<DetailsMovieScreen> {
   @override
   void initState() {
     getGenres();
-    getActors();
+    //getActors();
     getFavorites();
     super.initState();
   }
@@ -68,8 +68,8 @@ class _DetailsMovieScreenState extends State<DetailsMovieScreen> {
         SliverToBoxAdapter(
           child: _listActionsButton(),
         ),
-        sliverTitle("Cast"),
-        listActors(),
+        //sliverTitle("Cast"),
+        //listActors(),
         sliverTitle("Pour toi"),
         listFavoriteMovies()
       ]),
@@ -120,11 +120,12 @@ class _DetailsMovieScreenState extends State<DetailsMovieScreen> {
                         .replaceAll(']', '');
                     print("DEBBUG YOUTUBE URL $url");
                     Get.to(TrailerPlayerScreen(trailerUrl: url.trim()));
-                  }
-                  else
-                  {
-                    Get.snackbar('Erreur', 'Trailer non trouvé', snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.black, colorText: Colors.white, duration: Duration(seconds:1));
-                    
+                  } else {
+                    Get.snackbar('Erreur', 'Trailer non trouvé',
+                        snackPosition: SnackPosition.BOTTOM,
+                        backgroundColor: Colors.black,
+                        colorText: Colors.white,
+                        duration: Duration(seconds: 1));
                   }
                 }),
           ),
@@ -232,13 +233,15 @@ class _DetailsMovieScreenState extends State<DetailsMovieScreen> {
   Widget _rating() {
     return SmoothStarRating(
         allowHalfRating: true,
-        onRated: (v) {},
+        onRated: (v) {
+          print(v);
+        },
         starCount: 5,
         rating: double.parse(widget.movie['vote_average']),
         size: 20.0,
-        isReadOnly: true,
+        isReadOnly: false,
         color: Colors.yellow,
-        borderColor: Colors.yellow,
+        borderColor: Colors.black,
         spacing: 0.0);
   }
 

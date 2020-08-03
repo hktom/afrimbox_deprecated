@@ -1,14 +1,11 @@
-import 'package:afrimbox/controller/moviesController.dart';
-import 'package:afrimbox/screen/channelPlayer.dart';
+import 'package:afrimbox/provider/userProvider.dart';
 import 'package:afrimbox/screen/stream/StreamChannel.dart';
-import 'package:afrimbox/screen/trailerPlayerScreen.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:afrimbox/helpers/tex.dart';
 import 'package:get/get.dart';
 import 'package:html_unescape/html_unescape.dart';
-import 'package:badges/badges.dart';
+import 'package:provider/provider.dart';
 
 class ChannelDetailCardAppBar extends StatefulWidget {
   final Map channel;
@@ -23,6 +20,20 @@ class ChannelDetailCardAppBar extends StatefulWidget {
 
 class _ChannelDetailCardAppBarState extends State<ChannelDetailCardAppBar> {
   var unescape = new HtmlUnescape();
+  UserProvider model;
+  var currentUser;
+  int bundleActive = 0;
+
+  getRemainDays() {
+    model = Provider.of<UserProvider>(context, listen: false);
+    bundleActive = model.subscriptionRemainDays();
+  }
+
+  @override
+  void initState() {
+    getRemainDays();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,10 +61,14 @@ class _ChannelDetailCardAppBarState extends State<ChannelDetailCardAppBar> {
           //backgroundColor: Colors.yellow,
           onPressed: () {
             print("SHOw Channel");
-            if (widget.channel['acf']['m3u'] != '') {
-              Get.to(StreamChannel(
-                channelUrl: widget.channel['acf']['m3u'],
-              ));
+            if (bundleActive > 0) {
+              if (widget.channel['acf']['m3u'] != '') {
+                Get.to(StreamChannel(
+                  channelUrl: widget.channel['acf']['m3u'],
+                ));
+              }
+            } else {
+              Get.toNamed('/subscription');
             }
           },
           child: Icon(Icons.play_arrow),

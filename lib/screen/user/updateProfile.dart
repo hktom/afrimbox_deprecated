@@ -52,7 +52,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
     var result = await fireStoreController.updateDocument(
         collection: 'users',
         data: widget.profile,
-        doc: widget.profile['email']);
+        doc: widget.profile['id'].trim());
 
     await Provider.of<UserProvider>(context, listen: false)
         .getCurrentUser([widget.profile]);

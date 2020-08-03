@@ -9,8 +9,11 @@ class UserProvider extends ChangeNotifier {
   GoogleAuthController googleAuthController = new GoogleAuthController();
   FacebookAuthController facebookAuthController = new FacebookAuthController();
   FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+  String userDefaultPhoto =
+      "https://firebasestorage.googleapis.com/v0/b/skyship-bd599.appspot.com/o/userPhoto%2FPortrait_Placeholder.png?alt=media&token=50ce51eb-7154-4d74-b96b-cad1090bfcd0";
   var currentUser;
-  Map authUser;
+  var currentUserId;
+  //Map authUser;
   var payload;
 
   setPayload(payload) {
@@ -21,6 +24,37 @@ class UserProvider extends ChangeNotifier {
   getCurrentUser(currentUser) {
     this.currentUser = currentUser;
     notifyListeners();
+  }
+
+  int subscriptionRemainDays() {
+    int day = 0;
+    int duration = 0;
+    if (this.currentUser[0]['subscription'] != null) {
+      duration = this.currentUser[0]['subscription']['duration'];
+      //var debuteDate = this.currentUser[0]['subscription']['debuteDate'];
+      var endDate = this.currentUser[0]['subscription']['endDate'];
+      var dateNow = DateTime.now();
+      int days = int.parse(endDate.difference(dateNow).inDays.toString());
+
+      if (days <= duration) {
+        day = days;
+      }
+    }
+
+    return day;
+  }
+
+  Future<bool> getProfile(userId) async {
+    try {
+      var user = await fireStoreController.getDocument(
+          collection: 'users', doc: userId);
+      this.currentUser = user;
+      this.currentUserId = userId;
+      notifyListeners();
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   //createProfile
@@ -58,27 +92,18 @@ class UserProvider extends ChangeNotifier {
 
   // log out user
   Future<bool> signOut(String authMethod) async {
-    bool result;
-    switch (authMethod) {
-      case 'google.com':
-        result = await googleAuthController.signOut();
-
-        break;
-
-      case 'facebook.com':
-        result = await facebookAuthController.signOut();
-        break;
-
-      default:
-        result = true;
-        break;
+    try {
+      await googleAuthController.signOut();
+    } catch (e) {
+      try {
+        await facebookAuthController.signOut();
+      } catch (e) {}
     }
-
-    if (result) await _firebaseAuth.signOut();
-    return result;
+    await _firebaseAuth.signOut();
+    return true;
   }
 
-  Future<dynamic> checkLogin() async {
+  Future<FirebaseUser> checkLogin() async {
     var auth = await FirebaseAuth.instance.currentUser();
     return auth;
   }
