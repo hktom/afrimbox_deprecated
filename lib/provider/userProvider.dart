@@ -91,7 +91,7 @@ class UserProvider extends ChangeNotifier {
   }
 
   // log out user
-  Future<bool> signOut(String authMethod) async {
+  Future<bool> signOut() async {
     try {
       await googleAuthController.signOut();
     } catch (e) {

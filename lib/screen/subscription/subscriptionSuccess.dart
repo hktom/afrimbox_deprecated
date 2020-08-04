@@ -49,26 +49,42 @@ class _SubscriptionSuccessState extends State<SubscriptionSuccess> {
 
       default:
     }
+
+    var model = Provider.of<UserProvider>(context, listen: false);
+    Map<String, dynamic> dataUser = model.currentUser[0];
+
+    if (model.subscriptionRemainDays() > 0) {
+      await incrementSubscription(user: dataUser, duration: duration);
+    } else {
+      await newSubscription(user: dataUser, duration: duration);
+    }
+    //refresh dataUser
+    await model.getCurrentUser([dataUser]);
+
+    Get.offNamed('/home');
+  }
+
+  Future<void> newSubscription({user, duration}) async {
     var today = new DateTime.now();
     var endData = today.add(new Duration(days: duration));
-
-    Map<String, dynamic> dataUser =
-        Provider.of<UserProvider>(context, listen: false).currentUser[0];
-    dataUser['subscription'] = {
+    user['subscription'] = {
       'duration': duration,
       'debuteDate': DateTime.now(),
       'endDate': endData,
       'transactionId': widget.transactionId
     };
-
     await fireStoreController.updateDocument(
-        collection: 'users', doc: dataUser['id'].trim(), data: dataUser);
+        collection: 'users', doc: user['id'].trim(), data: user);
+  }
 
-    //refresh dataUser
-    await Provider.of<UserProvider>(context, listen: false)
-        .getCurrentUser([dataUser]);
-
-    Get.offNamed('/home');
+  Future<void> incrementSubscription({user, duration}) async {
+    var currentEndDate = user['subscription']['endDate'];
+    var currentDuration = user['subscription']['duration'];
+    var newEndDate = currentEndDate.add(new Duration(days: duration));
+    user['subscription']['endDate'] = newEndDate;
+    user['subscription']['duration'] = currentDuration + duration;
+    await fireStoreController.updateDocument(
+        collection: 'users', doc: user['id'].trim(), data: user);
   }
 
   @override

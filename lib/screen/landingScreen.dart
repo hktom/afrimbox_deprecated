@@ -47,10 +47,11 @@ class _LandingScreenState extends State<LandingScreen> {
     if (user.uid != null) {
       Get.back();
       bool checkIfProfileExist = await fireStoreController.checkIfDocumentExist(
-          userId: user.email, collection: 'users');
-      if (checkIfProfileExist)
-        await _redirectToProfileEdit(user, type);
-      else {
+          userId: user.uid.trim(), collection: 'users');
+      // check if profile exist , true redirect to homem false redirect to create profile
+      if (!checkIfProfileExist) {
+        return Get.offAll(CreateProfile(user: user));
+      } else {
         //get current profile
         bool result = await Provider.of<UserProvider>(context, listen: false)
             .getProfile(user.uid);

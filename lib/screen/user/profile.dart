@@ -131,19 +131,21 @@ class _ProfileState extends State<Profile> {
                             ]),
                           ),
                         ]),
+                        RowLayout.cards(children: <Widget>[
+                          Card(
+                            child: RowLayout.body(children: <Widget>[
+                              RowItem.text(
+                                  'Abonnement',
+                                  model.subscriptionRemainDays().toString() +
+                                      ' jour restant'),
+                              RowItem.text('Films vu', '0'),
+                              RowItem.text('Séries visionné', '0'),
+                              RowItem.text('Chaine suivi', '0'),
+                            ]),
+                          ),
+                        ]),
                       ],
                     )),
-
-            RowLayout.cards(children: <Widget>[
-              Card(
-                child: RowLayout.body(children: <Widget>[
-                  RowItem.text('Abonnement', '0 jour restant'),
-                  RowItem.text('Films vu', '0'),
-                  RowItem.text('Séries visionné', '0'),
-                  RowItem.text('Chaine suivi', '0'),
-                ]),
-              ),
-            ]),
 
             RowLayout.cards(children: <Widget>[
               Card(
@@ -173,12 +175,9 @@ class _ProfileState extends State<Profile> {
                   RowItem.clickable(
                     "Mon profile",
                     "Se deconnecter",
-                    onTap: () {
-                      var authMethod =
-                          Provider.of<UserProvider>(context, listen: false)
-                              .currentUser[0]['email'];
-                      Provider.of<UserProvider>(context, listen: false)
-                          .signOut(authMethod);
+                    onTap: () async {
+                      await Provider.of<UserProvider>(context, listen: false)
+                          .signOut();
                       Get.offAllNamed('/splash');
                     },
                   ),

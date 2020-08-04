@@ -50,16 +50,16 @@ class _HomeScreenState extends State<HomeScreen> {
         //elevation: 0,
         title: Text('AFRIMBOX'),
         actions: <Widget>[
-          IconButton(
-            padding: EdgeInsets.zero,
-            onPressed: () {},
-            icon: Icon(Icons.cast, color: Colors.white, size: 25),
-          ),
-          IconButton(
-            padding: EdgeInsets.zero,
-            onPressed: () {},
-            icon: Icon(Icons.search, color: Colors.white, size: 25),
-          ),
+          // IconButton(
+          //   padding: EdgeInsets.zero,
+          //   onPressed: () {},
+          //   icon: Icon(Icons.cast, color: Colors.white, size: 25),
+          // ),
+          // IconButton(
+          //   padding: EdgeInsets.zero,
+          //   onPressed: () {},
+          //   icon: Icon(Icons.search, color: Colors.white, size: 25),
+          // ),
         ],
       ),
       drawer: Menu(),

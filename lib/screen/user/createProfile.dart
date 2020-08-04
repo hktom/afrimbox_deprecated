@@ -71,7 +71,10 @@ class _CreateProfileState extends State<CreateProfile> {
 
   @override
   void initState() {
-    phoneNumberController.text = widget.user.phoneNumber.substring(4);
+    if (widget.user.phoneNumber != null)
+      phoneNumberController.text = widget.user.phoneNumber.substring(4);
+    else
+      phoneNumberController.text = '';
     emailController.text = widget.user.email;
     nameController.text = widget.user.displayName;
     userProfile['phone'] = phoneNumberController.text;

@@ -13,10 +13,12 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   FireStoreController fireStoreController = new FireStoreController();
+  var result;
   // check if user is logged
   Future<void> _checkSession() async {
-    var result =
+    result =
         await Provider.of<UserProvider>(context, listen: false).checkLogin();
+    print("DEBBUG SIGNOUT $result");
     // user is not logged
     if (result == null) {
       Get.offAllNamed('/landing');

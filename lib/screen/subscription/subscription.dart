@@ -71,7 +71,7 @@ class _SubscriptionState extends State<Subscription> {
                     "Abonnement Premium + \n Uniquement pour les films et séries plus: Bons carburant, Bons restaurant, Bons Momo",
                 session: '10 jours'),
             SizedBox(
-              height: 100,
+              height: 10,
             ),
             widget.firstStep
                 ? RaisedButton(
