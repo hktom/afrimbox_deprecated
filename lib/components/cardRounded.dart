@@ -3,6 +3,7 @@ import 'package:afrimbox/screen/detailsMovieScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:get/get.dart';
+import 'package:afrimbox/helpers/const.dart';
 
 class CardRounded extends StatefulWidget {
   final Map movie;
@@ -25,31 +26,28 @@ class CardRounded extends StatefulWidget {
 }
 
 class _CardRoundedState extends State<CardRounded> {
-  String imageUrlPrefix =
-      "https://afrimbox.groukam.com/App/wp-content/uploads/2020/06/";
+  //String imageUrlPrefix = ApiUrl.urlImage;
   String image;
 
   @override
   void initState() {
     image = widget.isChannel
         ? widget.movie['better_featured_image']['source_url']
-        : imageUrlPrefix + widget.movie['dt_poster'];
+        : appImageUrl + widget.movie['dt_poster'];
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-        onTap: (){
-          if(widget.isChannel){
-            Get.to(ChannelDetailScreen(channel: widget.movie));
-          }
-          else
-          {
-            Get.to(DetailsMovieScreen(movie: widget.movie));
-          }
-        },
-        child: Container(
+      onTap: () {
+        if (widget.isChannel) {
+          Get.to(ChannelDetailScreen(channel: widget.movie));
+        } else {
+          Get.to(DetailsMovieScreen(movie: widget.movie));
+        }
+      },
+      child: Container(
         margin: widget.margin,
         height: widget.height,
         width: widget.width,

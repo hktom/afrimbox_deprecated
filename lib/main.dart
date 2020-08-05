@@ -1,5 +1,6 @@
 import 'package:afrimbox/helpers/style.dart';
-import 'package:afrimbox/provider/itemsProvider.dart';
+import 'package:afrimbox/provider/ChannelProvider.dart';
+import 'package:afrimbox/provider/MovieProvider.dart';
 import 'package:afrimbox/provider/loginProvider.dart';
 import 'package:afrimbox/provider/streamingProvider.dart';
 import 'package:afrimbox/provider/userProvider.dart';
@@ -22,9 +23,11 @@ class _MyAppState extends State<MyApp> {
     return MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (_) => UserProvider()),
-          ChangeNotifierProvider(create: (_) => ItemsProvider()),
+          ChangeNotifierProvider(create: (_) => MovieProvider()),
+          ChangeNotifierProvider(create: (_) => ChannelProvider()),
           ChangeNotifierProvider(create: (_) => LoginProvider()),
           ChangeNotifierProvider(create: (_) => StreamingProvider()),
+          //ChangeNotifierProvider(create: (_) => ItemsProvider()),
         ],
         child: DynamicTheme(
             defaultBrightness: Brightness.light,

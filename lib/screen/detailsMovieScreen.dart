@@ -6,9 +6,10 @@ import 'package:get/get.dart';
 import 'package:html_unescape/html_unescape.dart';
 import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
-import 'package:afrimbox/provider/itemsProvider.dart';
+import 'package:afrimbox/provider/MovieProvider.dart';
 import 'package:provider/provider.dart';
 import 'package:afrimbox/controller/moviesController.dart';
+//import 'package:afrimbox/helpers/const.dart';
 
 class DetailsMovieScreen extends StatefulWidget {
   final Map movie;
@@ -18,46 +19,38 @@ class DetailsMovieScreen extends StatefulWidget {
 }
 
 class _DetailsMovieScreenState extends State<DetailsMovieScreen> {
+  final GlobalKey<ScaffoldState> _scaffoldkey = new GlobalKey<ScaffoldState>();
   var unescape = new HtmlUnescape();
-  var genres = [];
-  var actors = [];
+  //var genres = [];
+  //var actors = [];
   var favorites = [];
+  MovieProvider model;
+  SnackBar snackBar = SnackBar(
+    content: Text("Aucun trailer n'est disponible pour le moment"),
+    backgroundColor: Color.fromRGBO(158, 25, 25, 1),
+  );
 
   // get genres
-  Future<void> getGenres() async {
-    genres = await Provider.of<ItemsProvider>(context, listen: false)
-        .req(field: 'genres', id: widget.movie['id']);
+  Future<void> init() async {
+    await model.getGenres(widget.movie['id'].toString());
+    await model.getActors(widget.movie['id'].toString());
+    await model.getByGenre(3295.toString());
+    favorites = [];
     setState(() {});
-  }
-
-  //get actors
-  Future<void> getActors() async {
-    actors = await Provider.of<ItemsProvider>(context, listen: false)
-        .req(field: 'actors', id: widget.movie['id']);
-    setState(() {});
-  }
-
-  //get favorite
-  Future<void> getFavorites() async {
-    await Provider.of<ItemsProvider>(context, listen: false)
-        .getMovieByGenre(genre: 'Action');
-    setState(() {
-      favorites =
-          Provider.of<ItemsProvider>(context, listen: false).items['Action'];
-    });
   }
 
   @override
   void initState() {
-    getGenres();
-    //getActors();
-    getFavorites();
+    model = Provider.of<MovieProvider>(context, listen: false);
+    init();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldkey,
+      backgroundColor: Colors.white,
       body: CustomScrollView(slivers: <Widget>[
         SliverToBoxAdapter(
           child: _appBar(),
@@ -68,10 +61,10 @@ class _DetailsMovieScreenState extends State<DetailsMovieScreen> {
         SliverToBoxAdapter(
           child: _listActionsButton(),
         ),
-        //sliverTitle("Cast"),
-        //listActors(),
-        sliverTitle("Pour toi"),
-        listFavoriteMovies()
+        sliverTitle("Cast"),
+        listActors(),
+        sliverTitle("Voir également"),
+        //listFavoriteMovies()
       ]),
     );
   }
@@ -79,12 +72,12 @@ class _DetailsMovieScreenState extends State<DetailsMovieScreen> {
   Widget listActors() {
     return SliverToBoxAdapter(
       child: Container(
-        padding: EdgeInsets.all(5),
-        height: 180,
-        child: ListView(
-          scrollDirection: Axis.horizontal,
-          children: MoviesController.avatar(
-              offset: 0, limit: double.infinity, data: actors),
+        padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+        //height: 20,
+        child: Wrap(
+          direction: Axis.horizontal,
+          children: MoviesController.listName(
+              offset: 0, limit: double.infinity, data: model.actors),
         ),
       ),
     );
@@ -121,26 +114,22 @@ class _DetailsMovieScreenState extends State<DetailsMovieScreen> {
                     print("DEBBUG YOUTUBE URL $url");
                     Get.to(TrailerPlayerScreen(trailerUrl: url.trim()));
                   } else {
-                    Get.snackbar('Erreur', 'Trailer non trouvé',
-                        snackPosition: SnackPosition.BOTTOM,
-                        backgroundColor: Colors.black,
-                        colorText: Colors.white,
-                        duration: Duration(seconds: 1));
+                    _scaffoldkey.currentState.showSnackBar(snackBar);
                   }
                 }),
           ),
+          // Expanded(
+          //   flex: 1,
+          //   child: FlatButton(
+          //       padding: EdgeInsets.zero,
+          //       child: _buttonIcon(icon: Icons.share, text: 'Partager'),
+          //       onPressed: () {}),
+          // ),
           Expanded(
             flex: 1,
             child: FlatButton(
                 padding: EdgeInsets.zero,
-                child: _buttonIcon(icon: Icons.share, text: 'Partager'),
-                onPressed: () {}),
-          ),
-          Expanded(
-            flex: 1,
-            child: FlatButton(
-                padding: EdgeInsets.zero,
-                child: _buttonIcon(icon: Icons.check, text: 'Ma liste'),
+                child: _buttonIcon(icon: Icons.list, text: 'Ma liste'),
                 onPressed: () {}),
           ),
           Expanded(
@@ -168,7 +157,10 @@ class _DetailsMovieScreenState extends State<DetailsMovieScreen> {
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        Icon(icon),
+        Icon(
+          icon,
+          color: Theme.of(context).primaryColor,
+        ),
         SizedBox(height: 8),
         Text(
           text,
@@ -216,7 +208,7 @@ class _DetailsMovieScreenState extends State<DetailsMovieScreen> {
   Widget _appBar() {
     return MovieDetailCardAppBar(
       movie: widget.movie,
-      genres: this.genres,
+      genres: model.genres,
     );
   }
 
@@ -231,13 +223,15 @@ class _DetailsMovieScreenState extends State<DetailsMovieScreen> {
   }
 
   Widget _rating() {
+    double currentRate = double.parse(widget.movie['vote_average']) / 2;
     return SmoothStarRating(
         allowHalfRating: true,
         onRated: (v) {
           print(v);
+          print(widget.movie['vote_average']);
         },
         starCount: 5,
-        rating: double.parse(widget.movie['vote_average']),
+        rating: currentRate,
         size: 20.0,
         isReadOnly: false,
         color: Colors.yellow,
@@ -253,7 +247,7 @@ class _DetailsMovieScreenState extends State<DetailsMovieScreen> {
         child: ListView(
           scrollDirection: Axis.horizontal,
           children: MoviesController.poster(
-              offset: 0, limit: double.infinity, data: favorites),
+              offset: 0, limit: double.infinity, data: []),
         ),
       ),
     );

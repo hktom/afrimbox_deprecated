@@ -7,6 +7,7 @@ import 'package:afrimbox/helpers/tex.dart';
 import 'package:get/get.dart';
 import 'package:html_unescape/html_unescape.dart';
 import 'package:badges/badges.dart';
+import 'package:afrimbox/helpers/const.dart';
 
 class MovieDetailCardAppBar extends StatefulWidget {
   final Map movie;
@@ -18,8 +19,7 @@ class MovieDetailCardAppBar extends StatefulWidget {
 }
 
 class _MovieDetailCardAppBarState extends State<MovieDetailCardAppBar> {
-  String imageUrlPrefix =
-      "https://afrimbox.groukam.com/App/wp-content/uploads/2020/06/";
+  //String imageUrlPrefix = ApiUrl.urlImage;
   var unescape = new HtmlUnescape();
 
   @override
@@ -91,7 +91,7 @@ class _MovieDetailCardAppBarState extends State<MovieDetailCardAppBar> {
       height: 300,
       fit: BoxFit.cover,
       alignment: Alignment.topCenter,
-      imageUrl: imageUrlPrefix + widget.movie['dt_poster'],
+      imageUrl: appImageUrl + widget.movie['dt_poster'],
       placeholder: (context, url) => Container(
         color: Colors.grey[300],
       ),

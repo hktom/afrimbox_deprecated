@@ -1,15 +1,10 @@
 import 'package:afrimbox/components/channelDetailCardAppBar.dart';
-import 'package:afrimbox/screen/trailerPlayerScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:afrimbox/helpers/tex.dart';
-import 'package:get/get.dart';
 import 'package:html_unescape/html_unescape.dart';
-import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
-import 'package:smooth_star_rating/smooth_star_rating.dart';
-import 'package:afrimbox/provider/itemsProvider.dart';
+import 'package:afrimbox/provider/ChannelProvider.dart';
 import 'package:provider/provider.dart';
 import 'package:afrimbox/controller/moviesController.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ChannelDetailScreen extends StatefulWidget {
@@ -21,22 +16,12 @@ class ChannelDetailScreen extends StatefulWidget {
 
 class _ChannelDetailScreenState extends State<ChannelDetailScreen> {
   var unescape = new HtmlUnescape();
-  var favorites = [];
-
-  //get favorite
-  Future<void> getFavorites() async {
-    // await Provider.of<ItemsProvider>(context, listen: false)
-    //     .getItems(field: 'actions', filter: 'Action');
-    await Provider.of<ItemsProvider>(context, listen: false).getAllChannels();
-    setState(() {
-      favorites =
-          Provider.of<ItemsProvider>(context, listen: false).items['channels'];
-    });
-  }
+  ChannelProvider model;
 
   @override
   void initState() {
-    getFavorites();
+    model = Provider.of<ChannelProvider>(context, listen: false);
+    //getFavorites();
     super.initState();
   }
 
@@ -144,51 +129,11 @@ class _ChannelDetailScreenState extends State<ChannelDetailScreen> {
             ]));
   }
 
-  // Widget _caracteristics() {
-  //   return Container(
-  //     padding: EdgeInsets.symmetric(horizontal: 10),
-  //     child: Row(
-  //       children: <Widget>[
-  //         Expanded(
-  //             flex: 0,
-  //             child: Tex(
-  //               content: widget.channel['release_date'] + ' | ',
-  //             )),
-  //         Expanded(flex: 0, child: _time()),
-  //         Expanded(flex: 0, child: _rating()),
-  //       ],
-  //     ),
-  //   );
-  // }
-
   Widget _appBar() {
     return ChannelDetailCardAppBar(
       channel: widget.channel,
     );
   }
-
-  Widget _time() {
-    double runtime = double.parse(widget.channel['runtime']);
-    int h = runtime ~/ 60;
-    double m = runtime % 60;
-
-    return Tex(
-      content: h.toString() + 'h ' + m.toString() + 'min | ',
-    );
-  }
-
-  // Widget _rating() {
-  //   return SmoothStarRating(
-  //       allowHalfRating: true,
-  //       onRated: (v) {},
-  //       starCount: 5,
-  //       rating: double.parse(widget.channel['vote_average']),
-  //       size: 20.0,
-  //       isReadOnly: true,
-  //       color: Colors.yellow,
-  //       borderColor: Colors.yellow,
-  //       spacing: 0.0);
-  // }
 
   Widget listFavoritechannels() {
     return SliverToBoxAdapter(
@@ -198,7 +143,7 @@ class _ChannelDetailScreenState extends State<ChannelDetailScreen> {
         child: ListView(
           scrollDirection: Axis.horizontal,
           children: MoviesController.myChannels(
-              offset: 0, limit: double.infinity, data: favorites),
+              offset: 0, limit: double.infinity, data: []),
         ),
       ),
     );

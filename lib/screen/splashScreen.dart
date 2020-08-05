@@ -18,7 +18,6 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void> _checkSession() async {
     result =
         await Provider.of<UserProvider>(context, listen: false).checkLogin();
-    print("DEBBUG SIGNOUT $result");
     // user is not logged
     if (result == null) {
       Get.offAllNamed('/landing');

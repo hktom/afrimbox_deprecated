@@ -15,7 +15,7 @@ class _TrailerPlayerScreenState extends State<TrailerPlayerScreen> {
 
   @override
   void dispose() {
-    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+    //SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     super.dispose();
   }
 
@@ -27,7 +27,7 @@ class _TrailerPlayerScreenState extends State<TrailerPlayerScreen> {
       //   mute: false,
       // ),
     );
-    SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft]);
+    //SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft]);
     super.initState();
   }
 
@@ -38,14 +38,44 @@ class _TrailerPlayerScreenState extends State<TrailerPlayerScreen> {
         Get.back();
         return true;
       },
-      child: Scaffold(
-        backgroundColor: Colors.black,
-        body: Container(
+      child: OrientationBuilder(builder: (context, orientation) {
+        if (orientation == Orientation.portrait) {
+          return portrait();
+        } else {
+          return landscape();
+        }
+      }),
+    );
+  }
+
+  Widget portrait() {
+    return Scaffold(
+      appBar: AppBar(backgroundColor: Colors.black),
+      backgroundColor: Colors.black,
+      body: Center(
+        child: Container(
+          width: double.infinity,
+          height: 300,
           color: Colors.black,
           child: YoutubePlayer(
             controller: _controller,
             //liveUIColor: Colors.amber,
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget landscape() {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        color: Colors.black,
+        child: YoutubePlayer(
+          controller: _controller,
+          //liveUIColor: Colors.amber,
         ),
       ),
     );

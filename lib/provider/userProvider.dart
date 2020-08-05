@@ -32,7 +32,8 @@ class UserProvider extends ChangeNotifier {
     if (this.currentUser[0]['subscription'] != null) {
       duration = this.currentUser[0]['subscription']['duration'];
       //var debuteDate = this.currentUser[0]['subscription']['debuteDate'];
-      var endDate = this.currentUser[0]['subscription']['endDate'];
+      var timestamp = this.currentUser[0]['subscription']['endDate'];
+      var endDate = timestamp.toDate();
       var dateNow = DateTime.now();
       int days = int.parse(endDate.difference(dateNow).inDays.toString());
 

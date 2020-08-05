@@ -1,38 +1,35 @@
 import 'package:afrimbox/helpers/tex.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:afrimbox/provider/itemsProvider.dart';
+import 'package:afrimbox/provider/MovieProvider.dart';
 import 'package:provider/provider.dart';
+import 'package:afrimbox/helpers/const.dart';
 
 class FilterByGenre extends StatefulWidget {
-  final Function getMovies;
-  FilterByGenre({Key key, @required this.getMovies}) : super(key: key);
+  //final Function getMovies;
+  final String genre;
+  FilterByGenre({Key key, this.genre}) : super(key: key);
 
   @override
   _FilterByGenreState createState() => _FilterByGenreState();
 }
 
 class _FilterByGenreState extends State<FilterByGenre> {
-  String dropdownValue = "Tout genres";
+  String dropdownValue = "Tous";
   bool showFilter = false;
   bool loadData = true;
+  MovieProvider model;
 
-  Future<void> getMovies(genre) async {
-    print("LOAD MOVIE BY $genre");
-    setState(() {
-      loadData = false;
-    });
+  Future<void> getMovies() async {
+    await model.getByGenre(widget.genre);
+  }
 
-    if (genre == "Tout genres") {
-      await Provider.of<ItemsProvider>(context, listen: false).getAllMovies();
-    } else {
-      await Provider.of<ItemsProvider>(context, listen: false)
-          .getMovieByGenre(genre: genre, MovieArchive: true);
-    }
-
-    setState(() {
-      loadData = true;
-    });
+  @override
+  void initState() {
+    model = Provider.of<MovieProvider>(context, listen: false);
+    dropdownValue = widget.genre;
+    //getMovies();
+    super.initState();
   }
 
   @override
@@ -111,23 +108,32 @@ class _FilterByGenreState extends State<FilterByGenre> {
         color: Colors.deepPurpleAccent,
       ),
       onChanged: (String newValue) async {
+        var key = mapGenreToKey(newValue);
+        print(key);
         setState(() {
           dropdownValue = newValue;
         });
-        //await getMovies(newValue);
-        await widget.getMovies(newValue);
+        await model.getByGenre(key);
       },
-      items: Provider.of<ItemsProvider>(context, listen: false)
-          .genres
-          .map<DropdownMenuItem<String>>((String value) {
+      items: category.map<DropdownMenuItem<String>>((value) {
         return DropdownMenuItem<String>(
-          value: value,
+          value: value['label'],
           child: Tex(
-            content: value,
+            content: value['label'],
             color: Colors.white,
           ),
         );
       }).toList(),
     );
+  }
+
+  String mapGenreToKey(String label) {
+    var key;
+    category.forEach((element) {
+      if (element['label'] == label) {
+        key = element['key'].toString();
+      }
+    });
+    return key;
   }
 }

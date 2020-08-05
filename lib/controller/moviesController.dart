@@ -4,6 +4,7 @@ import 'package:afrimbox/components/placeHolders.dart';
 import 'package:flutter/material.dart';
 import '../components/customCard.dart';
 import '../components/cardRounded.dart';
+import 'package:afrimbox/helpers/tex.dart';
 
 class MoviesController {
   // large card on the top
@@ -132,6 +133,33 @@ class MoviesController {
         margin: EdgeInsets.symmetric(horizontal: 5, vertical: 5),
         movie: data[i],
       ));
+
+      if (i >= limit) break;
+    }
+    return items;
+  }
+
+  //list name in wrapper
+  static List listName({
+    int offset,
+    double limit,
+    data,
+  }) {
+    List<Widget> items = [];
+
+    if (data.length <= 0) {
+      items.add(Text(''));
+    }
+
+    for (var i = offset; i < data.length; i++) {
+      items.add(Padding(
+        padding: const EdgeInsets.all(4),
+        child: Tex(content: data[i]['name']),
+      ));
+      if (i < data.length - 1)
+        items.add(Tex(
+          content: ", ",
+        ));
 
       if (i >= limit) break;
     }

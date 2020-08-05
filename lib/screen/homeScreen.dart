@@ -1,14 +1,17 @@
-import 'package:afrimbox/components/loadingSpinner.dart';
+//import 'package:afrimbox/components/loadingSpinner.dart';
 import 'package:afrimbox/components/menu.dart';
 import 'package:afrimbox/controller/moviesController.dart';
 import 'package:afrimbox/helpers/tex.dart';
 import 'package:afrimbox/screen/archive/movieArchive.dart';
 import 'package:flutter/material.dart';
-import 'package:afrimbox/provider/itemsProvider.dart';
+import 'package:afrimbox/provider/MovieProvider.dart';
+import 'package:afrimbox/provider/ChannelProvider.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
+//import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:connectivity/connectivity.dart';
+import 'package:afrimbox/helpers/const.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -16,30 +19,46 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  var movies = [];
-  var actions = [];
-  var animations = [];
-  var channels = [];
   bool loadData = false;
+  var connectivity;
+  bool isOnline = true;
+  int counter = 1;
+  MovieProvider movieModel;
+  ChannelProvider channelModel;
+  Map<String, dynamic> display = {};
 
-  Future<void> getMovies() async {
-    var model = Provider.of<ItemsProvider>(context, listen: false);
-    await model.getAllMovies();
-    await model.getAllChannels();
-    await model.getMovieByGenre(genre: 'Animation');
-    await model.getMovieByGenre(genre: 'Action');
+  //load more
+  Future<void> loadMore(int increment) async {
+    if (increment < category.length) {
+      var genre = category[increment];
+      await movieModel.getByGenre(genre['key'].toString());
+      counter = increment + 1;
+    }
+  }
 
-    movies = model.items['movies'];
-    channels = model.items['channels'];
-    actions = model.items['Action'];
-    animations = model.items['Animation'];
-
+  Future<void> getMoviesChannels() async {
+    await movieModel.get();
+    await channelModel.get();
     setState(() {});
   }
 
   @override
-  void initState() {
-    getMovies();
+  initState() {
+    movieModel = Provider.of<MovieProvider>(context, listen: false);
+    channelModel = Provider.of<ChannelProvider>(context, listen: false);
+    //getMoviesChannels();
+    connectivity = Connectivity()
+        .onConnectivityChanged
+        .listen((ConnectivityResult result) {
+      if (result == ConnectivityResult.mobile ||
+          result == ConnectivityResult.wifi) {
+        setState(() => isOnline = true);
+        getMoviesChannels();
+      } else {
+        setState(() => isOnline = false);
+      }
+    });
+    //getMovies();
     super.initState();
   }
 
@@ -69,23 +88,56 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  Widget offLineBar() {
+    return SliverToBoxAdapter(
+      child: AnimatedOpacity(
+        opacity: !isOnline ? 1.0 : 0.0,
+        duration: Duration(milliseconds: 500),
+        child: Container(
+          width: double.infinity,
+          height: !isOnline ? 20 : 0,
+          color: Colors.blue[300],
+          child: Tex(
+            align: TextAlign.center,
+            content: "Mode hors ligne",
+            color: Colors.white,
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget content() {
     return Container(
-      child: CustomScrollView(
-        slivers: <Widget>[
-          // large card
-          lastMovie(),
-          // channel
-          sliverTitle("Nos chaines", "Null"),
-          listChannels(),
-          // actors
-          //movies Action
-          sliverTitle("Actions", "Action"),
-          listActionsMovies(),
-          //movies Animation
-          sliverTitle("Animations", "Animation"),
-          listAnimationMovies()
-        ],
+      child: NotificationListener<ScrollNotification>(
+        onNotification: (ScrollNotification scrollInfo) {
+          if (scrollInfo.metrics.pixels == scrollInfo.metrics.maxScrollExtent) {
+            //loadMore(counter);
+            print("reach bottom");
+          }
+        },
+        child: CustomScrollView(
+          slivers: <Widget>[
+            //if user is offline display bar
+            offLineBar(),
+            // large card
+            lastMovie(),
+            // channel
+            sliverTitle("Nos chaines", null),
+            listChannels(),
+            //movies lists
+            sliverTitle("Films populaires", "Tous"),
+            listMovies(0),
+            //movies Action
+            // sliverTitle("Actions", "Action"),
+            // listMovies(display['Action']),
+
+            // for (var i = 0; i < movieModel.moviesByGenre.length; i++)
+            //   if (movieModel.moviesByGenre[i] != null)
+            //     sliverTitle("Animations", "Animation"),
+            // listMovies(display['Animation']),
+          ],
+        ),
       ),
     );
   }
@@ -101,7 +153,7 @@ class _HomeScreenState extends State<HomeScreen> {
               color: Theme.of(context).primaryColor),
           trailing: IconButton(
             onPressed: () {
-              if (genre != "Null") {
+              if (genre != null) {
                 Get.to(MovieArchive(genre: genre));
               } else {
                 Get.toNamed('/channelArchive');
@@ -122,7 +174,7 @@ class _HomeScreenState extends State<HomeScreen> {
         MoviesController.myCard(
           offset: 0,
           limit: 0,
-          data: movies,
+          data: movieModel.movies,
         ),
       ),
     );
@@ -136,13 +188,14 @@ class _HomeScreenState extends State<HomeScreen> {
         child: ListView(
           scrollDirection: Axis.horizontal,
           children: MoviesController.myChannels(
-              offset: 0, limit: double.infinity, data: channels),
+              offset: 0, limit: double.infinity, data: channelModel.channels),
         ),
       ),
     );
   }
 
-  Widget listActionsMovies() {
+  Widget listMovies(int index) {
+    var data = index == 0 ? movieModel.movies : movieModel.moviesByGenre[index];
     return SliverToBoxAdapter(
       child: Container(
         padding: EdgeInsets.all(5),
@@ -150,21 +203,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: ListView(
           scrollDirection: Axis.horizontal,
           children: MoviesController.poster(
-              offset: 0, limit: double.infinity, data: actions),
-        ),
-      ),
-    );
-  }
-
-  Widget listAnimationMovies() {
-    return SliverToBoxAdapter(
-      child: Container(
-        padding: EdgeInsets.all(5),
-        height: 200,
-        child: ListView(
-          scrollDirection: Axis.horizontal,
-          children: MoviesController.poster(
-              offset: 0, limit: double.infinity, data: animations),
+              offset: index == 0 ? 1 : 0, limit: double.infinity, data: data),
         ),
       ),
     );

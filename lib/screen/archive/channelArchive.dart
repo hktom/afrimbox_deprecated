@@ -2,7 +2,7 @@ import 'package:afrimbox/components/menu.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
-import 'package:afrimbox/provider/itemsProvider.dart';
+import 'package:afrimbox/provider/ChannelProvider.dart';
 import 'package:afrimbox/controller/moviesController.dart';
 
 class ChannelArchive extends StatefulWidget {
@@ -13,16 +13,17 @@ class ChannelArchive extends StatefulWidget {
 class _ChannelArchiveState extends State<ChannelArchive> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  var channels = [];
+  //var channels = [];
   double itemHeight;
   double itemWidth;
   bool loadData = false;
   String title = '';
+  ChannelProvider model;
 
   @override
   void initState() {
-    var model = Provider.of<ItemsProvider>(context, listen: false);
-    channels = model.items['channels'];
+    model = Provider.of<ChannelProvider>(context, listen: false);
+    //channels = model.items['channels'];
     super.initState();
   }
 
@@ -56,21 +57,21 @@ class _ChannelArchiveState extends State<ChannelArchive> {
       drawer: Menu(),
       body: ListView(
         children: MoviesController.channelPosterGrid(
-            offset: 0, limit: double.infinity, data: channels),
+            offset: 0, limit: double.infinity, data: model.channels),
       ),
     );
   }
 
-  Stack buildStack() {
-    return Stack(
-      children: <Widget>[
-        GridView.count(
-          crossAxisCount: 1,
-          childAspectRatio: (itemWidth / itemHeight),
-          children: MoviesController.channelPosterGrid(
-              offset: 0, limit: double.infinity, data: channels),
-        ),
-      ],
-    );
-  }
+  // Stack _buildStack() {
+  //   return Stack(
+  //     children: <Widget>[
+  //       GridView.count(
+  //         crossAxisCount: 1,
+  //         childAspectRatio: (itemWidth / itemHeight),
+  //         children: MoviesController.channelPosterGrid(
+  //             offset: 0, limit: double.infinity, data: channels),
+  //       ),
+  //     ],
+  //   );
+  // }
 }

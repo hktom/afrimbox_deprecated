@@ -1,11 +1,12 @@
 import 'package:afrimbox/components/filterByGenre.dart';
-import 'package:afrimbox/components/loadingSpinner.dart';
+//import 'package:afrimbox/components/loadingSpinner.dart';
 import 'package:afrimbox/components/menu.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
-import 'package:afrimbox/provider/itemsProvider.dart';
+import 'package:afrimbox/provider/MovieProvider.dart';
 import 'package:afrimbox/controller/moviesController.dart';
+import 'package:afrimbox/helpers/const.dart';
 
 class MovieArchive extends StatefulWidget {
   final String genre;
@@ -22,35 +23,11 @@ class _MovieArchiveState extends State<MovieArchive> {
   double itemWidth;
   bool loadData = false;
   String title = '';
-
-  Future<void> getMovies(genre) async {
-    setState(() {
-      loadData = false;
-      title = genre;
-    });
-
-    if (genre == "Tout genres") {
-      await Provider.of<ItemsProvider>(context, listen: false).getAllMovies();
-      setState(() {
-        movies =
-            Provider.of<ItemsProvider>(context, listen: false).items["movies"];
-        loadData = true;
-      });
-    } else {
-      await Provider.of<ItemsProvider>(context, listen: false)
-          .getMovieByGenre(genre: genre, MovieArchive: true);
-
-      setState(() {
-        movies = Provider.of<ItemsProvider>(context, listen: false)
-            .items["genreMovie"];
-        loadData = true;
-      });
-    }
-  }
+  MovieProvider model;
 
   @override
   void initState() {
-    getMovies(widget.genre);
+    model = Provider.of<MovieProvider>(context, listen: false);
     super.initState();
   }
 
@@ -60,8 +37,6 @@ class _MovieArchiveState extends State<MovieArchive> {
     /*24 is for notification bar on Android*/
     itemHeight = (size.height - kToolbarHeight - 24) / 2;
     itemWidth = size.width / 2;
-
-    print("REFRESH DATA");
 
     return Scaffold(
       key: _scaffoldKey,
@@ -73,7 +48,7 @@ class _MovieArchiveState extends State<MovieArchive> {
             ),
             onPressed: () => Get.back()),
         elevation: 0,
-        title: Text(this.title == "Tout genres" ? "Films" : this.title),
+        title: Text(widget.genre == "Tous" ? "Films" : widget.genre),
         actions: <Widget>[
           IconButton(
               icon: Icon(
@@ -95,10 +70,8 @@ class _MovieArchiveState extends State<MovieArchive> {
         Align(
           alignment: Alignment.topRight,
           child: Padding(
-            padding: EdgeInsets.all(10),
-            child: FilterByGenre(
-              getMovies: this.getMovies,
-            ),
+            padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+            child: FilterByGenre(genre: "Tous"),
           ),
         ),
       ],
@@ -106,11 +79,25 @@ class _MovieArchiveState extends State<MovieArchive> {
   }
 
   Widget _listMovie() {
-    return GridView.count(
-      crossAxisCount: 3,
-      childAspectRatio: (itemWidth / itemHeight),
-      children: MoviesController.posterGrid(
-          offset: 0, limit: double.infinity, data: movies),
+    return Consumer<MovieProvider>(
+      builder: (context, model, child) => GridView.count(
+        crossAxisCount: 3,
+        childAspectRatio: (itemWidth / itemHeight),
+        children: MoviesController.posterGrid(
+            offset: 0,
+            limit: double.infinity,
+            data: model.moviesByGenre[model.currentGenre]),
+      ),
     );
   }
+
+  // String mapGenreToKey(String label) {
+  //   var key;
+  //   category.forEach((element) {
+  //     if (element['label'] == label) {
+  //       key = element['label'].toString();
+  //     }
+  //   });
+  //   return key;
+  // }
 }
