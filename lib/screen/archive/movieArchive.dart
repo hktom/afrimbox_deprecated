@@ -1,12 +1,10 @@
 import 'package:afrimbox/components/filterByGenre.dart';
-//import 'package:afrimbox/components/loadingSpinner.dart';
 import 'package:afrimbox/components/menu.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:afrimbox/provider/MovieProvider.dart';
 import 'package:afrimbox/controller/moviesController.dart';
-import 'package:afrimbox/helpers/const.dart';
 
 class MovieArchive extends StatefulWidget {
   final String genre;
@@ -71,7 +69,7 @@ class _MovieArchiveState extends State<MovieArchive> {
           alignment: Alignment.topRight,
           child: Padding(
             padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-            child: FilterByGenre(genre: "Tous"),
+            child: FilterByGenre(genre: widget.genre),
           ),
         ),
       ],

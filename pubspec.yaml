@@ -56,6 +56,8 @@ dependencies:
   flutter_signin_button: ^1.0.0
   flutter_form_builder: ^3.12.0
   cool_stepper: ^1.1.0
+  flutter_switch: ^0.1.1
+  animated_text_kit: ^2.2.0
   #kkiapay
   #kkiapay_flutter_sdk: ^0.5.0
   kkiapay_flutter_sdk:

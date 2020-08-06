@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:afrimbox/provider/loginProvider.dart';
 import 'package:get/get.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -47,6 +48,14 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    return Scaffold(
+      backgroundColor: Color.fromRGBO(247, 247, 247, 1),
+      body: Center(
+        child: Image.asset(
+          'assets/logo3.jpg',
+          width: 150,
+        ),
+      ),
+    );
   }
 }

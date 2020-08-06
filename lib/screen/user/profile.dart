@@ -27,50 +27,22 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  //Map profile = {};
-  //bool isProfileAlreadyExist = false;
-
-  // get current user
-  // void _getCurrentUser() {
-  //   var currentUser =
-  //       Provider.of<UserProvider>(context, listen: false).currentUser;
-
-  //   var authUser = Provider.of<UserProvider>(context, listen: false).authUser;
-
-  //   if (currentUser.contains(null)) {
-  //     profile = authUser;
-  //     profile['favoritesChannels'] = 0;
-  //     profile['favoritesMovies'] = 0;
-  //     profile['isProfileAlreadyExist'] = false;
-  //   } else {
-  //     print("DEBBUG $currentUser");
-  //     profile = currentUser[0];
-  //     if (!profile.containsKey('name')) profile['name'] = 'Ajouter Nom';
-  //     if (!profile.containsKey('email')) profile['email'] = 'Ajouter Email';
-  //     if (!profile.containsKey('phone')) profile['phone'] = 'Ajouter Télephone';
-  //     //profile = authUser;
-  //     isProfileAlreadyExist = true;
-  //     profile['isProfileAlreadyExist'] = true;
-  //   }
-  // }
+  UserProvider userProvider;
 
   @override
   void initState() {
-    //_getCurrentUser();
+    userProvider = Provider.of<UserProvider>(context, listen: false);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //backgroundColor: Colors.black,
       appBar: AppBar(
-        centerTitle: true,
         title: Tex(
           content: "Profile",
           color: Colors.white,
           size: 'h4',
-          bold: FontWeight.bold,
         ),
       ),
       body: Container(
@@ -152,7 +124,10 @@ class _ProfileState extends State<Profile> {
                 child: RowLayout.body(children: <Widget>[
                   RowItem.clickable(
                     "Films préferés",
-                    "0",
+                    userProvider.currentUser[0]['favoriteMovies'] != null
+                        ? userProvider.currentUser[0]['favoriteMovies'].length
+                            .toString()
+                        : '0',
                     onTap: () {},
                   ),
                   RowItem.clickable(

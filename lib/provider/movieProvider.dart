@@ -32,7 +32,7 @@ class MovieProvider extends ChangeNotifier {
   dynamic _setPopularMovies(List data) {
     var popular = [];
     data.forEach((element) {
-      if (double.parse(element['vote_average']) >= 7) {
+      if (double.parse(element['vote_average']) >= 5.5) {
         popular.add(element);
       }
     });

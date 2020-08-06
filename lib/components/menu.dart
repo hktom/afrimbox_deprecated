@@ -146,13 +146,16 @@ class _MenuState extends State<Menu> {
         Get.offAllNamed('/home');
         break;
       case 'Chaines':
-        Get.offAllNamed('/channelArchive');
+        Get.toNamed('/channelArchive');
         break;
       case 'Films':
-        Get.to(MovieArchive(genre: "Tout genres"));
+        Get.to(MovieArchive(genre: "All"));
         break;
       case "S'abonner":
         Get.toNamed('/subscription');
+        break;
+      case "Paramètres":
+        Get.toNamed('/setting');
         break;
       case 'Quitter':
         SystemChannels.platform.invokeMethod<void>('SystemNavigator.pop');

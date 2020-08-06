@@ -1,5 +1,7 @@
 import 'package:afrimbox/screen/archive/channelArchive.dart';
+import 'package:afrimbox/screen/archive/favoriteMovie.dart';
 import 'package:afrimbox/screen/archive/movieArchive.dart';
+import 'package:afrimbox/screen/setting.dart';
 import 'package:afrimbox/screen/subscription/subscription.dart';
 import 'package:afrimbox/screen/user/payment.dart';
 import 'package:afrimbox/screen/user/profile.dart';
@@ -20,9 +22,11 @@ class Routes {
     '/player': (context) => PlayerScreen(),
     '/genre': (context) => MovieArchive(),
     '/channelArchive': (context) => ChannelArchive(),
+    '/favoritesMovies': (context) => FavoriteMovie(),
     '/profile': (context) => Profile(),
     '/Payment': (context) => Payment(),
     '/updateProfile': (context) => UpdateProfile(),
     '/subscription': (context) => Subscription(),
+    '/setting': (context) => Setting(),
   };
 }

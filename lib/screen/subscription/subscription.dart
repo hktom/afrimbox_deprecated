@@ -31,14 +31,13 @@ class _SubscriptionState extends State<Subscription> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      //backgroundColor: Colors.white,
       appBar: AppBar(
-        centerTitle: true,
+        //centerTitle: true,
         title: Tex(
-          content: "l'abonnement",
+          content: "Abonnement",
           color: Colors.white,
           size: 'h4',
-          bold: FontWeight.bold,
         ),
       ),
       body: Container(

@@ -1,30 +1,24 @@
 import 'package:afrimbox/components/menu.dart';
-import 'package:afrimbox/helpers/tex.dart';
+import 'package:afrimbox/controller/moviesController.dart';
+import 'package:afrimbox/provider/userProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
-import 'package:afrimbox/provider/ChannelProvider.dart';
-import 'package:afrimbox/controller/moviesController.dart';
 
-class ChannelArchive extends StatefulWidget {
+class FavoriteMovie extends StatefulWidget {
   @override
-  _ChannelArchiveState createState() => _ChannelArchiveState();
+  _FavoriteMovieState createState() => _FavoriteMovieState();
 }
 
-class _ChannelArchiveState extends State<ChannelArchive> {
+class _FavoriteMovieState extends State<FavoriteMovie> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-
-  //var channels = [];
+  UserProvider model;
   double itemHeight;
   double itemWidth;
-  bool loadData = false;
-  String title = '';
-  ChannelProvider model;
 
   @override
   void initState() {
-    model = Provider.of<ChannelProvider>(context, listen: false);
-    //channels = model.items['channels'];
+    model = Provider.of<UserProvider>(context, listen: false);
     super.initState();
   }
 
@@ -34,7 +28,6 @@ class _ChannelArchiveState extends State<ChannelArchive> {
     /*24 is for notification bar on Android*/
     itemHeight = (size.height - kToolbarHeight - 24) / 2;
     itemWidth = size.width / 2;
-
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
@@ -45,10 +38,7 @@ class _ChannelArchiveState extends State<ChannelArchive> {
             ),
             onPressed: () => Get.back()),
         elevation: 0,
-        title: Tex(
-          content: "Nos chaines",
-          size: 'h4',
-        ),
+        title: Text("Mes Films"),
         actions: <Widget>[
           IconButton(
               icon: Icon(
@@ -59,23 +49,22 @@ class _ChannelArchiveState extends State<ChannelArchive> {
         ],
       ),
       drawer: Menu(),
-      body: ListView(
-        children: MoviesController.channelPosterGrid(
-            offset: 0, limit: double.infinity, data: model.channels),
+      body: Container(
+        child: _listMovie(),
       ),
     );
   }
 
-  // Stack _buildStack() {
-  //   return Stack(
-  //     children: <Widget>[
-  //       GridView.count(
-  //         crossAxisCount: 1,
-  //         childAspectRatio: (itemWidth / itemHeight),
-  //         children: MoviesController.channelPosterGrid(
-  //             offset: 0, limit: double.infinity, data: channels),
-  //       ),
-  //     ],
-  //   );
-  // }
+  Widget _listMovie() {
+    return Consumer<UserProvider>(
+      builder: (context, model, child) => GridView.count(
+        crossAxisCount: 3,
+        childAspectRatio: (itemWidth / itemHeight),
+        children: MoviesController.posterGrid(
+            offset: 0,
+            limit: double.infinity,
+            data: model.currentUser[0]['favoriteMovies']),
+      ),
+    );
+  }
 }

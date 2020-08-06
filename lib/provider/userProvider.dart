@@ -23,6 +23,7 @@ class UserProvider extends ChangeNotifier {
   //setupCurrentUser
   getCurrentUser(currentUser) {
     this.currentUser = currentUser;
+    this.currentUserId = currentUser[0]['id'];
     notifyListeners();
   }
 
@@ -43,6 +44,44 @@ class UserProvider extends ChangeNotifier {
     }
 
     return day;
+  }
+
+  bool isMovieInFavories(dynamic movie) {
+    bool result = false;
+    if (currentUser[0]['favoriteMovies'] != null) {
+      currentUser[0]['favoriteMovies'].forEach((element) {
+        if (element['id'] == movie['id']) {
+          result = true;
+        }
+      });
+    }
+    return result;
+  }
+
+  Future<void> addMovieToFavorite(dynamic movie) async {
+    bool movieExist = isMovieInFavories(movie);
+    if (!movieExist) {
+      if (currentUser[0]['favoriteMovies'] == null) {
+        currentUser[0]['favoriteMovies'] = [];
+      }
+      currentUser[0]['favoriteMovies'].add(movie);
+      await fireStoreController.updateDocument(
+          collection: 'users', doc: currentUserId.trim(), data: currentUser[0]);
+      notifyListeners();
+    }
+  }
+
+  Future<void> removeMovieToFavorite(dynamic movie) async {
+    bool movieExist = isMovieInFavories(movie);
+    if (movieExist) {
+      currentUser[0]['favoriteMovies']
+          .removeWhere((item) => item['id'] == movie['id']);
+
+      //update
+      await fireStoreController.updateDocument(
+          collection: 'users', doc: currentUserId, data: currentUser[0]);
+      notifyListeners();
+    }
   }
 
   Future<bool> getProfile(userId) async {

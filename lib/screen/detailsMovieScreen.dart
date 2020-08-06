@@ -1,4 +1,5 @@
 import 'package:afrimbox/components/movieDetailCardAppBar.dart';
+import 'package:afrimbox/provider/userProvider.dart';
 import 'package:afrimbox/screen/trailerPlayerScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:afrimbox/helpers/tex.dart';
@@ -21,13 +22,20 @@ class DetailsMovieScreen extends StatefulWidget {
 class _DetailsMovieScreenState extends State<DetailsMovieScreen> {
   final GlobalKey<ScaffoldState> _scaffoldkey = new GlobalKey<ScaffoldState>();
   var unescape = new HtmlUnescape();
-  //var genres = [];
-  //var actors = [];
   var favorites = [];
   MovieProvider model;
+  UserProvider userModel;
+  bool isFavorite = false;
   SnackBar snackBar = SnackBar(
     content: Text("Aucun trailer n'est disponible pour le moment"),
     backgroundColor: Color.fromRGBO(158, 25, 25, 1),
+  );
+  SnackBar snackBarAddToFavorite = SnackBar(
+    content: Text("Ce film a été ajouté à vos favoris"),
+  );
+
+  SnackBar snackBarRemoveToFavorite = SnackBar(
+    content: Text("Ce film a été retiré de vos favoris"),
   );
 
   // get genres
@@ -42,6 +50,8 @@ class _DetailsMovieScreenState extends State<DetailsMovieScreen> {
   @override
   void initState() {
     model = Provider.of<MovieProvider>(context, listen: false);
+    userModel = Provider.of<UserProvider>(context, listen: false);
+    isFavorite = userModel.isMovieInFavories(widget.movie);
     init();
     super.initState();
   }
@@ -50,7 +60,6 @@ class _DetailsMovieScreenState extends State<DetailsMovieScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldkey,
-      backgroundColor: Colors.white,
       body: CustomScrollView(slivers: <Widget>[
         SliverToBoxAdapter(
           child: _appBar(),
@@ -63,7 +72,7 @@ class _DetailsMovieScreenState extends State<DetailsMovieScreen> {
         ),
         sliverTitle("Cast"),
         listActors(),
-        sliverTitle("Voir également"),
+        //liverTitle("Voir également"),
         //listFavoriteMovies()
       ]),
     );
@@ -104,7 +113,12 @@ class _DetailsMovieScreenState extends State<DetailsMovieScreen> {
             flex: 1,
             child: FlatButton(
                 padding: EdgeInsets.zero,
-                child: _buttonIcon(icon: Icons.camera_roll, text: 'Trailer'),
+                child: _buttonIcon(
+                    icon: Icons.camera_roll,
+                    text: 'Trailer',
+                    color: widget.movie["youtube_id"] != ""
+                        ? Theme.of(context).accentColor
+                        : Colors.grey),
                 onPressed: () {
                   if (widget.movie["youtube_id"] != "") {
                     var url = widget.movie["youtube_id"]
@@ -130,14 +144,37 @@ class _DetailsMovieScreenState extends State<DetailsMovieScreen> {
             child: FlatButton(
                 padding: EdgeInsets.zero,
                 child: _buttonIcon(icon: Icons.list, text: 'Ma liste'),
-                onPressed: () {}),
+                onPressed: () {
+                  if (userModel.currentUser[0]['favoriteMovies'] != null) {
+                    Get.toNamed('/favoritesMovies');
+                  }
+                }),
           ),
           Expanded(
             flex: 1,
             child: FlatButton(
                 padding: EdgeInsets.zero,
-                child: _buttonIcon(icon: Icons.thumb_up, text: "j'aime"),
-                onPressed: () {}),
+                child: _buttonIcon(
+                    icon: Icons.thumb_up,
+                    text: "j'aime",
+                    color: isFavorite
+                        ? Theme.of(context).accentColor
+                        : Colors.grey),
+                onPressed: () async {
+                  if (isFavorite) {
+                    //remove to my favorite
+                    setState(() => isFavorite = !isFavorite);
+                    await userModel.removeMovieToFavorite(widget.movie);
+                    _scaffoldkey.currentState
+                        .showSnackBar(snackBarRemoveToFavorite);
+                  } else {
+                    // add to my favorite
+                    setState(() => isFavorite = !isFavorite);
+                    await userModel.addMovieToFavorite(widget.movie);
+                    _scaffoldkey.currentState
+                        .showSnackBar(snackBarAddToFavorite);
+                  }
+                }),
           ),
           Expanded(
             flex: 1,
@@ -152,14 +189,14 @@ class _DetailsMovieScreenState extends State<DetailsMovieScreen> {
     );
   }
 
-  Widget _buttonIcon({IconData icon, String text}) {
+  Widget _buttonIcon({IconData icon, String text, Color color}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
         Icon(
           icon,
-          color: Theme.of(context).primaryColor,
+          color: color == null ? Colors.grey : color,
         ),
         SizedBox(height: 8),
         Text(

@@ -64,6 +64,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         //elevation: 0,
+        centerTitle: true,
         title: Image.asset(
           'assets/logo_afrimbox.png',
           width: 100,
@@ -111,7 +112,8 @@ class _HomeScreenState extends State<HomeScreen> {
     return Container(
       child: NotificationListener<ScrollNotification>(
         onNotification: (ScrollNotification scrollInfo) {
-          if (scrollInfo.metrics.pixels == scrollInfo.metrics.maxScrollExtent) {
+          if (scrollInfo.metrics.pixels >=
+              scrollInfo.metrics.maxScrollExtent - 400) {
             loadMore(counter);
           }
         },
@@ -129,7 +131,7 @@ class _HomeScreenState extends State<HomeScreen> {
     slivers.add(sliverTitle("Nos chaines", null));
     slivers.add(listChannels());
     slivers.add(sliverTitle("Films populaires", "Popular"));
-    slivers.add(listMovies(0));
+    slivers.add(listMovies(1));
 
     for (var i = 2; i < movieModel.moviesByGenre.length; i++) {
       var genre = category[i]['key'];
@@ -150,9 +152,10 @@ class _HomeScreenState extends State<HomeScreen> {
         sliver: SliverToBoxAdapter(
             child: ListTile(
           leading: Tex(
-              content: title,
-              size: 'h5',
-              color: Theme.of(context).primaryColor),
+            content: title,
+            size: 'h5',
+            color: Theme.of(context).accentColor,
+          ),
           trailing: IconButton(
             onPressed: () {
               if (genre != null) {
@@ -163,7 +166,7 @@ class _HomeScreenState extends State<HomeScreen> {
             },
             icon: FaIcon(
               FontAwesomeIcons.th,
-              color: Theme.of(context).primaryColor,
+              color: Theme.of(context).accentColor,
             ),
           ),
         )));

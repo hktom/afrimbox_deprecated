@@ -4,20 +4,27 @@ class Style {
   //mainStyle theme
   static ThemeData mainstyle() {
     return ThemeData(
-        //primaryColor: Color.fromRGBO(247, 247, 247, 1),
-        primaryColor: Color.fromRGBO(158, 25, 25, 1),
-        scaffoldBackgroundColor: Color.fromRGBO(236, 235, 240, 1),
-        accentColor: Color.fromRGBO(155, 16, 18, 1),
-        primaryColorDark: Color.fromRGBO(6, 6, 6, 1));
+      primaryColor: Color.fromRGBO(158, 25, 25, 1),
+      primaryColorLight: Colors.white,
+      scaffoldBackgroundColor: Colors.white,
+      accentColor: Color.fromRGBO(158, 25, 25, 1),
+      primaryColorDark: Color.fromRGBO(6, 6, 6, 1),
+      iconTheme: IconThemeData(color: Colors.black),
+    );
   }
 
   // Dark Theme
   static ThemeData darkStyle() {
     return ThemeData(
-      primaryColor: Color.fromRGBO(0, 0, 0, 1),
-      scaffoldBackgroundColor: Color.fromRGBO(0, 0, 0, 1),
-      accentColor: Color.fromRGBO(247, 247, 247, 1),
-      primaryColorDark: Color.fromRGBO(155, 16, 18, 1),
-    );
+        primaryColor: Colors.black,
+        scaffoldBackgroundColor: Colors.black,
+        accentColor: Colors.white,
+        primaryColorDark: Colors.black,
+        iconTheme: IconThemeData(color: Colors.white),
+        cardColor: Colors.black,
+        textTheme: TextTheme(
+          bodyText1: TextStyle(color: Colors.white),
+          bodyText2: TextStyle(color: Colors.white),
+        ));
   }
 }
