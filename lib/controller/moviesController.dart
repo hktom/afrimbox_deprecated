@@ -199,11 +199,8 @@ class MoviesController {
     }
 
     for (var i = offset; i < data.length; i++) {
-      items.add(Align(
-        alignment: Alignment.centerLeft,
-        child: CardGenre(
-          data: data[i],
-        ),
+      items.add(CardGenre(
+        data: data[i],
       ));
 
       if (i >= limit) break;

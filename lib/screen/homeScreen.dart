@@ -22,18 +22,15 @@ class _HomeScreenState extends State<HomeScreen> {
   bool loadData = false;
   var connectivity;
   bool isOnline = true;
-  int counter = 1;
+  int counter = 2;
   MovieProvider movieModel;
   ChannelProvider channelModel;
-  Map<String, dynamic> display = {};
 
   //load more
-  Future<void> loadMore(int increment) async {
-    if (increment < category.length) {
-      var genre = category[increment];
-      await movieModel.getByGenre(genre['key'].toString());
-      counter = increment + 1;
-    }
+  Future<void> loadMore(int index) async {
+    counter = await movieModel.loadMore(counter: index);
+    setState(() {});
+    //}
   }
 
   Future<void> getMoviesChannels() async {
@@ -46,7 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
   initState() {
     movieModel = Provider.of<MovieProvider>(context, listen: false);
     channelModel = Provider.of<ChannelProvider>(context, listen: false);
-    //getMoviesChannels();
+    movieModel.resetPendingReq();
     connectivity = Connectivity()
         .onConnectivityChanged
         .listen((ConnectivityResult result) {
@@ -67,7 +64,10 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         //elevation: 0,
-        title: Text('AFRIMBOX'),
+        title: Image.asset(
+          'assets/logo_afrimbox.png',
+          width: 100,
+        ),
         actions: <Widget>[
           // IconButton(
           //   padding: EdgeInsets.zero,
@@ -112,34 +112,36 @@ class _HomeScreenState extends State<HomeScreen> {
       child: NotificationListener<ScrollNotification>(
         onNotification: (ScrollNotification scrollInfo) {
           if (scrollInfo.metrics.pixels == scrollInfo.metrics.maxScrollExtent) {
-            //loadMore(counter);
-            print("reach bottom");
+            loadMore(counter);
           }
         },
         child: CustomScrollView(
-          slivers: <Widget>[
-            //if user is offline display bar
-            offLineBar(),
-            // large card
-            lastMovie(),
-            // channel
-            sliverTitle("Nos chaines", null),
-            listChannels(),
-            //movies lists
-            sliverTitle("Films populaires", "Tous"),
-            listMovies(0),
-            //movies Action
-            // sliverTitle("Actions", "Action"),
-            // listMovies(display['Action']),
-
-            // for (var i = 0; i < movieModel.moviesByGenre.length; i++)
-            //   if (movieModel.moviesByGenre[i] != null)
-            //     sliverTitle("Animations", "Animation"),
-            // listMovies(display['Animation']),
-          ],
+          slivers: _returnSlivers(),
         ),
       ),
     );
+  }
+
+  List<Widget> _returnSlivers() {
+    List<Widget> slivers = [];
+    slivers.add(offLineBar());
+    slivers.add(lastMovie());
+    slivers.add(sliverTitle("Nos chaines", null));
+    slivers.add(listChannels());
+    slivers.add(sliverTitle("Films populaires", "Popular"));
+    slivers.add(listMovies(0));
+
+    for (var i = 2; i < movieModel.moviesByGenre.length; i++) {
+      var genre = category[i]['key'];
+      if (movieModel.moviesByGenre[genre.toString()] != null) {
+        slivers.add(sliverTitle(category[i]['label'], category[i]['label']));
+        slivers.add(listMovies(genre));
+      }
+    }
+
+    slivers.add(SliverPadding(padding: EdgeInsets.only(top: 50)));
+
+    return slivers;
   }
 
   Widget sliverTitle(String title, String genre) {
@@ -195,7 +197,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget listMovies(int index) {
-    var data = index == 0 ? movieModel.movies : movieModel.moviesByGenre[index];
+    var data = movieModel.moviesByGenre[index.toString()] != null
+        ? movieModel.moviesByGenre[index.toString()]
+        : [];
     return SliverToBoxAdapter(
       child: Container(
         padding: EdgeInsets.all(5),
@@ -203,7 +207,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: ListView(
           scrollDirection: Axis.horizontal,
           children: MoviesController.poster(
-              offset: index == 0 ? 1 : 0, limit: double.infinity, data: data),
+              offset: 0, limit: double.infinity, data: data),
         ),
       ),
     );

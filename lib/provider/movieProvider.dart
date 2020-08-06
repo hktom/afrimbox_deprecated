@@ -10,6 +10,7 @@ class MovieProvider extends ChangeNotifier {
   var moviesByGenre = {};
   var moviesArchive = [];
   var currentGenre;
+  var pendingReq = [];
 
 // get All movies
   Future<void> get() async {
@@ -17,13 +18,29 @@ class MovieProvider extends ChangeNotifier {
     if (response.statusCode == 200) {
       var jsonResponse = convert.jsonDecode(response.body);
       movies = jsonResponse;
-      moviesByGenre['0'] = movies;
       currentGenre = '0';
+      moviesByGenre['0'] = movies;
+      moviesByGenre['1'] = _setPopularMovies(jsonResponse);
       print("MOVIE API REQUEST STATUS 200");
     } else {
       print("MOVIE API REQUEST STATUS 404");
     }
     notifyListeners();
+  }
+
+  //set popular movies
+  dynamic _setPopularMovies(List data) {
+    var popular = [];
+    data.forEach((element) {
+      if (double.parse(element['vote_average']) >= 7) {
+        popular.add(element);
+      }
+    });
+    return popular;
+  }
+
+  void resetPendingReq() {
+    pendingReq = [];
   }
 
 // Get movies by genres
@@ -33,11 +50,28 @@ class MovieProvider extends ChangeNotifier {
       var jsonResponse = convert.jsonDecode(response.body);
       moviesByGenre[genre] = jsonResponse;
       currentGenre = genre;
-      print("MOVIE By Genre API REQUEST STATUS 200");
+      print("MOVIE By Genre $genre API REQUEST STATUS 200");
     } else {
-      print("MOVIE By Genre REQUEST STATUS 404");
+      print("MOVIE By Genre $genre REQUEST STATUS 404");
     }
     notifyListeners();
+  }
+
+  //inifinite Scroll load More Movies
+  Future<int> loadMore({int counter}) async {
+    if (counter >= category.length) {
+      return counter;
+    }
+
+    var genre = category[counter]['key'].toString();
+
+    if (!pendingReq.contains(genre)) {
+      pendingReq.add(genre);
+      await this.getByGenre(genre);
+      return counter + 1;
+    }
+
+    return counter;
   }
 
   //get genres

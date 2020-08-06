@@ -31,8 +31,7 @@ class _MovieDetailCardAppBarState extends State<MovieDetailCardAppBar> {
           _background(),
           _filter(),
           _appBar(),
-          _title(),
-          _listGenres(),
+          _columnTitleGenres(),
           _floatButton(),
         ],
       ),
@@ -52,17 +51,26 @@ class _MovieDetailCardAppBarState extends State<MovieDetailCardAppBar> {
     );
   }
 
+  Widget _columnTitleGenres() {
+    return Container(
+      margin: EdgeInsets.only(bottom: 60),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: <Widget>[_title(), _listGenres()],
+      ),
+    );
+  }
+
   Widget _listGenres() {
     return Align(
       alignment: Alignment.bottomLeft,
       child: Container(
-        height: 40,
+        //height: 40,
         padding: EdgeInsets.zero,
-        margin: EdgeInsets.only(left: 10, right: 10, bottom: 60),
-        child: ListView(
-          padding: EdgeInsets.zero,
-          //shrinkWrap: true,
-          scrollDirection: Axis.horizontal,
+        margin: EdgeInsets.only(left: 10, right: 10, bottom: 0),
+        child: Wrap(
+          direction: Axis.horizontal,
           children: MoviesController.genres(
               offset: 0, limit: double.infinity, data: widget.genres),
         ),
@@ -75,7 +83,7 @@ class _MovieDetailCardAppBarState extends State<MovieDetailCardAppBar> {
       alignment: Alignment.bottomLeft,
       child: Container(
           width: MediaQuery.of(context).size.width * 0.80,
-          margin: EdgeInsets.only(bottom: 100, left: 10),
+          margin: EdgeInsets.only(bottom: 0, left: 10),
           child: Tex(
             content: unescape.convert(widget.movie['title']['rendered']),
             size: 'h2',

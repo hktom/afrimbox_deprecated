@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Tex extends StatefulWidget {
   final String content;
@@ -7,7 +8,14 @@ class Tex extends StatefulWidget {
   final FontWeight bold;
   final TextAlign align;
 
-  Tex({Key key, this.color, this.size: 'p', this.content, this.bold:FontWeight.normal, this.align:TextAlign.left}) : super(key: key);
+  Tex(
+      {Key key,
+      this.color,
+      this.size: 'p',
+      this.content,
+      this.bold: FontWeight.normal,
+      this.align: TextAlign.left})
+      : super(key: key);
 
   @override
   _TexState createState() => _TexState();
@@ -27,7 +35,15 @@ class _TexState extends State<Tex> {
   Widget build(BuildContext context) {
     return Text(
       widget.content,
-      style: TextStyle(fontSize: size[widget.size], color: widget.color, fontWeight: widget.bold),
+      style: widget.size == "p"
+          ? GoogleFonts.roboto(
+              fontSize: size[widget.size],
+              color: widget.color,
+              fontWeight: widget.bold)
+          : GoogleFonts.lato(
+              fontSize: size[widget.size],
+              color: widget.color,
+              fontWeight: widget.bold),
       textAlign: widget.align,
     );
   }

@@ -15,7 +15,7 @@ class FilterByGenre extends StatefulWidget {
 }
 
 class _FilterByGenreState extends State<FilterByGenre> {
-  String dropdownValue = "Tous";
+  String dropdownValue = "All";
   bool showFilter = false;
   bool loadData = true;
   MovieProvider model;

@@ -9,7 +9,8 @@ const actorsUrl = 'https://streaming.afrimbox.com/wp-json/wp/v2/dtcast?post=';
 const channelsUrl = 'https://streaming.afrimbox.com/wp-json/wp/v2/chaine_tv';
 
 const List<Map> category = [
-  {'label': 'Tous', 'key': 0},
+  {'label': 'All', 'key': 0},
+  {'label': 'Popular', 'key': 1},
   {'label': 'Action', 'key': 3295},
   {'label': 'Animation', 'key': 3302},
   {'label': 'Aventure', 'key': 3304},
