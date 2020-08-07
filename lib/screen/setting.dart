@@ -93,7 +93,36 @@ class _SettingState extends State<Setting> with AutomaticKeepAliveClientMixin {
                   RowItem.clickable('Compte', 'Active'),
                 ]),
               ),
-            ])
+            ]),
+
+            //
+            RowLayout.cards(children: <Widget>[
+              Card(
+                child: RowLayout.body(children: <Widget>[
+                  RowItem.clickable(
+                    'Apps',
+                    'Partager',
+                    onTap: () {},
+                  ),
+                  RowItem.clickable(
+                    'Rapport Bugs et Aide',
+                    'Envoyer',
+                    onTap: () async {},
+                  ),
+                  RowItem.clickable(
+                    'Police de confidentialité',
+                    'Lire',
+                    onTap: () {},
+                  ),
+                  Separator.divider(),
+                  RowItem.clickable(
+                    'Revenir plus tard',
+                    'Quitter',
+                    onTap: () {},
+                  ),
+                ]),
+              ),
+            ]),
           ],
         ),
       ),

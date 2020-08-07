@@ -1,9 +1,12 @@
 import 'package:afrimbox/helpers/tex.dart';
-import 'package:afrimbox/screen/archive/channelArchive.dart';
-import 'package:afrimbox/screen/archive/movieArchive.dart';
+import 'package:afrimbox/screen/channel/channelArchive.dart';
+import 'package:afrimbox/screen/channel/channels.dart';
+import 'package:afrimbox/screen/movie/movieArchive.dart';
 import 'package:afrimbox/screen/homeScreen.dart';
+import 'package:afrimbox/screen/movie/movies.dart';
 import 'package:afrimbox/screen/setting.dart';
 import 'package:afrimbox/screen/subscription/subscription.dart';
+import 'package:afrimbox/screen/subscription/subscriptionPage.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -17,9 +20,9 @@ class _RouteStackState extends State<RouteStack> {
   int _selectedIndex = 0;
   List<Widget> _screens = [
     HomeScreen(),
-    MovieArchive(genre: 'All'),
-    ChannelArchive(),
-    Subscription(),
+    Movies(),
+    Channels(),
+    SubscriptionPage(),
     Setting()
   ];
 

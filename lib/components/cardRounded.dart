@@ -1,5 +1,5 @@
-import 'package:afrimbox/screen/channelDetailScreen.dart';
-import 'package:afrimbox/screen/detailsMovieScreen.dart';
+import 'package:afrimbox/screen/channel/channelDetailScreen.dart';
+import 'package:afrimbox/screen/movie/detailsMovieScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:get/get.dart';

@@ -6,12 +6,12 @@ import 'package:provider/provider.dart';
 import 'package:afrimbox/provider/ChannelProvider.dart';
 import 'package:afrimbox/controller/moviesController.dart';
 
-class ChannelArchive extends StatefulWidget {
+class Channels extends StatefulWidget {
   @override
-  _ChannelArchiveState createState() => _ChannelArchiveState();
+  _ChannelsState createState() => _ChannelsState();
 }
 
-class _ChannelArchiveState extends State<ChannelArchive>
+class _ChannelsState extends State<Channels>
     with AutomaticKeepAliveClientMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
@@ -42,23 +42,20 @@ class _ChannelArchiveState extends State<ChannelArchive>
 
     return Scaffold(
       key: _scaffoldKey,
-      body: ListView(
-        children: MoviesController.channelPosterGrid(
-            offset: 0, limit: double.infinity, data: model.channels),
-      ),
+      body: _buildStack(),
     );
   }
 
-  // Stack _buildStack() {
-  //   return Stack(
-  //     children: <Widget>[
-  //       GridView.count(
-  //         crossAxisCount: 1,
-  //         childAspectRatio: (itemWidth / itemHeight),
-  //         children: MoviesController.channelPosterGrid(
-  //             offset: 0, limit: double.infinity, data: channels),
-  //       ),
-  //     ],
-  //   );
-  // }
+  Stack _buildStack() {
+    return Stack(
+      children: <Widget>[
+        GridView.count(
+          crossAxisCount: 2,
+          childAspectRatio: (itemWidth / itemHeight),
+          children: MoviesController.channelPosterGrid(
+              offset: 0, limit: double.infinity, data: model.channels),
+        ),
+      ],
+    );
+  }
 }

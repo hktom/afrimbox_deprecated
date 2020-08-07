@@ -1,6 +1,6 @@
 import 'package:afrimbox/components/movieDetailCardAppBar.dart';
 import 'package:afrimbox/provider/userProvider.dart';
-import 'package:afrimbox/screen/trailerPlayerScreen.dart';
+import 'package:afrimbox/screen/movie/trailerPlayerScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:afrimbox/helpers/tex.dart';
 import 'package:get/get.dart';

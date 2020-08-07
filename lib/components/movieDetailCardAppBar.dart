@@ -1,5 +1,5 @@
 import 'package:afrimbox/controller/moviesController.dart';
-import 'package:afrimbox/screen/trailerPlayerScreen.dart';
+import 'package:afrimbox/screen/movie/trailerPlayerScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:cached_network_image/cached_network_image.dart';

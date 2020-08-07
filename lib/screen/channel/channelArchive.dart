@@ -1,0 +1,67 @@
+import 'package:afrimbox/components/menu.dart';
+import 'package:afrimbox/helpers/tex.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:provider/provider.dart';
+import 'package:afrimbox/provider/ChannelProvider.dart';
+import 'package:afrimbox/controller/moviesController.dart';
+
+class ChannelArchive extends StatefulWidget {
+  @override
+  _ChannelArchiveState createState() => _ChannelArchiveState();
+}
+
+class _ChannelArchiveState extends State<ChannelArchive>
+    with AutomaticKeepAliveClientMixin {
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
+  //var channels = [];
+  double itemHeight;
+  double itemWidth;
+  bool loadData = false;
+  String title = '';
+  ChannelProvider model;
+
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
+  void initState() {
+    model = Provider.of<ChannelProvider>(context, listen: false);
+    //channels = model.items['channels'];
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+    var size = MediaQuery.of(context).size;
+    /*24 is for notification bar on Android*/
+    itemHeight = (size.height - kToolbarHeight - 24) / 2;
+    itemWidth = size.width / 2;
+
+    return Scaffold(
+      key: _scaffoldKey,
+      appBar: AppBar(
+        title: Tex(
+          content: "Chaine par categorie",
+          size: 'h1',
+        ),
+      ),
+      body: _buildStack(),
+    );
+  }
+
+  Stack _buildStack() {
+    return Stack(
+      children: <Widget>[
+        GridView.count(
+          crossAxisCount: 2,
+          childAspectRatio: (itemWidth / itemHeight),
+          children: MoviesController.channelPosterGrid(
+              offset: 0, limit: double.infinity, data: model.channels),
+        ),
+      ],
+    );
+  }
+}

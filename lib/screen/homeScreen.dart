@@ -2,7 +2,7 @@
 import 'package:afrimbox/components/menu.dart';
 import 'package:afrimbox/controller/moviesController.dart';
 import 'package:afrimbox/helpers/tex.dart';
-import 'package:afrimbox/screen/archive/movieArchive.dart';
+import 'package:afrimbox/screen/movie/movieArchive.dart';
 import 'package:flutter/material.dart';
 import 'package:afrimbox/provider/MovieProvider.dart';
 import 'package:afrimbox/provider/ChannelProvider.dart';
@@ -32,7 +32,6 @@ class _HomeScreenState extends State<HomeScreen>
   Future<void> loadMore(int index) async {
     counter = await movieModel.loadMore(counter: index);
     setState(() {});
-    //}
   }
 
   Future<void> getMoviesChannels() async {
@@ -95,16 +94,21 @@ class _HomeScreenState extends State<HomeScreen>
   Widget _scaffold() {
     return Container(
       child: NotificationListener<ScrollNotification>(
-        onNotification: (ScrollNotification scrollInfo) {
-          if (scrollInfo.metrics.pixels >=
-              scrollInfo.metrics.maxScrollExtent - 400) {
-            loadMore(counter);
-          }
-        },
-        child: CustomScrollView(
+          onNotification: (ScrollNotification scrollInfo) {
+        if (scrollInfo.metrics.pixels >=
+            scrollInfo.metrics.maxScrollExtent - 400) {
+          loadMore(counter);
+        }
+      }, child: Consumer<MovieProvider>(builder: (context, model, child) {
+        if (model.pending['get']) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+        return CustomScrollView(
           slivers: _returnSlivers(),
-        ),
-      ),
+        );
+      })),
     );
   }
 
@@ -125,6 +129,13 @@ class _HomeScreenState extends State<HomeScreen>
       }
     }
 
+    if (movieModel.pending['getByGenre']) {
+      slivers.add(SliverToBoxAdapter(
+          child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 162, vertical: 20),
+        child: CircularProgressIndicator(),
+      )));
+    }
     slivers.add(SliverPadding(padding: EdgeInsets.only(top: 50)));
 
     return slivers;

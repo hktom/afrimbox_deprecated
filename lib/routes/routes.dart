@@ -1,8 +1,8 @@
 import 'package:afrimbox/landingScreen.dart';
 import 'package:afrimbox/routeStack.dart';
-import 'package:afrimbox/screen/archive/channelArchive.dart';
-import 'package:afrimbox/screen/archive/favoriteMovie.dart';
-import 'package:afrimbox/screen/archive/movieArchive.dart';
+import 'package:afrimbox/screen/channel/channelArchive.dart';
+import 'package:afrimbox/screen/movie/favoriteMovie.dart';
+import 'package:afrimbox/screen/movie/movieArchive.dart';
 import 'package:afrimbox/screen/homeScreen.dart';
 import 'package:afrimbox/screen/mobileAuthScreen.dart';
 import 'package:afrimbox/screen/playerScreen.dart';

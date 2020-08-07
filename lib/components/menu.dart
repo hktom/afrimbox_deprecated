@@ -1,6 +1,6 @@
 import 'package:afrimbox/helpers/tex.dart';
 import 'package:afrimbox/provider/userProvider.dart';
-import 'package:afrimbox/screen/archive/movieArchive.dart';
+import 'package:afrimbox/screen/movie/movieArchive.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

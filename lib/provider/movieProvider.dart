@@ -1,6 +1,7 @@
 import 'package:afrimbox/helpers/const.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
 import 'dart:convert' as convert;
 
 class MovieProvider extends ChangeNotifier {
@@ -11,16 +12,18 @@ class MovieProvider extends ChangeNotifier {
   var moviesArchive = [];
   var currentGenre;
   var pendingReq = [];
-
+  Map<String, bool> pending = {'get': false, 'getByGenre': false};
+  Dio dio = new Dio();
 // get All movies
   Future<void> get() async {
-    var response = await http.get(moviesUrl);
+    pending['get'] = true;
+    var response =
+        await dio.get(moviesUrl).whenComplete(() => pending['get'] = false);
     if (response.statusCode == 200) {
-      var jsonResponse = convert.jsonDecode(response.body);
-      movies = jsonResponse;
+      movies = response.data;
       currentGenre = '0';
       moviesByGenre['0'] = movies;
-      moviesByGenre['1'] = _setPopularMovies(jsonResponse);
+      moviesByGenre['1'] = _setPopularMovies(response.data);
       print("MOVIE API REQUEST STATUS 200");
     } else {
       print("MOVIE API REQUEST STATUS 404");
@@ -45,10 +48,12 @@ class MovieProvider extends ChangeNotifier {
 
 // Get movies by genres
   Future<void> getByGenre(String genre) async {
-    var response = await http.get(moviesByGenreUrl + genre);
+    pending['getByGenre'] = true;
+    var response = await dio
+        .get(moviesByGenreUrl + genre)
+        .whenComplete(() => pending['getByGenre'] = false);
     if (response.statusCode == 200) {
-      var jsonResponse = convert.jsonDecode(response.body);
-      moviesByGenre[genre] = jsonResponse;
+      moviesByGenre[genre] = response.data;
       currentGenre = genre;
       print("MOVIE By Genre $genre API REQUEST STATUS 200");
     } else {

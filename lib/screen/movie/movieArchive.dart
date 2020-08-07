@@ -1,5 +1,6 @@
 import 'package:afrimbox/components/filterByGenre.dart';
 import 'package:afrimbox/components/menu.dart';
+import 'package:afrimbox/helpers/tex.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
@@ -43,6 +44,11 @@ class _MovieArchiveState extends State<MovieArchive>
 
     return Scaffold(
       key: _scaffoldKey,
+      appBar: AppBar(
+        title: Tex(
+          content: widget.genre,
+        ),
+      ),
       body: buildStack(),
     );
   }

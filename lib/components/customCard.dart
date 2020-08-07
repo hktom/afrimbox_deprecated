@@ -1,4 +1,4 @@
-import 'package:afrimbox/screen/detailsMovieScreen.dart';
+import 'package:afrimbox/screen/movie/detailsMovieScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:afrimbox/helpers/tex.dart';
 import 'package:afrimbox/helpers/const.dart';
@@ -29,7 +29,7 @@ class _CustomCardState extends State<CustomCard> {
             CachedNetworkImage(
               width: double.infinity,
               fit: BoxFit.cover,
-              alignment: Alignment.center,
+              alignment: Alignment.topCenter,
               imageUrl: appImageUrl + widget.movie['dt_poster'],
               placeholder: (context, url) => Container(
                 color: Colors.grey[300],

@@ -11,15 +11,15 @@ import 'package:kkiapay_flutter_sdk/kkiapayWebview.dart';
 //import 'package:kkiapay_flutter_sdk/kkiapayConf.sample.dart';
 //import 'package:kkiapay_flutter_sdk/utils/Kkiapay.dart';
 
-class Subscription extends StatefulWidget {
+class SubscriptionPage extends StatefulWidget {
   final bool firstStep;
-  Subscription({Key key, this.firstStep: false}) : super(key: key);
+  SubscriptionPage({Key key, this.firstStep: false}) : super(key: key);
   //final
   @override
-  _SubscriptionState createState() => _SubscriptionState();
+  _SubscriptionPageState createState() => _SubscriptionPageState();
 }
 
-class _SubscriptionState extends State<Subscription>
+class _SubscriptionPageState extends State<SubscriptionPage>
     with AutomaticKeepAliveClientMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   //call after transaction
@@ -38,11 +38,6 @@ class _SubscriptionState extends State<Subscription>
     super.build(context);
     return Scaffold(
       key: _scaffoldKey,
-      appBar: AppBar(
-        title: Tex(
-          content: "abonnement",
-        ),
-      ),
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: 10),
         child: ListView(

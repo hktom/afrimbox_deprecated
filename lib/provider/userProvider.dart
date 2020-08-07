@@ -135,15 +135,19 @@ class UserProvider extends ChangeNotifier {
     try {
       await googleAuthController.signOut();
     } catch (e) {
-      try {
-        await facebookAuthController.signOut();
-      } catch (e) {
-        try {
-          await _firebaseAuth.signOut();
-        } catch (e) {
-          print("ERROR SIGNOUT ${e.toString()}");
-        }
-      }
+      print("ERROR GOOGLE SIGNOUT ${e.toString()}");
+    }
+
+    try {
+      await facebookAuthController.signOut();
+    } catch (e) {
+      print("ERROR FACEBOOK SIGNOUT ${e.toString()}");
+    }
+
+    try {
+      await _firebaseAuth.signOut();
+    } catch (e) {
+      print("ERROR NORMAL SIGNOUT ${e.toString()}");
     }
 
     return true;
