@@ -18,7 +18,9 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen>
+    with AutomaticKeepAliveClientMixin {
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   bool loadData = false;
   var connectivity;
   bool isOnline = true;
@@ -38,6 +40,9 @@ class _HomeScreenState extends State<HomeScreen> {
     await channelModel.get();
     setState(() {});
   }
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   initState() {
@@ -61,31 +66,10 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
-      appBar: AppBar(
-        //elevation: 0,
-        centerTitle: true,
-        title: Image.asset(
-          'assets/logo_afrimbox.png',
-          width: 100,
-        ),
-        actions: <Widget>[
-          // IconButton(
-          //   padding: EdgeInsets.zero,
-          //   onPressed: () {},
-          //   icon: Icon(Icons.cast, color: Colors.white, size: 25),
-          // ),
-          // IconButton(
-          //   padding: EdgeInsets.zero,
-          //   onPressed: () {},
-          //   icon: Icon(Icons.search, color: Colors.white, size: 25),
-          // ),
-        ],
-      ),
-      drawer: Menu(),
-      body: Container(
-        child: content(),
-      ),
+      key: _scaffoldKey,
+      body: _scaffold(),
     );
   }
 
@@ -108,7 +92,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  Widget content() {
+  Widget _scaffold() {
     return Container(
       child: NotificationListener<ScrollNotification>(
         onNotification: (ScrollNotification scrollInfo) {

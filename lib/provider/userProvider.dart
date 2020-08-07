@@ -137,9 +137,15 @@ class UserProvider extends ChangeNotifier {
     } catch (e) {
       try {
         await facebookAuthController.signOut();
-      } catch (e) {}
+      } catch (e) {
+        try {
+          await _firebaseAuth.signOut();
+        } catch (e) {
+          print("ERROR SIGNOUT ${e.toString()}");
+        }
+      }
     }
-    await _firebaseAuth.signOut();
+
     return true;
   }
 

@@ -19,7 +19,9 @@ class Subscription extends StatefulWidget {
   _SubscriptionState createState() => _SubscriptionState();
 }
 
-class _SubscriptionState extends State<Subscription> {
+class _SubscriptionState extends State<Subscription>
+    with AutomaticKeepAliveClientMixin {
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   //call after transaction
   void sucessCallback(response, context) {
     print(response);
@@ -29,17 +31,13 @@ class _SubscriptionState extends State<Subscription> {
   }
 
   @override
+  bool get wantKeepAlive => true;
+
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
-      //backgroundColor: Colors.white,
-      appBar: AppBar(
-        //centerTitle: true,
-        title: Tex(
-          content: "Abonnement",
-          color: Colors.white,
-          size: 'h4',
-        ),
-      ),
+      key: _scaffoldKey,
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: 10),
         child: ListView(

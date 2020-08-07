@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class Style {
   //mainStyle theme
-  static ThemeData mainstyle() {
+  static ThemeData lightTheme() {
     return ThemeData(
       primaryColor: Color.fromRGBO(158, 25, 25, 1),
       primaryColorLight: Colors.white,
@@ -14,7 +14,7 @@ class Style {
   }
 
   // Dark Theme
-  static ThemeData darkStyle() {
+  static ThemeData darkTheme() {
     return ThemeData(
         primaryColor: Colors.black,
         scaffoldBackgroundColor: Colors.black,

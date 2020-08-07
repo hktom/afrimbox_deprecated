@@ -8,9 +8,10 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
-import '../helpers/tex.dart';
+import 'helpers/tex.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LandingScreen extends StatefulWidget {
   @override
@@ -23,6 +24,8 @@ class _LandingScreenState extends State<LandingScreen> {
   FacebookAuthController facebookAuthController = new FacebookAuthController();
   FirebaseUser user;
   String errLogin = "";
+  UserProvider model;
+  SharedPreferences prefs;
 
   Future<void> progressModal() async {
     return showDialog<void>(
@@ -38,30 +41,46 @@ class _LandingScreenState extends State<LandingScreen> {
 
   Future<void> _authGoogleFacebook(String type) async {
     progressModal();
-    if (type == "google.com")
-      user = await googleAuthController.auth();
-    else
-      user = await facebookAuthController.auth();
+    await model.signOut();
+    try {
+      user = type == "google.com"
+          ? await googleAuthController.auth()
+          : await facebookAuthController.auth();
+    } catch (e) {
+      return this.setState(() {
+        errLogin = "Nous avons rencontré une erreur, veuillez ressayer";
+      });
+    }
 
     //check if auth succed
     if (user.uid != null) {
+      print("Auth Success");
+      await _checkProfileExist();
+    } else {
+      print("Not Auth Success");
       Get.back();
-      bool checkIfProfileExist = await fireStoreController.checkIfDocumentExist(
-          userId: user.uid.trim(), collection: 'users');
-      // check if profile exist , true redirect to homem false redirect to create profile
-      if (!checkIfProfileExist) {
-        return Get.offAll(CreateProfile(user: user));
-      } else {
-        //get current profile
-        bool result = await Provider.of<UserProvider>(context, listen: false)
-            .getProfile(user.uid);
-        if (result)
-          Get.offAllNamed('/home');
-        else
-          setState(() {
-            errLogin = "Nous avons rencontré une erreur, veuillez ressayer";
-          });
-      }
+      setState(() {
+        errLogin = "Nous avons rencontré une erreur, veuillez ressayer";
+      });
+    }
+  }
+
+  Future<void> _checkProfileExist() async {
+    bool checkIfProfileExist = await fireStoreController.checkIfDocumentExist(
+        userId: user.uid.trim(), collection: 'users');
+    if (!checkIfProfileExist) {
+      Get.back();
+      return Get.offAll(CreateProfile(user: user));
+    } else {
+      await _getCurrentProfile();
+    }
+  }
+
+  Future<void> _getCurrentProfile() async {
+    bool result = await model.getProfile(user.uid);
+    if (result) {
+      Get.back();
+      return Get.offAllNamed('/routeStack');
     } else {
       Get.back();
       setState(() {
@@ -70,15 +89,15 @@ class _LandingScreenState extends State<LandingScreen> {
     }
   }
 
-  Future<void> _redirectToProfileEdit(user, authMethod) async {
-    return Get.offAll(CreateProfile(
-      //authMethod: authMethod,
-      user: user,
-    ));
+  Future<void> init() async {
+    prefs = await SharedPreferences.getInstance();
+    prefs.setBool('themeIsLight', true);
   }
 
   @override
   void initState() {
+    init();
+    model = Provider.of<UserProvider>(context, listen: false);
     super.initState();
   }
 
@@ -86,51 +105,39 @@ class _LandingScreenState extends State<LandingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(elevation: 0, backgroundColor: Colors.transparent),
       body: Container(
-        //padding: EdgeInsets.symmetric(horizontal: 40),
+        color: Color.fromRGBO(158, 25, 25, 1),
         child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Expanded(
-                flex: 0,
-                child: SizedBox(
-                  width: MediaQuery.of(context).physicalDepth,
-                  child: Tex(
-                    size: 'h6',
-                    align: TextAlign.center,
-                    content: "Bienvenu sur AfrimBox",
-                    bold: FontWeight.bold,
-                  ),
-                ),
-              ),
-              Expanded(
-                flex: 1,
-                child: Image.asset('assets/logo1.jpg',
-                    width: 200, fit: BoxFit.contain),
-              ),
               Padding(
                 padding: EdgeInsets.only(bottom: 5),
                 child: Tex(
                   align: TextAlign.center,
                   bold: FontWeight.bold,
-                  content: "Se Connecter avec",
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(bottom: 5),
-                child: Tex(
-                  align: TextAlign.center,
-                  bold: FontWeight.bold,
-                  color: Colors.red,
+                  color: Colors.black,
                   content: errLogin,
+                ),
+              ),
+              Align(
+                alignment: Alignment.center,
+                child:
+                    Image.asset('assets/afrimbox-png.png', fit: BoxFit.contain),
+              ),
+              Padding(
+                padding: EdgeInsets.only(bottom: 5, top: 30),
+                child: Tex(
+                  color: Colors.white,
+                  align: TextAlign.center,
+                  //bold: FontWeight.bold,
+                  content: "Connection",
                 ),
               ),
               Padding(
                 padding: EdgeInsets.only(bottom: 1),
                 child: SignInButtonBuilder(
-                  text: 'Son numero de télephone',
+                  text: 'Télephone',
                   icon: FontAwesomeIcons.mobile,
                   onPressed: () => Get.toNamed('/login'),
                   backgroundColor: Colors.blueGrey[700],
@@ -140,7 +147,7 @@ class _LandingScreenState extends State<LandingScreen> {
                   padding: EdgeInsets.only(bottom: 1),
                   child: SignInButton(
                     Buttons.Google,
-                    text: "Son compte Google",
+                    text: "Google",
                     onPressed: () async {
                       _authGoogleFacebook('google.com');
                     },
@@ -149,7 +156,7 @@ class _LandingScreenState extends State<LandingScreen> {
                   padding: EdgeInsets.only(bottom: 40),
                   child: SignInButton(
                     Buttons.Facebook,
-                    text: "Son profile Facebook",
+                    text: "Facebook",
                     onPressed: () async {
                       _authGoogleFacebook('facebook.com');
                     },

@@ -32,8 +32,8 @@ class _MyAppState extends State<MyApp> {
         child: DynamicTheme(
             defaultBrightness: Brightness.light,
             data: (brightness) => brightness == Brightness.light
-                ? Style.mainstyle()
-                : Style.darkStyle(),
+                ? Style.lightTheme()
+                : Style.darkTheme(),
             themedWidgetBuilder: (context, theme) {
               return GetMaterialApp(
                 theme: theme,

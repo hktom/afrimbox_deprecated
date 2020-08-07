@@ -1,20 +1,22 @@
+import 'package:afrimbox/landingScreen.dart';
+import 'package:afrimbox/routeStack.dart';
 import 'package:afrimbox/screen/archive/channelArchive.dart';
 import 'package:afrimbox/screen/archive/favoriteMovie.dart';
 import 'package:afrimbox/screen/archive/movieArchive.dart';
+import 'package:afrimbox/screen/homeScreen.dart';
+import 'package:afrimbox/screen/mobileAuthScreen.dart';
+import 'package:afrimbox/screen/playerScreen.dart';
 import 'package:afrimbox/screen/setting.dart';
 import 'package:afrimbox/screen/subscription/subscription.dart';
 import 'package:afrimbox/screen/user/payment.dart';
 import 'package:afrimbox/screen/user/profile.dart';
 import 'package:afrimbox/screen/user/updateProfile.dart';
+import 'package:afrimbox/splashScreen.dart';
 import 'package:flutter/material.dart';
-import '../screen/splashScreen.dart';
-import '../screen/Homescreen.dart';
-import '../screen/Playerscreen.dart';
-import '../screen/MobileAuthScreen.dart';
-import '../screen/Landingscreen.dart';
 
 class Routes {
   static Map<String, WidgetBuilder> list = {
+    '/routeStack': (context) => RouteStack(),
     '/splash': (context) => SplashScreen(),
     '/landing': (context) => LandingScreen(),
     '/home': (context) => HomeScreen(),

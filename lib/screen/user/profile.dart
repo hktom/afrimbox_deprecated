@@ -1,25 +1,13 @@
 import 'package:afrimbox/helpers/tex.dart';
 import 'package:afrimbox/screen/user/updateProfile.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'dart:async';
-import 'package:flutter/services.dart';
 import 'package:row_collection/row_collection.dart';
 import 'package:provider/provider.dart';
 import 'package:afrimbox/provider/userProvider.dart';
-
-void sucessCallback(response, context) {
-  print(response);
-  Navigator.pop(context);
-  // Navigator.push(
-  //   context,
-  //   MaterialPageRoute(
-  //       builder: (context) => SuccessScreen(
-  //           amount: response['amount'],
-  //           transactionId: response['transactionId'])),
-  // );
-}
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Profile extends StatefulWidget {
   @override
@@ -28,6 +16,15 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
   UserProvider userProvider;
+  SharedPreferences prefs;
+
+  Future<void> renitStateTheme() async {
+    prefs = await SharedPreferences.getInstance();
+    if (!prefs.getBool('themeIsLight')) {
+      prefs.setBool('themeIsLight', true);
+      await DynamicTheme.of(context).setBrightness(Brightness.light);
+    }
+  }
 
   @override
   void initState() {
@@ -53,31 +50,7 @@ class _ProfileState extends State<Profile> {
             Consumer<UserProvider>(
                 builder: (context, model, child) => Column(
                       children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: Card(
-                            child: ListTile(
-                              trailing: IconButton(
-                                  icon: Icon(Icons.edit), onPressed: null),
-                              leading: ClipRRect(
-                                  borderRadius: BorderRadius.circular(100),
-                                  child: CachedNetworkImage(
-                                    width: 50,
-                                    height: 50,
-                                    fit: BoxFit.cover,
-                                    imageUrl:
-                                        model.currentUser[0]['photoUrl'] == null
-                                            ? model.userDefaultPhoto
-                                            : model.currentUser[0]['photoUrl'],
-                                    placeholder: (context, url) => Container(
-                                      color: Colors.grey,
-                                    ),
-                                    errorWidget: (context, url, error) =>
-                                        Icon(Icons.error),
-                                  )),
-                            ),
-                          ),
-                        ),
+                        //_cardUserAvatar()
                         RowLayout.cards(children: <Widget>[
                           Card(
                             child: RowLayout.body(children: <Widget>[
@@ -151,6 +124,7 @@ class _ProfileState extends State<Profile> {
                     "Mon profile",
                     "Se deconnecter",
                     onTap: () async {
+                      await renitStateTheme();
                       await Provider.of<UserProvider>(context, listen: false)
                           .signOut();
                       Get.offAllNamed('/splash');
@@ -170,6 +144,31 @@ class _ProfileState extends State<Profile> {
             //   },
             // ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _cardUserAvatar() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: Card(
+        child: ListTile(
+          trailing: IconButton(icon: Icon(Icons.edit), onPressed: null),
+          leading: ClipRRect(
+              borderRadius: BorderRadius.circular(100),
+              child: CachedNetworkImage(
+                width: 50,
+                height: 50,
+                fit: BoxFit.cover,
+                imageUrl: userProvider.currentUser[0]['photoUrl'] == null
+                    ? userProvider.userDefaultPhoto
+                    : userProvider.currentUser[0]['photoUrl'],
+                placeholder: (context, url) => Container(
+                  color: Colors.grey,
+                ),
+                errorWidget: (context, url, error) => Icon(Icons.error),
+              )),
         ),
       ),
     );

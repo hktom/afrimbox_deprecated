@@ -13,7 +13,8 @@ class MovieArchive extends StatefulWidget {
   _MovieArchiveState createState() => _MovieArchiveState();
 }
 
-class _MovieArchiveState extends State<MovieArchive> {
+class _MovieArchiveState extends State<MovieArchive>
+    with AutomaticKeepAliveClientMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   var movies = [];
@@ -24,6 +25,9 @@ class _MovieArchiveState extends State<MovieArchive> {
   MovieProvider model;
 
   @override
+  bool get wantKeepAlive => true;
+
+  @override
   void initState() {
     model = Provider.of<MovieProvider>(context, listen: false);
     super.initState();
@@ -31,6 +35,7 @@ class _MovieArchiveState extends State<MovieArchive> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     var size = MediaQuery.of(context).size;
     /*24 is for notification bar on Android*/
     itemHeight = (size.height - kToolbarHeight - 24) / 2;
@@ -38,25 +43,6 @@ class _MovieArchiveState extends State<MovieArchive> {
 
     return Scaffold(
       key: _scaffoldKey,
-      appBar: AppBar(
-        leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back,
-              color: Colors.white,
-            ),
-            onPressed: () => Get.back()),
-        elevation: 0,
-        title: Text(widget.genre == "Tous" ? "Films" : widget.genre),
-        actions: <Widget>[
-          IconButton(
-              icon: Icon(
-                Icons.menu,
-                color: Colors.white,
-              ),
-              onPressed: () => _scaffoldKey.currentState.openDrawer())
-        ],
-      ),
-      drawer: Menu(),
       body: buildStack(),
     );
   }

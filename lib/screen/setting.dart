@@ -6,48 +6,56 @@ import 'package:provider/provider.dart';
 import 'package:row_collection/row_collection.dart';
 import 'package:flutter_switch/flutter_switch.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Setting extends StatefulWidget {
   @override
   _SettingState createState() => _SettingState();
 }
 
-class _SettingState extends State<Setting> {
+class _SettingState extends State<Setting> with AutomaticKeepAliveClientMixin {
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   UserProvider userProvider;
   bool themeIsLight = true;
+  SharedPreferences prefs;
 
-  void checkCurrentTheme() {
-    if (Theme.of(context).brightness == Brightness.dark) {
-      themeIsLight = false;
-    }
+  Future<void> checkCurrentTheme() async {
+    prefs = await SharedPreferences.getInstance();
+    bool _currentTheme = prefs.getBool('themeIsLight') != null
+        ? prefs.getBool('themeIsLight')
+        : true;
+    setState(() {
+      themeIsLight = _currentTheme;
+    });
   }
 
-  void setDark() {
-    DynamicTheme.of(context).setBrightness(Brightness.dark);
+  Future<void> setDark() async {
+    await DynamicTheme.of(context).setBrightness(Brightness.dark);
+    prefs.setBool('themeIsLight', false);
     setState(() => themeIsLight = false);
   }
 
-  void setLight() {
-    DynamicTheme.of(context).setBrightness(Brightness.light);
+  Future<void> setLight() async {
+    await DynamicTheme.of(context).setBrightness(Brightness.light);
+    prefs.setBool('themeIsLight', true);
     setState(() => themeIsLight = true);
   }
 
   @override
+  bool get wantKeepAlive => true;
+
+  @override
   void initState() {
+    checkCurrentTheme();
     userProvider = Provider.of<UserProvider>(context, listen: false);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    checkCurrentTheme();
+    super.build(context);
     return Scaffold(
-      appBar: AppBar(
-        title: Tex(
-          content: "Paramètres",
-          size: 'h4',
-        ),
-      ),
+      key: _scaffoldKey,
       body: Container(
         margin: EdgeInsets.only(top: 20),
         child: ListView(
@@ -63,11 +71,11 @@ class _SettingState extends State<Setting> {
                   RowItem.clickable(
                     'Thème',
                     themeIsLight ? 'Dark' : 'Light',
-                    onTap: () {
+                    onTap: () async {
                       if (themeIsLight) {
-                        setDark();
+                        await setDark();
                       } else {
-                        setLight();
+                        await setLight();
                       }
                     },
                   ),
