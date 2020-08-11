@@ -3,6 +3,7 @@ import 'package:afrimbox/components/channelDetailCardAppBar.dart';
 import 'package:afrimbox/provider/userProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:afrimbox/helpers/tex.dart';
+import 'package:get/get.dart';
 import 'package:html_unescape/html_unescape.dart';
 import 'package:afrimbox/provider/ChannelProvider.dart';
 import 'package:provider/provider.dart';
@@ -89,7 +90,14 @@ class _ChannelDetailScreenState extends State<ChannelDetailScreen> {
             child: FlatButton(
                 padding: EdgeInsets.zero,
                 child: ButtonIconText(icon: Icons.list, text: 'Ma liste'),
-                onPressed: () {}),
+                onPressed: () {
+                  if (userModel.currentUser[0]['favoriteChannels'] != null) {
+                    Get.toNamed('/favoriteChannels');
+                  } else {
+                    Toast.show(
+                        "Aucune chaine a été ajouté aux favoris", context);
+                  }
+                }),
           ),
           Expanded(
             flex: 1,
@@ -101,12 +109,12 @@ class _ChannelDetailScreenState extends State<ChannelDetailScreen> {
                 color: isFavorite ? Theme.of(context).accentColor : Colors.grey,
               ),
               onPressed: () async {
+                setState(() => isFavorite = !isFavorite);
                 if (isFavorite) {
-                  setState(() => isFavorite = !isFavorite);
-                  Toast.show("Cette chaine a été retiré aux favoris", context);
+                  Toast.show("Cette chaine a été retiré de favoris", context);
                   await userModel.removeChannelToFavorite(widget.channel);
                 } else {
-                  setState(() => isFavorite = !isFavorite);
+                  //setState(() => isFavorite = !isFavorite);
                   Toast.show("Cette chaine a été ajouté aux favoris", context);
                   await userModel.addChannelToFavorite(widget.channel);
                 }

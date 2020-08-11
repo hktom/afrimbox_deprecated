@@ -27,6 +27,22 @@ class UserProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  List<dynamic> favoriteMovies() {
+    if (this.currentUser[0]['favoriteMovies'] != null) {
+      return this.currentUser[0]['favoriteMovies'];
+    } else {
+      return [];
+    }
+  }
+
+  List<dynamic> favoriteChannels() {
+    if (this.currentUser[0]['favoriteChannels'] != null) {
+      return this.currentUser[0]['favoriteChannels'];
+    } else {
+      return [];
+    }
+  }
+
   int subscriptionRemainDays() {
     int day = 0;
     int duration = 0;

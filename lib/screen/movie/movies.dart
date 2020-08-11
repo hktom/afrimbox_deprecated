@@ -1,5 +1,6 @@
 import 'package:afrimbox/components/filterByGenre.dart';
 import 'package:afrimbox/components/menu.dart';
+import 'package:afrimbox/helpers/tex.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
@@ -8,7 +9,8 @@ import 'package:afrimbox/controller/moviesController.dart';
 
 class Movies extends StatefulWidget {
   final String genre;
-  Movies({Key key, this.genre}) : super(key: key);
+  final bool displayAppBar;
+  Movies({Key key, this.genre, this.displayAppBar}) : super(key: key);
   @override
   _MoviesState createState() => _MoviesState();
 }
@@ -42,6 +44,14 @@ class _MoviesState extends State<Movies> with AutomaticKeepAliveClientMixin {
 
     return Scaffold(
       key: _scaffoldKey,
+      appBar: widget.displayAppBar
+          ? AppBar(
+              title: Tex(
+                content: widget.genre,
+                size: 'h4',
+              ),
+            )
+          : null,
       body: buildStack(),
     );
   }

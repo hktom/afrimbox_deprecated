@@ -1,6 +1,6 @@
 import 'package:afrimbox/helpers/tex.dart';
 import 'package:afrimbox/provider/userProvider.dart';
-import 'package:afrimbox/screen/movie/movieArchive.dart';
+//import 'package:afrimbox/screen/movie/movieArchive.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -149,7 +149,8 @@ class _MenuState extends State<Menu> {
         Get.toNamed('/channelArchive');
         break;
       case 'Films':
-        Get.to(MovieArchive(genre: "All"));
+        null;
+        //Get.to(MovieArchive(genre: "All"));
         break;
       case "S'abonner":
         Get.toNamed('/subscription');

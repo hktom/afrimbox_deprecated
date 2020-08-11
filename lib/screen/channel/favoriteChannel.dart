@@ -1,17 +1,20 @@
-import 'package:afrimbox/components/menu.dart';
 import 'package:afrimbox/helpers/tex.dart';
+import 'package:afrimbox/provider/userProvider.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:provider/provider.dart';
-import 'package:afrimbox/provider/ChannelProvider.dart';
 import 'package:afrimbox/controller/moviesController.dart';
+//import 'package:afrimbox/components/menu.dart';
+//import 'package:get/get.dart';
+//import 'package:afrimbox/provider/ChannelProvider.dart';
 
-class ChannelArchive extends StatefulWidget {
+class FavoriteChannel extends StatefulWidget {
+  //final bool displayAppBar;
+  //FavoriteChannel({Key key, this.displayAppBar}) : super(key: key);
   @override
-  _ChannelArchiveState createState() => _ChannelArchiveState();
+  _FavoriteChannelState createState() => _FavoriteChannelState();
 }
 
-class _ChannelArchiveState extends State<ChannelArchive>
+class _FavoriteChannelState extends State<FavoriteChannel>
     with AutomaticKeepAliveClientMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
@@ -20,14 +23,14 @@ class _ChannelArchiveState extends State<ChannelArchive>
   double itemWidth;
   bool loadData = false;
   String title = '';
-  ChannelProvider model;
+  UserProvider model;
 
   @override
   bool get wantKeepAlive => true;
 
   @override
   void initState() {
-    model = Provider.of<ChannelProvider>(context, listen: false);
+    model = Provider.of<UserProvider>(context, listen: false);
     //channels = model.items['channels'];
     super.initState();
   }
@@ -38,15 +41,12 @@ class _ChannelArchiveState extends State<ChannelArchive>
     var size = MediaQuery.of(context).size;
     /*24 is for notification bar on Android*/
     itemHeight = (size.height - kToolbarHeight - 24) / 2;
-    itemWidth = size.width / 2;
+    itemWidth = size.width;
 
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: Tex(
-          content: "Chaine par categorie",
-          size: 'h1',
-        ),
+        title: Tex(content: "Mes chaines", size: 'h4'),
       ),
       body: _buildStack(),
     );
@@ -56,10 +56,12 @@ class _ChannelArchiveState extends State<ChannelArchive>
     return Stack(
       children: <Widget>[
         GridView.count(
-          crossAxisCount: 2,
+          crossAxisCount: 3,
           childAspectRatio: (itemWidth / itemHeight),
           children: MoviesController.channelPosterGrid(
-              offset: 0, limit: double.infinity, data: model.channels),
+              offset: 0,
+              limit: double.infinity,
+              data: model.favoriteChannels()),
         ),
       ],
     );

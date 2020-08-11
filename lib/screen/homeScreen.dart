@@ -1,17 +1,18 @@
 //import 'package:afrimbox/components/loadingSpinner.dart';
-import 'package:afrimbox/components/menu.dart';
 import 'package:afrimbox/controller/moviesController.dart';
 import 'package:afrimbox/helpers/tex.dart';
-import 'package:afrimbox/screen/movie/movieArchive.dart';
+import 'package:afrimbox/screen/channel/channels.dart';
+import 'package:afrimbox/screen/movie/movies.dart';
 import 'package:flutter/material.dart';
 import 'package:afrimbox/provider/MovieProvider.dart';
 import 'package:afrimbox/provider/ChannelProvider.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
-//import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:afrimbox/helpers/const.dart';
+//import 'package:afrimbox/components/menu.dart';
+//import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -154,9 +155,9 @@ class _HomeScreenState extends State<HomeScreen>
           trailing: IconButton(
             onPressed: () {
               if (genre != null) {
-                Get.to(MovieArchive(genre: genre));
+                Get.to(Movies(genre: genre, displayAppBar: true));
               } else {
-                Get.toNamed('/channelArchive');
+                Get.to(Channels(displayAppBar: true));
               }
             },
             icon: FaIcon(

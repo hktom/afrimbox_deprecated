@@ -8,11 +8,12 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
+import 'package:toast/toast.dart';
 import 'helpers/tex.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:bot_toast/bot_toast.dart';
+//import 'package:bot_toast/bot_toast.dart';
 
 class LandingScreen extends StatefulWidget {
   @override
@@ -49,8 +50,8 @@ class _LandingScreenState extends State<LandingScreen> {
           : await facebookAuthController.auth();
     } catch (e) {
       Get.back();
-      return BotToast.showText(
-          text: "Nous avons rencontré une erreur, veuillez ressayer");
+      return Toast.show(
+          "Nous avons rencontré une erreur, veuillez ressayer", context);
       // return this.setState(() {
       //   errLogin = "Nous avons rencontré une erreur, veuillez ressayer";
       // });
@@ -63,8 +64,8 @@ class _LandingScreenState extends State<LandingScreen> {
     } else {
       print("Not Auth Success");
       Get.back();
-      return BotToast.showText(
-          text: "Nous avons rencontré une erreur, veuillez ressayer");
+      return Toast.show(
+          "Nous avons rencontré une erreur, veuillez ressayer", context);
     }
   }
 
@@ -86,8 +87,8 @@ class _LandingScreenState extends State<LandingScreen> {
       return Get.offAllNamed('/routeStack');
     } else {
       Get.back();
-      return BotToast.showText(
-          text: "Nous avons rencontré une erreur, veuillez ressayer");
+      return Toast.show(
+          "Nous avons rencontré une erreur, veuillez ressayer", context);
     }
   }
 

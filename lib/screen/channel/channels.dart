@@ -7,6 +7,8 @@ import 'package:afrimbox/provider/ChannelProvider.dart';
 import 'package:afrimbox/controller/moviesController.dart';
 
 class Channels extends StatefulWidget {
+  final bool displayAppBar;
+  Channels({Key key, this.displayAppBar}) : super(key: key);
   @override
   _ChannelsState createState() => _ChannelsState();
 }
@@ -42,6 +44,14 @@ class _ChannelsState extends State<Channels>
 
     return Scaffold(
       key: _scaffoldKey,
+      appBar: widget.displayAppBar
+          ? AppBar(
+              title: Tex(
+                content: "Les chaines",
+                size: 'h4',
+              ),
+            )
+          : null,
       body: _buildStack(),
     );
   }

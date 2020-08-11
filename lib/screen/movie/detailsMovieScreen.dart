@@ -11,6 +11,7 @@ import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'package:afrimbox/provider/MovieProvider.dart';
 import 'package:provider/provider.dart';
 import 'package:afrimbox/controller/moviesController.dart';
+import 'package:toast/toast.dart';
 //import 'package:afrimbox/helpers/const.dart';
 
 class DetailsMovieScreen extends StatefulWidget {
@@ -161,6 +162,8 @@ class _DetailsMovieScreenState extends State<DetailsMovieScreen> {
                 onPressed: () {
                   if (userModel.currentUser[0]['favoriteMovies'] != null) {
                     Get.toNamed('/favoritesMovies');
+                  } else {
+                    Toast.show("Aucun film a été ajouté aux favoris", context);
                   }
                 }),
           ),
@@ -175,18 +178,13 @@ class _DetailsMovieScreenState extends State<DetailsMovieScreen> {
                         ? Theme.of(context).accentColor
                         : Colors.grey),
                 onPressed: () async {
+                  setState(() => isFavorite = !isFavorite);
                   if (isFavorite) {
-                    //remove to my favorite
-                    setState(() => isFavorite = !isFavorite);
+                    Toast.show("Ce film a été retiré de favoris", context);
                     await userModel.removeMovieToFavorite(widget.movie);
-                    _scaffoldkey.currentState
-                        .showSnackBar(snackBarRemoveToFavorite);
                   } else {
-                    // add to my favorite
-                    setState(() => isFavorite = !isFavorite);
+                    Toast.show("Ce film a été ajouté aux favoris", context);
                     await userModel.addMovieToFavorite(widget.movie);
-                    _scaffoldkey.currentState
-                        .showSnackBar(snackBarAddToFavorite);
                   }
                 }),
           ),

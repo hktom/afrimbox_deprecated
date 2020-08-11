@@ -1,5 +1,6 @@
 import 'package:afrimbox/components/menu.dart';
 import 'package:afrimbox/controller/moviesController.dart';
+import 'package:afrimbox/helpers/tex.dart';
 import 'package:afrimbox/provider/userProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -38,7 +39,7 @@ class _FavoriteMovieState extends State<FavoriteMovie> {
             ),
             onPressed: () => Get.back()),
         elevation: 0,
-        title: Text("Mes Films"),
+        title: Tex(content: "Mes Films", size: 'h4'),
         actions: <Widget>[
           IconButton(
               icon: Icon(
@@ -58,13 +59,10 @@ class _FavoriteMovieState extends State<FavoriteMovie> {
   Widget _listMovie() {
     return Consumer<UserProvider>(
       builder: (context, model, child) => GridView.count(
-        crossAxisCount: 3,
-        childAspectRatio: (itemWidth / itemHeight),
-        children: MoviesController.posterGrid(
-            offset: 0,
-            limit: double.infinity,
-            data: model.currentUser[0]['favoriteMovies']),
-      ),
+          crossAxisCount: 3,
+          childAspectRatio: (itemWidth / itemHeight),
+          children: MoviesController.posterGrid(
+              offset: 0, limit: double.infinity, data: model.favoriteMovies())),
     );
   }
 }
