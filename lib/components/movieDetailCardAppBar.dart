@@ -21,6 +21,22 @@ class MovieDetailCardAppBar extends StatefulWidget {
 class _MovieDetailCardAppBarState extends State<MovieDetailCardAppBar> {
   //String imageUrlPrefix = ApiUrl.urlImage;
   var unescape = new HtmlUnescape();
+  String image = '';
+  String placeholder = 'assets/movie_placeholder.png';
+
+  String setImage() {
+    if (widget.movie['dt_poster'] != null) {
+      return appImageUrl + widget.movie['dt_poster'];
+    } else {
+      return placeholder;
+    }
+  }
+
+  @override
+  void initState() {
+    image = setImage();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -99,11 +115,23 @@ class _MovieDetailCardAppBarState extends State<MovieDetailCardAppBar> {
       height: 300,
       fit: BoxFit.cover,
       alignment: Alignment.topCenter,
-      imageUrl: appImageUrl + widget.movie['dt_poster'],
+      imageUrl: image,
       placeholder: (context, url) => Container(
         color: Colors.grey[300],
+        child: Image.asset(placeholder,
+            width: double.infinity,
+            height: 300,
+            fit: BoxFit.cover,
+            alignment: Alignment.center),
       ),
-      errorWidget: (context, url, error) => Icon(Icons.error),
+      errorWidget: (context, url, error) => Container(
+        color: Colors.grey[300],
+        child: Image.asset(placeholder,
+            width: double.infinity,
+            height: 300,
+            fit: BoxFit.cover,
+            alignment: Alignment.center),
+      ),
     );
   }
 

@@ -61,7 +61,7 @@ class _SubscriptionSuccessState extends State<SubscriptionSuccess> {
     //refresh dataUser
     await model.getCurrentUser([dataUser]);
 
-    Get.offNamed('/home');
+    Get.offAllNamed('/routeStack');
   }
 
   Future<void> newSubscription({user, duration}) async {

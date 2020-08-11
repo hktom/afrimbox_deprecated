@@ -45,8 +45,8 @@ class MoviesController {
 
     for (var i = offset; i < data.length; i++) {
       items.add(CardRounded(
-        height: 100,
-        width: 200,
+        height: 95,
+        width: 95,
         margin: EdgeInsets.symmetric(horizontal: 5),
         movie: data[i],
         isChannel: true,
@@ -100,8 +100,8 @@ class MoviesController {
 
     for (var i = offset; i < data.length; i++) {
       items.add(CardRounded(
-        height: 50,
-        width: 50,
+        height: 30,
+        width: 30,
         margin: EdgeInsets.symmetric(horizontal: 5, vertical: 10),
         movie: data[i],
         isChannel: true,

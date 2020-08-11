@@ -27,13 +27,31 @@ class CardRounded extends StatefulWidget {
 
 class _CardRoundedState extends State<CardRounded> {
   //String imageUrlPrefix = ApiUrl.urlImage;
-  String image;
+  String image = '';
+  String placeholder = '';
+
+  String setImagePlaceholder() {
+    if (widget.isChannel) {
+      return 'assets/channel_placeholder.png';
+    } else {
+      return 'assets/movie_placeholder.png';
+    }
+  }
+
+  String setImage() {
+    if (widget.isChannel && widget.movie['better_featured_image'] != null) {
+      return widget.movie['better_featured_image']['source_url'];
+    } else if (widget.movie['dt_poster'] != null) {
+      return appImageUrl + widget.movie['dt_poster'];
+    } else {
+      return placeholder;
+    }
+  }
 
   @override
   void initState() {
-    image = widget.isChannel
-        ? widget.movie['better_featured_image']['source_url']
-        : appImageUrl + widget.movie['dt_poster'];
+    placeholder = setImagePlaceholder();
+    image = setImage();
     super.initState();
   }
 
@@ -64,9 +82,17 @@ class _CardRoundedState extends State<CardRounded> {
             imageUrl: this.image,
             placeholder: (context, url) => Container(
               color: Colors.grey[300],
+              child: Image.asset(placeholder,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                  alignment: Alignment.center),
             ),
             errorWidget: (context, url, error) => Container(
               color: Colors.grey[300],
+              child: Image.asset(placeholder,
+                  width: double.infinity,
+                  fit: BoxFit.cover,
+                  alignment: Alignment.center),
             ),
           ),
         ),

@@ -12,6 +12,7 @@ import 'helpers/tex.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:bot_toast/bot_toast.dart';
 
 class LandingScreen extends StatefulWidget {
   @override
@@ -33,7 +34,7 @@ class _LandingScreenState extends State<LandingScreen> {
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
         return ProgressModal(
-          title: "Authentifaction en cours",
+          title: "Chargement...",
         );
       },
     );
@@ -47,9 +48,12 @@ class _LandingScreenState extends State<LandingScreen> {
           ? await googleAuthController.auth()
           : await facebookAuthController.auth();
     } catch (e) {
-      return this.setState(() {
-        errLogin = "Nous avons rencontré une erreur, veuillez ressayer";
-      });
+      Get.back();
+      return BotToast.showText(
+          text: "Nous avons rencontré une erreur, veuillez ressayer");
+      // return this.setState(() {
+      //   errLogin = "Nous avons rencontré une erreur, veuillez ressayer";
+      // });
     }
 
     //check if auth succed
@@ -59,9 +63,8 @@ class _LandingScreenState extends State<LandingScreen> {
     } else {
       print("Not Auth Success");
       Get.back();
-      setState(() {
-        errLogin = "Nous avons rencontré une erreur, veuillez ressayer";
-      });
+      return BotToast.showText(
+          text: "Nous avons rencontré une erreur, veuillez ressayer");
     }
   }
 
@@ -83,9 +86,8 @@ class _LandingScreenState extends State<LandingScreen> {
       return Get.offAllNamed('/routeStack');
     } else {
       Get.back();
-      setState(() {
-        errLogin = "Nous avons rencontré une erreur, veuillez ressayer";
-      });
+      return BotToast.showText(
+          text: "Nous avons rencontré une erreur, veuillez ressayer");
     }
   }
 
@@ -111,15 +113,6 @@ class _LandingScreenState extends State<LandingScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Padding(
-                padding: EdgeInsets.only(bottom: 5),
-                child: Tex(
-                  align: TextAlign.center,
-                  bold: FontWeight.bold,
-                  color: Colors.black,
-                  content: errLogin,
-                ),
-              ),
               Align(
                 alignment: Alignment.center,
                 child:

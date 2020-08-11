@@ -46,6 +46,46 @@ class UserProvider extends ChangeNotifier {
     return day;
   }
 
+  // Channel
+  bool isChannelInFavories(dynamic channel) {
+    bool result = false;
+    if (currentUser[0]['favoriteChannels'] != null) {
+      currentUser[0]['favoriteChannels'].forEach((element) {
+        if (element['id'] == channel['id']) {
+          result = true;
+        }
+      });
+    }
+    return result;
+  }
+
+  Future<void> addChannelToFavorite(dynamic movie) async {
+    bool movieExist = isChannelInFavories(movie);
+    if (!movieExist) {
+      if (currentUser[0]['favoriteChannels'] == null) {
+        currentUser[0]['favoriteChannels'] = [];
+      }
+      currentUser[0]['favoriteChannels'].add(movie);
+      await fireStoreController.updateDocument(
+          collection: 'users', doc: currentUserId.trim(), data: currentUser[0]);
+      notifyListeners();
+    }
+  }
+
+  Future<void> removeChannelToFavorite(dynamic movie) async {
+    bool movieExist = isChannelInFavories(movie);
+    if (movieExist) {
+      currentUser[0]['favoriteChannels']
+          .removeWhere((item) => item['id'] == movie['id']);
+
+      //update
+      await fireStoreController.updateDocument(
+          collection: 'users', doc: currentUserId, data: currentUser[0]);
+      notifyListeners();
+    }
+  }
+
+// Movies
   bool isMovieInFavories(dynamic movie) {
     bool result = false;
     if (currentUser[0]['favoriteMovies'] != null) {

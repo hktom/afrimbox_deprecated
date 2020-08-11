@@ -117,4 +117,8 @@ class MovieProvider extends ChangeNotifier {
     }
     notifyListeners();
   }
+
+  void setActors() {
+    this.actors = [];
+  }
 }

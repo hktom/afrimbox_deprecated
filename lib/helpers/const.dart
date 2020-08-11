@@ -7,6 +7,8 @@ const moviesByGenreUrl =
 const genresUrl = 'https://streaming.afrimbox.com/wp-json/wp/v2/genres?post=';
 const actorsUrl = 'https://streaming.afrimbox.com/wp-json/wp/v2/dtcast?post=';
 const channelsUrl = 'https://streaming.afrimbox.com/wp-json/wp/v2/chaine_tv';
+const defaultChannel =
+    'https://bfmparishdslive-lh.akamaihd.net/i/BFMPARIS_KB@429747/master.m3u8';
 
 const List<Map> category = [
   {'label': 'All', 'key': 0},

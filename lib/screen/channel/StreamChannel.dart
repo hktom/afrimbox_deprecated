@@ -1,4 +1,5 @@
 import 'package:afrimbox/helpers/tex.dart';
+import 'package:afrimbox/helpers/const.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter/services.dart';
@@ -9,7 +10,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 //hls stream
 
 class StreamChannel extends StatefulWidget {
-  final String channelUrl;
+  final Map channelUrl;
   StreamChannel({Key key, this.channelUrl}) : super(key: key);
   @override
   _StreamChannelState createState() => _StreamChannelState();
@@ -19,13 +20,24 @@ class _StreamChannelState extends State<StreamChannel> {
   VideoPlayerController player;
   Future<void> _initializeVideoPlayerFuture;
   String screenOrientation = "portrait";
-  String quality = '360p';
+  String quality = '240p';
+  String url = '';
   //FlickManager flickManager;
+
+  String _setUrl(urls) {
+    return urls['flux_240p'] != null ? urls['flux_240p'] : urls['flux_480p'];
+  }
+
+  void _urlSwitcher(urls) {
+    url = quality == '240p' ? urls['flux_240p'] : urls['flux_480p'];
+    _initEngine(url);
+    this.setState(() {});
+  }
 
   _initEngine(url) async {
     //await Cdnbye.init("7r0wbwVMg", config: P2pConfig.byDefault());
     //var cdnUrl = await Cdnbye.parseStreamURL(url);
-    player = VideoPlayerController.network(url);
+    player = VideoPlayerController.network(defaultChannel);
     _initializeVideoPlayerFuture = player.initialize();
   }
 
@@ -48,8 +60,8 @@ class _StreamChannelState extends State<StreamChannel> {
 
   @override
   void initState() {
-    _initEngine(widget.channelUrl);
-    print("URL CHANNEL ${widget.channelUrl}");
+    url = _setUrl(widget.channelUrl);
+    _initEngine(url);
     //SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft]);
     super.initState();
   }
@@ -94,8 +106,9 @@ class _StreamChannelState extends State<StreamChannel> {
               setState(() {
                 quality = newValue;
               });
+              _urlSwitcher(widget.channelUrl);
             },
-            items: <String>['144p', '360p', '480p', '720p']
+            items: <String>['240p', '480p']
                 .map<DropdownMenuItem<String>>((String value) {
               return DropdownMenuItem<String>(
                 value: value,

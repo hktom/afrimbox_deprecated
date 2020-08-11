@@ -38,7 +38,7 @@ class _ChannelsState extends State<Channels>
     var size = MediaQuery.of(context).size;
     /*24 is for notification bar on Android*/
     itemHeight = (size.height - kToolbarHeight - 24) / 2;
-    itemWidth = size.width / 2;
+    itemWidth = size.width;
 
     return Scaffold(
       key: _scaffoldKey,
@@ -50,7 +50,7 @@ class _ChannelsState extends State<Channels>
     return Stack(
       children: <Widget>[
         GridView.count(
-          crossAxisCount: 2,
+          crossAxisCount: 3,
           childAspectRatio: (itemWidth / itemHeight),
           children: MoviesController.channelPosterGrid(
               offset: 0, limit: double.infinity, data: model.channels),

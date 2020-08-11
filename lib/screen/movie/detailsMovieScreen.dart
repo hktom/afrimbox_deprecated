@@ -1,3 +1,4 @@
+import 'package:afrimbox/components/buttonIconText.dart';
 import 'package:afrimbox/components/movieDetailCardAppBar.dart';
 import 'package:afrimbox/provider/userProvider.dart';
 import 'package:afrimbox/screen/movie/trailerPlayerScreen.dart';
@@ -50,6 +51,7 @@ class _DetailsMovieScreenState extends State<DetailsMovieScreen> {
   @override
   void initState() {
     model = Provider.of<MovieProvider>(context, listen: false);
+    model.setActors();
     userModel = Provider.of<UserProvider>(context, listen: false);
     isFavorite = userModel.isMovieInFavories(widget.movie);
     init();
@@ -60,22 +62,34 @@ class _DetailsMovieScreenState extends State<DetailsMovieScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldkey,
-      body: CustomScrollView(slivers: <Widget>[
-        SliverToBoxAdapter(
-          child: _appBar(),
-        ),
-        SliverToBoxAdapter(
-          child: _description(),
-        ),
-        SliverToBoxAdapter(
-          child: _listActionsButton(),
-        ),
-        sliverTitle("Cast"),
-        listActors(),
-        //liverTitle("Voir également"),
-        //listFavoriteMovies()
-      ]),
+      body: model.actors.length == 0 ? _spinner() : _scaffold(),
     );
+  }
+
+  Widget _spinner() {
+    return Container(
+      child: Center(
+        child: CircularProgressIndicator(),
+      ),
+    );
+  }
+
+  Widget _scaffold() {
+    return CustomScrollView(slivers: <Widget>[
+      SliverToBoxAdapter(
+        child: _appBar(),
+      ),
+      SliverToBoxAdapter(
+        child: _description(),
+      ),
+      SliverToBoxAdapter(
+        child: _listActionsButton(),
+      ),
+      sliverTitle("Cast"),
+      listActors(),
+      //liverTitle("Voir également"),
+      //listFavoriteMovies()
+    ]);
   }
 
   Widget listActors() {
@@ -113,7 +127,7 @@ class _DetailsMovieScreenState extends State<DetailsMovieScreen> {
             flex: 1,
             child: FlatButton(
                 padding: EdgeInsets.zero,
-                child: _buttonIcon(
+                child: ButtonIconText(
                     icon: Icons.camera_roll,
                     text: 'Trailer',
                     color: widget.movie["youtube_id"] != ""
@@ -143,7 +157,7 @@ class _DetailsMovieScreenState extends State<DetailsMovieScreen> {
             flex: 1,
             child: FlatButton(
                 padding: EdgeInsets.zero,
-                child: _buttonIcon(icon: Icons.list, text: 'Ma liste'),
+                child: ButtonIconText(icon: Icons.list, text: 'Ma liste'),
                 onPressed: () {
                   if (userModel.currentUser[0]['favoriteMovies'] != null) {
                     Get.toNamed('/favoritesMovies');
@@ -154,7 +168,7 @@ class _DetailsMovieScreenState extends State<DetailsMovieScreen> {
             flex: 1,
             child: FlatButton(
                 padding: EdgeInsets.zero,
-                child: _buttonIcon(
+                child: ButtonIconText(
                     icon: Icons.thumb_up,
                     text: "j'aime",
                     color: isFavorite
@@ -180,30 +194,12 @@ class _DetailsMovieScreenState extends State<DetailsMovieScreen> {
             flex: 1,
             child: FlatButton(
                 padding: EdgeInsets.zero,
-                child:
-                    _buttonIcon(icon: Icons.file_download, text: 'Télecharger'),
+                child: ButtonIconText(
+                    icon: Icons.file_download, text: 'Télecharger'),
                 onPressed: () {}),
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buttonIcon({IconData icon, String text, Color color}) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: <Widget>[
-        Icon(
-          icon,
-          color: color == null ? Colors.grey : color,
-        ),
-        SizedBox(height: 8),
-        Text(
-          text,
-          style: TextStyle(fontSize: 10),
-        )
-      ],
     );
   }
 

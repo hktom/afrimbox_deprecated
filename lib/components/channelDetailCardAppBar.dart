@@ -23,6 +23,16 @@ class _ChannelDetailCardAppBarState extends State<ChannelDetailCardAppBar> {
   UserProvider model;
   var currentUser;
   int bundleActive = 0;
+  String image = '';
+  String placeholder = 'assets/channel_placeholder.png';
+
+  String setImage() {
+    if (widget.channel['better_featured_image'] != null) {
+      return widget.channel['better_featured_image']['source_url'];
+    } else {
+      return placeholder;
+    }
+  }
 
   getRemainDays() {
     model = Provider.of<UserProvider>(context, listen: false);
@@ -31,6 +41,7 @@ class _ChannelDetailCardAppBarState extends State<ChannelDetailCardAppBar> {
 
   @override
   void initState() {
+    image = setImage();
     getRemainDays();
     super.initState();
   }
@@ -62,9 +73,9 @@ class _ChannelDetailCardAppBarState extends State<ChannelDetailCardAppBar> {
           onPressed: () {
             print("SHOw Channel");
             if (bundleActive > 0) {
-              if (widget.channel['acf']['m3u'] != '') {
+              if (widget.channel['acf'] != '') {
                 Get.to(StreamChannel(
-                  channelUrl: widget.channel['acf']['m3u'],
+                  channelUrl: widget.channel['acf'],
                 ));
               }
             } else {
@@ -116,11 +127,23 @@ class _ChannelDetailCardAppBarState extends State<ChannelDetailCardAppBar> {
       height: 300,
       fit: BoxFit.cover,
       alignment: Alignment.topCenter,
-      imageUrl: widget.channel['better_featured_image']['source_url'],
+      imageUrl: image,
       placeholder: (context, url) => Container(
         color: Colors.grey[300],
+        child: Image.asset(placeholder,
+            width: double.infinity,
+            height: 300,
+            fit: BoxFit.cover,
+            alignment: Alignment.center),
       ),
-      errorWidget: (context, url, error) => Icon(Icons.error),
+      errorWidget: (context, url, error) => Container(
+        color: Colors.grey[300],
+        child: Image.asset(placeholder,
+            width: double.infinity,
+            height: 300,
+            fit: BoxFit.cover,
+            alignment: Alignment.center),
+      ),
     );
   }
 

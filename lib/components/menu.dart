@@ -49,7 +49,7 @@ class _MenuState extends State<Menu> {
   Widget build(BuildContext context) {
     return Drawer(
       child: Container(
-        width: MediaQuery.of(context).physicalDepth,
+        width: double.infinity,
         color: Theme.of(context).primaryColorDark,
         child: Padding(
           padding: EdgeInsets.all(8.0),

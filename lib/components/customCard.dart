@@ -17,6 +17,23 @@ class CustomCard extends StatefulWidget {
 class _CustomCardState extends State<CustomCard> {
   //String imageUrlPrefix = ApiUrl.urlImage;
 
+  String image = '';
+  String placeholder = 'assets/movie_placeholder.png';
+
+  String setImage() {
+    if (widget.movie['dt_poster'] != null) {
+      return appImageUrl + widget.movie['dt_poster'];
+    } else {
+      return placeholder;
+    }
+  }
+
+  @override
+  void initState() {
+    image = setImage();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -33,8 +50,19 @@ class _CustomCardState extends State<CustomCard> {
               imageUrl: appImageUrl + widget.movie['dt_poster'],
               placeholder: (context, url) => Container(
                 color: Colors.grey[300],
+                child: Image.asset(placeholder,
+                    width: double.infinity,
+                    height: 300,
+                    fit: BoxFit.cover,
+                    alignment: Alignment.center),
               ),
-              errorWidget: (context, url, error) => Icon(Icons.error),
+              errorWidget: (context, url, error) => Container(
+                  color: Colors.grey[300],
+                  child: Image.asset(placeholder,
+                      width: double.infinity,
+                      height: 300,
+                      fit: BoxFit.cover,
+                      alignment: Alignment.center)),
             ),
             Container(
               color: Color.fromRGBO(0, 0, 0, 0.1),
