@@ -3,25 +3,27 @@ import 'package:afrimbox/helpers/const.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:flutter/services.dart';
-import 'package:cdnbye/cdnbye.dart';
 import 'package:video_player/video_player.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+//import 'package:cdnbye/cdnbye.dart';
 // import 'package:flick_video_player/flick_video_player.dart';
 //hls stream
 
-class StreamChannel extends StatefulWidget {
-  final Map channelUrl;
-  StreamChannel({Key key, this.channelUrl}) : super(key: key);
+class StreamPlayer extends StatefulWidget {
+  final Map streamUrl;
+  StreamPlayer({Key key, this.streamUrl}) : super(key: key);
   @override
-  _StreamChannelState createState() => _StreamChannelState();
+  _StreamPlayerState createState() => _StreamPlayerState();
 }
 
-class _StreamChannelState extends State<StreamChannel> {
+class _StreamPlayerState extends State<StreamPlayer> {
   VideoPlayerController player;
   Future<void> _initializeVideoPlayerFuture;
   String screenOrientation = "portrait";
   String quality = '240p';
   String url = '';
+  bool showSwitcher = false;
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   //FlickManager flickManager;
 
   String _setUrl(urls) {
@@ -29,7 +31,17 @@ class _StreamChannelState extends State<StreamChannel> {
   }
 
   void _urlSwitcher(urls) {
-    url = quality == '240p' ? urls['flux_240p'] : urls['flux_480p'];
+    //url = quality == '240p' ? urls['flux_240p'] : urls['flux_480p'];
+    switch (quality) {
+      case '240p':
+        url = urls['flux_240p'];
+        break;
+      case '480p':
+        url = urls['flux_480p'];
+        break;
+      default:
+        url = defaultChannel;
+    }
     _initEngine(url);
     this.setState(() {});
   }
@@ -37,7 +49,7 @@ class _StreamChannelState extends State<StreamChannel> {
   _initEngine(url) async {
     //await Cdnbye.init("7r0wbwVMg", config: P2pConfig.byDefault());
     //var cdnUrl = await Cdnbye.parseStreamURL(url);
-    player = VideoPlayerController.network(defaultChannel);
+    player = VideoPlayerController.network(url);
     _initializeVideoPlayerFuture = player.initialize();
   }
 
@@ -54,15 +66,15 @@ class _StreamChannelState extends State<StreamChannel> {
   @override
   void dispose() {
     player.dispose();
-    //SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
     super.dispose();
   }
 
   @override
   void initState() {
-    url = _setUrl(widget.channelUrl);
+    url = _setUrl(widget.streamUrl);
     _initEngine(url);
-    //SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft]);
+    SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft]);
     super.initState();
   }
 
@@ -106,9 +118,9 @@ class _StreamChannelState extends State<StreamChannel> {
               setState(() {
                 quality = newValue;
               });
-              _urlSwitcher(widget.channelUrl);
+              _urlSwitcher(widget.streamUrl);
             },
-            items: <String>['240p', '480p']
+            items: <String>['240p', '480p', 'défault']
                 .map<DropdownMenuItem<String>>((String value) {
               return DropdownMenuItem<String>(
                 value: value,
@@ -138,7 +150,11 @@ class _StreamChannelState extends State<StreamChannel> {
 
   Scaffold _landscape() {
     return Scaffold(
+      key: _scaffoldKey,
       backgroundColor: Colors.black,
+      drawer: Drawer(
+        child: Container(),
+      ),
       body: Center(
         child: FutureBuilder(
           future: _initializeVideoPlayerFuture,
@@ -163,25 +179,109 @@ class _StreamChannelState extends State<StreamChannel> {
         VideoPlayer(player),
         Align(
           alignment: Alignment.center,
-          child: _buttonPlayStop(),
+          child: _playerController(),
         ),
+        _swictherQuality(),
       ],
     );
   }
 
-  Widget _buttonPlayStop() {
+  Widget _swictherQuality() {
+    return Align(
+      alignment: Alignment.bottomLeft,
+      child: AnimatedOpacity(
+        opacity: showSwitcher ? 1.0 : 0.0,
+        duration: Duration(milliseconds: 500),
+        child: Container(
+          width: 80,
+          padding: EdgeInsets.zero,
+          margin: EdgeInsets.only(top: 210),
+          child: ListView(
+            padding: EdgeInsets.zero,
+            //mainAxisAlignment: MainAxisAlignment.end,
+            //crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              FlatButton(
+                  color: Color.fromRGBO(158, 25, 25, 1),
+                  padding: EdgeInsets.zero,
+                  onPressed: () {
+                    setState(() {
+                      quality = '240p';
+                    });
+                    _urlSwitcher(widget.streamUrl);
+                  },
+                  child: Tex(
+                    content: "240p",
+                    color: Colors.white,
+                  )),
+              FlatButton(
+                  color: Color.fromRGBO(158, 25, 25, 1),
+                  padding: EdgeInsets.zero,
+                  onPressed: () {
+                    setState(() {
+                      quality = '480p';
+                    });
+                    _urlSwitcher(widget.streamUrl);
+                  },
+                  child: Tex(
+                    content: "480p",
+                    color: Colors.white,
+                  )),
+              FlatButton(
+                  color: Color.fromRGBO(158, 25, 25, 1),
+                  padding: EdgeInsets.zero,
+                  onPressed: () {
+                    setState(() {
+                      quality = 'default';
+                    });
+                    _urlSwitcher(widget.streamUrl);
+                  },
+                  child: Tex(
+                    content: "Défaut",
+                    color: Colors.white,
+                  )),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _playerController() {
     return AnimatedOpacity(
       opacity: player.value.isPlaying ? 0.0 : 1.0,
       duration: Duration(milliseconds: 500),
-      child: GestureDetector(
-        onTap: () => _playerOnTap(),
-        child: Icon(
-          player.value.isPlaying ? Icons.pause : Icons.play_arrow,
-          color: Colors.white,
-          size: 150,
-          //size: 100,
+      child: Row(children: <Widget>[
+        Expanded(
+          flex: 1,
+          child: GestureDetector(
+              onTap: () {
+                setState(() => showSwitcher = !showSwitcher);
+              },
+              child: Icon(Icons.settings, color: Colors.white, size: 50)),
         ),
-      ),
+        Expanded(
+          flex: 2,
+          child: GestureDetector(
+            onTap: () => _playerOnTap(),
+            child: Icon(
+              player.value.isPlaying ? Icons.pause : Icons.play_arrow,
+              color: Colors.white,
+              size: 50,
+              //size: 100,
+            ),
+          ),
+        ),
+        Expanded(
+          flex: 1,
+          child: GestureDetector(
+            onTap: () {
+              Get.back();
+            },
+            child: Icon(Icons.exit_to_app, color: Colors.white, size: 50),
+          ),
+        ),
+      ]),
     );
   }
 }

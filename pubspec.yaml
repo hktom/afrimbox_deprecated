@@ -48,7 +48,7 @@ dependencies:
   flutter_widget_from_html_core: ^0.3.3+4
   smooth_star_rating: ^1.1.1
   badges: ^1.1.1
-  avatar_letter: ^1.0.1
+  #avatar_letter: ^1.0.1
   #youtube_player_flutter: ^6.1.1
   youtube_player_flutter: ^7.0.0+7
   url_launcher: ^5.4.11
@@ -56,8 +56,8 @@ dependencies:
   flutter_signin_button: ^1.0.0
   flutter_form_builder: ^3.12.0
   cool_stepper: ^1.1.0
-  flutter_switch: ^0.1.1
-  animated_text_kit: ^2.2.0
+  #flutter_switch: ^0.1.1
+  #animated_text_kit: ^2.2.0
   #kkiapay
   #kkiapay_flutter_sdk: ^0.5.0
   kkiapay_flutter_sdk:
@@ -65,16 +65,16 @@ dependencies:
       url: git://github.com/hktom/kkiapay-flutter-sdk.git
       ref: hktom-webview-removed
   row_collection: ^0.2.4
-  expansion_card: ^0.1.0
-  cdnbye: ^0.7.0
   connectivity: ^0.4.9
   google_fonts: ^1.1.0
   dio: ^3.0.9
   flutter_chips_input: ^1.9.0-dev.1
   internet_speed_test: ^1.1.2+1
-  bot_toast: ^3.0.1
   toast: ^0.1.5
-  fluttertoast: ^7.0.2
+  #expansion_card: ^0.1.0
+  #cdnbye: ^0.7.0
+  #bot_toast: ^3.0.1
+  #fluttertoast: ^7.0.2
   #flutter_youtube_view: ^1.1.8
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:row_collection/row_collection.dart';
-import 'package:flutter_switch/flutter_switch.dart';
+//import 'package:flutter_switch/flutter_switch.dart';
 import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 

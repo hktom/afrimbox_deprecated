@@ -1,5 +1,5 @@
 import 'package:afrimbox/provider/userProvider.dart';
-import 'package:afrimbox/screen/channel/StreamChannel.dart';
+import 'package:afrimbox/screen/StreamPlayer.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:afrimbox/helpers/tex.dart';
@@ -74,8 +74,8 @@ class _ChannelDetailCardAppBarState extends State<ChannelDetailCardAppBar> {
             print("SHOw Channel");
             if (bundleActive > 0) {
               if (widget.channel['acf'] != '') {
-                Get.to(StreamChannel(
-                  channelUrl: widget.channel['acf'],
+                Get.to(StreamPlayer(
+                  streamUrl: widget.channel['acf'],
                 ));
               }
             } else {
