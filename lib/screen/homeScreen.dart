@@ -1,4 +1,4 @@
-//import 'package:afrimbox/components/loadingSpinner.dart';
+//import 'package:afrimbox/widgets/loadingSpinner.dart';
 import 'package:afrimbox/controller/moviesController.dart';
 import 'package:afrimbox/helpers/tex.dart';
 import 'package:afrimbox/screen/channel/channels.dart';
@@ -11,7 +11,7 @@ import 'package:provider/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:afrimbox/helpers/const.dart';
-//import 'package:afrimbox/components/menu.dart';
+//import 'package:afrimbox/widgets/menu.dart';
 //import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class HomeScreen extends StatefulWidget {

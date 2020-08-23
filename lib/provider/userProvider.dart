@@ -54,7 +54,7 @@ class UserProvider extends ChangeNotifier {
       var dateNow = DateTime.now();
       int days = int.parse(endDate.difference(dateNow).inDays.toString());
 
-      if (days <= duration) {
+      if (days <= duration && days != 0) {
         day = days;
       }
     }

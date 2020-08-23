@@ -1,5 +1,6 @@
 import 'package:afrimbox/controller/moviesController.dart';
 import 'package:afrimbox/screen/movie/trailerPlayerScreen.dart';
+import 'package:afrimbox/screen/streamPlayer.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -60,7 +61,11 @@ class _MovieDetailCardAppBarState extends State<MovieDetailCardAppBar> {
       child: Container(
         margin: EdgeInsets.only(bottom: 24, right: 10),
         child: FloatingActionButton(
-          onPressed: () {},
+          onPressed: () {
+            if (widget.movie['acf']['flux_movie'] != null) {
+              StreamPlayer(streamUrl: widget.movie['acf']);
+            }
+          },
           child: Icon(Icons.play_arrow),
         ),
       ),

@@ -88,7 +88,7 @@ dependencies {
     implementation 'co.opensi.kkiapay:kkiapay:1.1.8'
     //   configurations {
     //     all*.exclude group: 'xpp3', module: 'xpp3'
-    //     implementation.exclude group: "org.apache.httpcomponents", module: "httpclient"
+    //     implementation.exclude group: "org.apache.httpwidgets", module: "httpclient"
     // }
     //implementation 'com.google.firebase:firebase-analytics:17.2.2'
     //implementation 'com.google.firebase:firebase-auth:17.2.2'

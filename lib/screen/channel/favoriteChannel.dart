@@ -3,7 +3,7 @@ import 'package:afrimbox/provider/userProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:afrimbox/controller/moviesController.dart';
-//import 'package:afrimbox/components/menu.dart';
+//import 'package:afrimbox/widgets/menu.dart';
 //import 'package:get/get.dart';
 //import 'package:afrimbox/provider/ChannelProvider.dart';
 

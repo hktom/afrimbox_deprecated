@@ -37,8 +37,8 @@ class PlaceHolders extends StatelessWidget {
 
   Widget cardHorizontal() {
     return Container(
-      height: 100,
-      width: 200,
+      height: 95,
+      width: 95,
       margin: EdgeInsets.symmetric(horizontal: 5),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(8.0),

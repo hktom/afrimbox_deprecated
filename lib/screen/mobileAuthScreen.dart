@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:afrimbox/components/progressModal.dart';
+import 'package:afrimbox/widgets/progressModal.dart';
 import 'package:afrimbox/controller/auth/mobileAuthController.dart';
 import 'package:afrimbox/controller/firestoreController.dart';
 import 'package:afrimbox/screen/user/createProfile.dart';

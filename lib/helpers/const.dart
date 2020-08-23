@@ -7,8 +7,11 @@ const moviesByGenreUrl =
 const genresUrl = 'https://streaming.afrimbox.com/wp-json/wp/v2/genres?post=';
 const actorsUrl = 'https://streaming.afrimbox.com/wp-json/wp/v2/dtcast?post=';
 const channelsUrl = 'https://streaming.afrimbox.com/wp-json/wp/v2/chaine_tv';
+
 const defaultChannel =
-    'https://bfmparishdslive-lh.akamaihd.net/i/BFMPARIS_KB@429747/master.m3u8';
+    'http://iptv.afrimbox.com:25461/movie/afrimbox/showtime/59.mp4';
+//'http://zmky-nextcloud.sandslash.seedbox.link/s/esm5JcjaGRo7eot/download';
+//http://iptv.afrimbox.com:25461/movie/Afrimbox/\$2y\$10\$Gs/59.mp4
 
 const List<Map> category = [
   {'label': 'All', 'key': 0},

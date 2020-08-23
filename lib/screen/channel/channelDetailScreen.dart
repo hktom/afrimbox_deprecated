@@ -1,5 +1,5 @@
-import 'package:afrimbox/components/buttonIconText.dart';
-import 'package:afrimbox/components/channelDetailCardAppBar.dart';
+import 'package:afrimbox/widgets/buttonIconText.dart';
+import 'package:afrimbox/widgets/channelDetailCardAppBar.dart';
 import 'package:afrimbox/provider/userProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:afrimbox/helpers/tex.dart';

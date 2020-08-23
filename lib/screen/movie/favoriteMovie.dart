@@ -1,4 +1,4 @@
-import 'package:afrimbox/components/menu.dart';
+import 'package:afrimbox/widgets/menu.dart';
 import 'package:afrimbox/controller/moviesController.dart';
 import 'package:afrimbox/helpers/tex.dart';
 import 'package:afrimbox/provider/userProvider.dart';

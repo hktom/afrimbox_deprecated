@@ -1,9 +1,9 @@
-import 'package:afrimbox/components/cardAvatar.dart';
-import 'package:afrimbox/components/cardGenre.dart';
-import 'package:afrimbox/components/placeHolders.dart';
+import 'package:afrimbox/widgets/cardAvatar.dart';
+import 'package:afrimbox/widgets/cardGenre.dart';
+import 'package:afrimbox/widgets/placeHolders.dart';
 import 'package:flutter/material.dart';
-import '../components/customCard.dart';
-import '../components/cardRounded.dart';
+import '../widgets/customCard.dart';
+import '../widgets/cardRounded.dart';
 import 'package:afrimbox/helpers/tex.dart';
 
 class MoviesController {

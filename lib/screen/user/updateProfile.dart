@@ -1,4 +1,4 @@
-import 'package:afrimbox/components/progressModal.dart';
+import 'package:afrimbox/widgets/progressModal.dart';
 import 'package:afrimbox/helpers/tex.dart';
 import 'package:afrimbox/provider/userProvider.dart';
 import 'package:flutter/material.dart';

@@ -1,5 +1,5 @@
-import 'package:afrimbox/components/buttonIconText.dart';
-import 'package:afrimbox/components/movieDetailCardAppBar.dart';
+import 'package:afrimbox/widgets/buttonIconText.dart';
+import 'package:afrimbox/widgets/movieDetailCardAppBar.dart';
 import 'package:afrimbox/provider/userProvider.dart';
 import 'package:afrimbox/screen/movie/trailerPlayerScreen.dart';
 import 'package:flutter/material.dart';

@@ -1,5 +1,5 @@
-import 'package:afrimbox/components/filterByGenre.dart';
-import 'package:afrimbox/components/menu.dart';
+import 'package:afrimbox/widgets/filterByGenre.dart';
+import 'package:afrimbox/widgets/menu.dart';
 import 'package:afrimbox/helpers/tex.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
