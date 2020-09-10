@@ -1,16 +1,13 @@
 import 'package:afrimbox/helpers/tex.dart';
 import 'package:afrimbox/provider/userProvider.dart';
+import 'package:afrimbox/screen/subscription/coupon.dart';
 import 'package:afrimbox/screen/subscription/subscriptionSuccess.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
-import 'package:kkiapay_flutter_sdk/kkiapayWebview.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-//import 'package:expansion_card/expansion_card.dart';
-// kkiapay
-//import 'package:kkiapay_flutter_sdk/kkiapayConf.sample.dart';
-//import 'package:kkiapay_flutter_sdk/utils/Kkiapay.dart';
+import 'package:kkiapay_flutter_sdk/kkiapayWebview.dart';
 
 class SubscriptionPage extends StatefulWidget {
   final bool firstStep;
@@ -45,8 +42,9 @@ class _SubscriptionPageState extends State<SubscriptionPage>
           showMaterialModalBottomSheet(
             context: context,
             builder: (context, scrollController) => Container(
-              height: 200,
-              child: Tex(content: "Coupon Code"),
+              height: MediaQuery.of(context).size.height * 0.8,
+              padding: EdgeInsets.fromLTRB(10, 20, 10, 0),
+              child: Coupon(),
             ),
           );
         },
@@ -103,12 +101,6 @@ class _SubscriptionPageState extends State<SubscriptionPage>
     );
   }
 
-  Widget _formCoupons(){
-    return Container(
-
-    );
-  }
-
   Widget _subscription(
       {int price, int type, String description, String session, Color color}) {
     return Card(
@@ -125,6 +117,7 @@ class _SubscriptionPageState extends State<SubscriptionPage>
             data: description,
             sandbox: false,
             callback: sucessCallback,
+            theme: '#9E1919',
           ));
         },
         contentPadding: EdgeInsets.symmetric(vertical: 20, horizontal: 20),

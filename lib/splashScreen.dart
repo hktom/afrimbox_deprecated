@@ -38,6 +38,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     model = Provider.of<UserProvider>(context, listen: false);
+    model.getCoupons();
     _checkSession();
     super.initState();
   }

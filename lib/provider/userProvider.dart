@@ -51,14 +51,25 @@ class UserProvider extends ChangeNotifier {
   }
 
   //check if coupons is valide
-  bool checkCoupons(value) {
-    bool result = false;
+  Map<String, dynamic> checkCoupons(value) {
+    Map<String, dynamic> _coupon = {
+      'value': '',
+      'duration': 0,
+      'valide': false
+    };
     this.coupons.forEach((coupon) {
       if (coupon['value'] == value && this._dateDiff(coupon['endDate']) > 0) {
-        result = true;
+        _coupon['value'] = value;
+        _coupon['valide'] = true;
+        _coupon['duration'] = this._dateDiff(coupon['endDate']);
       }
     });
-    return result;
+
+    if (this.currentUser[0]['coupons'] != null && _coupon['valide']) {
+      _coupon['valide'] =
+          this.currentUser[0]['coupons'].contains(value) ? false : true;
+    }
+    return _coupon;
   }
 
   //difference date

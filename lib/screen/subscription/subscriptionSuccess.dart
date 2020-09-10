@@ -2,15 +2,23 @@ import 'package:afrimbox/widgets/progressModal.dart';
 import 'package:afrimbox/controller/firestoreController.dart';
 import 'package:afrimbox/helpers/tex.dart';
 import 'package:afrimbox/provider/userProvider.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 
 class SubscriptionSuccess extends StatefulWidget {
   final int amount;
+  final bool couponPay;
+  final Map coupon;
   final String transactionId;
 
-  SubscriptionSuccess({Key key, this.amount, this.transactionId});
+  SubscriptionSuccess(
+      {Key key,
+      this.amount,
+      this.transactionId,
+      this.coupon,
+      this.couponPay: false});
 
   @override
   _SubscriptionSuccessState createState() => _SubscriptionSuccessState();
@@ -18,6 +26,7 @@ class SubscriptionSuccess extends StatefulWidget {
 
 class _SubscriptionSuccessState extends State<SubscriptionSuccess> {
   FireStoreController fireStoreController = new FireStoreController();
+  var duration = 0;
   //show dialog
   Future<void> progressModal() async {
     return showDialog<void>(
@@ -31,9 +40,7 @@ class _SubscriptionSuccessState extends State<SubscriptionSuccess> {
     );
   }
 
-  Future<void> activationSubscription() async {
-    //progressModal();
-    var duration = 0;
+  void _getDuration() {
     switch (widget.amount) {
       case 500:
         duration = 2;
@@ -48,6 +55,15 @@ class _SubscriptionSuccessState extends State<SubscriptionSuccess> {
         break;
 
       default:
+    }
+  }
+
+  Future<void> activationSubscription() async {
+    //progressModal();
+    if (widget.couponPay) {
+      duration = widget.coupon['duration'];
+    } else {
+      _getDuration();
     }
 
     var model = Provider.of<UserProvider>(context, listen: false);
@@ -70,25 +86,44 @@ class _SubscriptionSuccessState extends State<SubscriptionSuccess> {
     Get.offAllNamed('/routeStack');
   }
 
+  void updateCoupons(user) {
+    if (user['coupons'] != null) {
+      user['coupons'].add(widget.coupon['value']);
+    } else {
+      user['coupons'] = [widget.coupon['value']];
+    }
+  }
+
   Future<void> newSubscription({user, duration}) async {
     var today = new DateTime.now();
-    var endData = today.add(new Duration(days: duration));
+    var endDate = today.add(new Duration(days: duration));
     user['subscription'] = {
       'duration': duration,
       'debuteDate': DateTime.now(),
-      'endDate': endData,
+      'endDate': endDate,
       'transactionId': widget.transactionId
     };
+    //upadate coupons
+    if (widget.couponPay) {
+      updateCoupons(user);
+    }
+
     await fireStoreController.updateDocument(
         collection: 'users', doc: user['id'].trim(), data: user);
   }
 
   Future<void> incrementSubscription({user, duration}) async {
-    var currentEndDate = user['subscription']['endDate'];
+    Timestamp _timestamp = user['subscription']['endDate'];
+    DateTime currentEndDate = new DateTime.fromMicrosecondsSinceEpoch(
+        _timestamp.microsecondsSinceEpoch);
     var currentDuration = user['subscription']['duration'];
     var newEndDate = currentEndDate.add(new Duration(days: duration));
     user['subscription']['endDate'] = newEndDate;
     user['subscription']['duration'] = currentDuration + duration;
+    //upadate coupons
+    if (widget.couponPay) {
+      updateCoupons(user);
+    }
     await fireStoreController.updateDocument(
         collection: 'users', doc: user['id'].trim(), data: user);
   }
