@@ -59,8 +59,14 @@ class _SubscriptionSuccessState extends State<SubscriptionSuccess> {
       await newSubscription(user: dataUser, duration: duration);
     }
     //refresh dataUser
-    await model.getCurrentUser([dataUser]);
+    await _refreshUserProfile(dataUser['id'], model);
+    //await model.getCurrentUser([dataUser]);
+  }
 
+  Future<void> _refreshUserProfile(uid, model) async {
+    var fireStoreUser =
+        await fireStoreController.getDocument(collection: 'users', doc: uid);
+    await model.getCurrentUser(fireStoreUser);
     Get.offAllNamed('/routeStack');
   }
 

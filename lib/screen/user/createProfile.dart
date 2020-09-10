@@ -2,8 +2,7 @@ import 'package:afrimbox/widgets/progressModal.dart';
 import 'package:afrimbox/controller/firestoreController.dart';
 import 'package:afrimbox/helpers/tex.dart';
 import 'package:afrimbox/provider/userProvider.dart';
-import 'package:afrimbox/screen/subscription/subscription.dart';
-import 'package:dynamic_theme/dynamic_theme.dart';
+import 'package:afrimbox/screen/subscription/subscriptionPage.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cool_stepper/cool_stepper.dart';
@@ -50,7 +49,7 @@ class _CreateProfileState extends State<CreateProfile> {
           .getProfile(widget.user.uid);
       Get.back();
       if (result) {
-        Get.offAll(Subscription(
+        Get.offAll(SubscriptionPage(
           firstStep: true,
         ));
       }

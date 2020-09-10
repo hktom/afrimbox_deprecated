@@ -1,5 +1,6 @@
 import 'package:afrimbox/controller/auth/facebookAuthController.dart';
 import 'package:afrimbox/controller/auth/googleAuthController.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:afrimbox/controller/firestoreController.dart';
@@ -13,6 +14,7 @@ class UserProvider extends ChangeNotifier {
       "https://firebasestorage.googleapis.com/v0/b/skyship-bd599.appspot.com/o/userPhoto%2FPortrait_Placeholder.png?alt=media&token=50ce51eb-7154-4d74-b96b-cad1090bfcd0";
   var currentUser;
   var currentUserId;
+  List<dynamic> coupons;
   //Map authUser;
   var payload;
 
@@ -43,22 +45,49 @@ class UserProvider extends ChangeNotifier {
     }
   }
 
+  //coupons pays
+  Future<void> getCoupons() async {
+    this.coupons = await fireStoreController.getDocuments('coupons');
+  }
+
+  //check if coupons is valide
+  bool checkCoupons(value) {
+    bool result = false;
+    this.coupons.forEach((coupon) {
+      if (coupon['value'] == value && this._dateDiff(coupon['endDate']) > 0) {
+        result = true;
+      }
+    });
+    return result;
+  }
+
+  //difference date
+  int _dateDiff(timestamp) {
+    var endDate = timestamp.toDate();
+    var dateNow = DateTime.now();
+    int days = int.parse(endDate.difference(dateNow).inDays.toString());
+    if (days <= 0)
+      return 0;
+    else
+      return days;
+  }
+
   int subscriptionRemainDays() {
     int day = 0;
     int duration = 0;
     if (this.currentUser[0]['subscription'] != null) {
       duration = this.currentUser[0]['subscription']['duration'];
-      //var debuteDate = this.currentUser[0]['subscription']['debuteDate'];
       var timestamp = this.currentUser[0]['subscription']['endDate'];
-      var endDate = timestamp.toDate();
-      var dateNow = DateTime.now();
-      int days = int.parse(endDate.difference(dateNow).inDays.toString());
+      //var debuteDate = this.currentUser[0]['subscription']['debuteDate'];
+      // var endDate = timestamp.toDate();
+      // var dateNow = DateTime.now();
+      // int days = int.parse(endDate.difference(dateNow).inDays.toString());
+      int days = this._dateDiff(timestamp);
 
-      if (days <= duration && days != 0) {
+      if (days <= duration && days > 0) {
         day = days;
       }
     }
-
     return day;
   }
 

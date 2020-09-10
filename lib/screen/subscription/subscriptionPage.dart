@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'package:kkiapay_flutter_sdk/kkiapayWebview.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 //import 'package:expansion_card/expansion_card.dart';
 // kkiapay
 //import 'package:kkiapay_flutter_sdk/kkiapayConf.sample.dart';
@@ -38,6 +39,18 @@ class _SubscriptionPageState extends State<SubscriptionPage>
     super.build(context);
     return Scaffold(
       key: _scaffoldKey,
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.ac_unit),
+        onPressed: () {
+          showMaterialModalBottomSheet(
+            context: context,
+            builder: (context, scrollController) => Container(
+              height: 200,
+              child: Tex(content: "Coupon Code"),
+            ),
+          );
+        },
+      ),
       body: Container(
         padding: EdgeInsets.symmetric(horizontal: 10),
         child: ListView(
@@ -90,6 +103,12 @@ class _SubscriptionPageState extends State<SubscriptionPage>
     );
   }
 
+  Widget _formCoupons(){
+    return Container(
+
+    );
+  }
+
   Widget _subscription(
       {int price, int type, String description, String session, Color color}) {
     return Card(
@@ -97,14 +116,14 @@ class _SubscriptionPageState extends State<SubscriptionPage>
       child: ListTile(
         onTap: () {
           Get.to(KKiaPay(
-            apikey: 'bb4c2370cbc011ea84cb097ce4c306b7',
+            apikey: 'bd4ea720990711e99551a5d587ddabb7',
             amount: price,
             phone: Provider.of<UserProvider>(context, listen: false)
                 .currentUser[0]['phone']
                 .toString()
                 .substring(4),
             data: description,
-            sandbox: true,
+            sandbox: false,
             callback: sucessCallback,
           ));
         },

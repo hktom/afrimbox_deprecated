@@ -5,7 +5,9 @@ import 'package:flick_video_player/flick_video_player.dart';
 
 class StreamPlayer extends StatefulWidget {
   final Map streamUrl;
-  StreamPlayer({Key key, this.streamUrl}) : super(key: key);
+  final bool isChannel;
+  StreamPlayer({Key key, this.streamUrl, this.isChannel: false})
+      : super(key: key);
   @override
   _StreamPlayerState createState() => _StreamPlayerState();
 }
@@ -24,9 +26,11 @@ class _StreamPlayerState extends State<StreamPlayer> {
 
   @override
   void initState() {
+    String _url = widget.isChannel
+        ? widget.streamUrl['flux_240p']
+        : widget.streamUrl['flux_movie'];
     flickManager = FlickManager(
-      videoPlayerController:
-          VideoPlayerController.network(widget.streamUrl['flux_movie']),
+      videoPlayerController: VideoPlayerController.network(_url),
     );
     super.initState();
   }

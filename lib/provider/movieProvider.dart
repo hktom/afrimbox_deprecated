@@ -48,7 +48,17 @@ class MovieProvider extends ChangeNotifier {
 
 // Get movies by genres
   Future<void> getByGenre(String genre) async {
+    if (int.parse(genre) <= 1) {
+      await this.get();
+    } else {
+      await this._callBackGetByGenre(genre);
+    }
+    notifyListeners();
+  }
+
+  Future<void> _callBackGetByGenre(String genre) async {
     pending['getByGenre'] = true;
+    notifyListeners();
     var response = await dio
         .get(moviesByGenreUrl + genre)
         .whenComplete(() => pending['getByGenre'] = false);
@@ -59,6 +69,7 @@ class MovieProvider extends ChangeNotifier {
     } else {
       print("MOVIE By Genre $genre REQUEST STATUS 404");
     }
+    pending['getByGenre'] = false;
     notifyListeners();
   }
 

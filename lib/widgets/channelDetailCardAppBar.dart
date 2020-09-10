@@ -75,6 +75,7 @@ class _ChannelDetailCardAppBarState extends State<ChannelDetailCardAppBar> {
             if (bundleActive > 0) {
               if (widget.channel['acf'] != '') {
                 Get.to(StreamPlayer(
+                  isChannel:true,
                   streamUrl: widget.channel['acf'],
                 ));
               }

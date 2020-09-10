@@ -63,7 +63,8 @@ class _MovieDetailCardAppBarState extends State<MovieDetailCardAppBar> {
         child: FloatingActionButton(
           onPressed: () {
             if (widget.movie['acf']['flux_movie'] != null) {
-              StreamPlayer(streamUrl: widget.movie['acf']);
+              Get.to(StreamPlayer(
+                  streamUrl: widget.movie['acf'], isChannel: false));
             }
           },
           child: Icon(Icons.play_arrow),

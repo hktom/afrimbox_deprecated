@@ -73,14 +73,21 @@ class _MoviesState extends State<Movies> with AutomaticKeepAliveClientMixin {
 
   Widget _listMovie() {
     return Consumer<MovieProvider>(
-      builder: (context, model, child) => GridView.count(
-        crossAxisCount: 3,
-        childAspectRatio: (itemWidth / itemHeight),
-        children: MoviesController.posterGrid(
-            offset: 0,
-            limit: double.infinity,
-            data: model.moviesByGenre[model.currentGenre]),
-      ),
+      builder: (context, model, child) {
+        print("PENDING ${model.pending['getByGenre']}");
+        if (model.pending['getByGenre']) {
+          return Center(child: CircularProgressIndicator());
+        } else {
+          return GridView.count(
+            crossAxisCount: 3,
+            childAspectRatio: (itemWidth / itemHeight),
+            children: MoviesController.posterGrid(
+                offset: 0,
+                limit: double.infinity,
+                data: model.moviesByGenre[model.currentGenre]),
+          );
+        }
+      },
     );
   }
 
