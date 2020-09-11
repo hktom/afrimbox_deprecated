@@ -119,12 +119,13 @@ class _HomeScreenState extends State<HomeScreen>
     slivers.add(lastMovie());
     slivers.add(sliverTitle("Nos chaines", null));
     slivers.add(listChannels());
-    slivers.add(sliverTitle("Films populaires", "Popular"));
+    slivers.add(sliverTitle("Films populaires", category[1]['label']));
     slivers.add(listMovies(1));
 
     for (var i = 2; i < movieModel.moviesByGenre.length; i++) {
       var genre = category[i]['key'];
-      if (movieModel.moviesByGenre[genre.toString()] != null) {
+      if (movieModel.moviesByGenre[genre.toString()] != null &&
+          !movieModel.moviesByGenre[genre.toString()].isEmpty) {
         slivers.add(sliverTitle(category[i]['label'], category[i]['label']));
         slivers.add(listMovies(genre));
       }

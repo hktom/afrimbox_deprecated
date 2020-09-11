@@ -48,8 +48,17 @@ class MovieProvider extends ChangeNotifier {
 
 // Get movies by genres
   Future<void> getByGenre(String genre) async {
-    if (int.parse(genre) <= 1) {
-      await this.get();
+    //await this.get();
+    if (int.parse(genre) == 0) {
+      pending['getByGenre'] = true;
+      moviesByGenre[genre] = moviesByGenre['0'];
+      currentGenre = genre;
+      pending['getByGenre'] = false;
+    } else if (int.parse(genre) == 1) {
+      pending['getByGenre'] = true;
+      moviesByGenre[genre] = moviesByGenre['1'];
+      currentGenre = genre;
+      pending['getByGenre'] = false;
     } else {
       await this._callBackGetByGenre(genre);
     }

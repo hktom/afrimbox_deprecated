@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:provider/provider.dart';
 import 'package:afrimbox/provider/MovieProvider.dart';
 import 'package:afrimbox/controller/moviesController.dart';
+import 'package:sup/sup.dart';
 
 class Movies extends StatefulWidget {
   final String genre;
@@ -47,7 +48,8 @@ class _MoviesState extends State<Movies> with AutomaticKeepAliveClientMixin {
       appBar: widget.displayAppBar
           ? AppBar(
               title: Tex(
-                content: widget.genre,
+                content:
+                    widget.genre == null ? model.currentGenre : widget.genre,
                 size: 'h4',
               ),
             )
@@ -64,7 +66,9 @@ class _MoviesState extends State<Movies> with AutomaticKeepAliveClientMixin {
           alignment: Alignment.topRight,
           child: Padding(
             padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-            child: FilterByGenre(genre: widget.genre),
+            child: FilterByGenre(
+                genre:
+                    widget.genre == null ? model.currentGenre : widget.genre),
           ),
         ),
       ],
@@ -78,14 +82,22 @@ class _MoviesState extends State<Movies> with AutomaticKeepAliveClientMixin {
         if (model.pending['getByGenre']) {
           return Center(child: CircularProgressIndicator());
         } else {
-          return GridView.count(
-            crossAxisCount: 3,
-            childAspectRatio: (itemWidth / itemHeight),
-            children: MoviesController.posterGrid(
-                offset: 0,
-                limit: double.infinity,
-                data: model.moviesByGenre[model.currentGenre]),
-          );
+          if (model.moviesByGenre[model.currentGenre].isEmpty) {
+            return Center(
+              child: QuickSup.empty(
+                subtitle: "Cette categorie est vide",
+              ),
+            );
+          } else {
+            return GridView.count(
+              crossAxisCount: 3,
+              childAspectRatio: (itemWidth / itemHeight),
+              children: MoviesController.posterGrid(
+                  offset: 0,
+                  limit: double.infinity,
+                  data: model.moviesByGenre[model.currentGenre]),
+            );
+          }
         }
       },
     );

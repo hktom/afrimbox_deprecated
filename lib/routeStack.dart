@@ -6,6 +6,7 @@ import 'package:afrimbox/screen/subscription/subscriptionPage.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import './helpers/const.dart';
 
 class RouteStack extends StatefulWidget {
   @override
@@ -16,7 +17,7 @@ class _RouteStackState extends State<RouteStack> {
   int _selectedIndex = 0;
   List<Widget> _screens = [
     HomeScreen(),
-    Movies(displayAppBar: false, genre: '0'),
+    Movies(displayAppBar: false, genre: category[0]['label']),
     Channels(displayAppBar: false),
     SubscriptionPage(),
     Setting()

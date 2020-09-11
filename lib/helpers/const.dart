@@ -14,8 +14,8 @@ const defaultChannel =
 //http://iptv.afrimbox.com:25461/movie/Afrimbox/\$2y\$10\$Gs/59.mp4
 
 const List<Map> category = [
-  {'label': 'All', 'key': 0},
-  {'label': 'Popular', 'key': 1},
+  {'label': 'Tous les films', 'key': 0},
+  {'label': 'Populaires', 'key': 1},
   {'label': 'Action', 'key': 3295},
   {'label': 'Animation', 'key': 3302},
   {'label': 'Aventure', 'key': 3304},
