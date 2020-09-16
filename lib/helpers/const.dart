@@ -1,6 +1,8 @@
+import 'package:intl/intl.dart';
+
 const appUrl = "https://streaming.afrimbox.com";
-const appImageUrl =
-    "https://streaming.afrimbox.com/App/wp-content/uploads/2020/08/";
+//const appImageUrl =
+// "https://streaming.afrimbox.com/App/wp-content/uploads/2020/08/";
 const moviesUrl = 'https://streaming.afrimbox.com/wp-json/wp/v2/movies';
 const moviesByGenreUrl =
     'https://streaming.afrimbox.com/wp-json/wp/v2/movies?genres=';
@@ -12,6 +14,13 @@ const defaultChannel =
     'http://iptv.afrimbox.com:25461/movie/afrimbox/showtime/59.mp4';
 //'http://zmky-nextcloud.sandslash.seedbox.link/s/esm5JcjaGRo7eot/download';
 //http://iptv.afrimbox.com:25461/movie/Afrimbox/\$2y\$10\$Gs/59.mp4
+
+String appImageUrl(date, img) {
+  DateTime dateTime = DateTime.parse(date);
+  String dateformat = DateFormat("yyyy/MM").format(dateTime);
+  String url = "https://streaming.afrimbox.com/App/wp-content/uploads/";
+  return url + dateformat + img;
+}
 
 const List<Map> category = [
   {'label': 'Tous les films', 'key': 0},

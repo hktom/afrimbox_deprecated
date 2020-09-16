@@ -22,7 +22,7 @@ class _CustomCardState extends State<CustomCard> {
 
   String setImage() {
     if (widget.movie['dt_poster'] != null) {
-      return appImageUrl + widget.movie['dt_poster'];
+      return appImageUrl(widget.movie["modified"], widget.movie['dt_poster']);
     } else {
       return placeholder;
     }
@@ -47,7 +47,8 @@ class _CustomCardState extends State<CustomCard> {
               width: double.infinity,
               fit: BoxFit.cover,
               alignment: Alignment.topCenter,
-              imageUrl: appImageUrl + widget.movie['dt_poster'],
+              imageUrl: appImageUrl(
+                  widget.movie["modified"], widget.movie['dt_poster']),
               placeholder: (context, url) => Container(
                 color: Colors.grey[300],
                 child: Image.asset(placeholder,

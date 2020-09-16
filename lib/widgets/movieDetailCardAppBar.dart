@@ -27,7 +27,7 @@ class _MovieDetailCardAppBarState extends State<MovieDetailCardAppBar> {
 
   String setImage() {
     if (widget.movie['dt_poster'] != null) {
-      return appImageUrl + widget.movie['dt_poster'];
+      return appImageUrl(widget.movie["modified"], widget.movie['dt_poster']);
     } else {
       return placeholder;
     }

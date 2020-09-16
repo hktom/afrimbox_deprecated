@@ -42,7 +42,7 @@ class _CardRoundedState extends State<CardRounded> {
     if (widget.isChannel && widget.movie['better_featured_image'] != null) {
       return widget.movie['better_featured_image']['source_url'];
     } else if (widget.movie['dt_poster'] != null) {
-      return appImageUrl + widget.movie['dt_poster'];
+      return appImageUrl(widget.movie["modified"], widget.movie['dt_poster']);
     } else {
       return placeholder;
     }
