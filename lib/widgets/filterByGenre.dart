@@ -7,8 +7,8 @@ import 'package:afrimbox/helpers/const.dart';
 
 class FilterByGenre extends StatefulWidget {
   //final Function getMovies;
-  final String genre;
-  FilterByGenre({Key key, this.genre}) : super(key: key);
+  //final Map currentGenre;
+  FilterByGenre({Key key}) : super(key: key);
 
   @override
   _FilterByGenreState createState() => _FilterByGenreState();
@@ -20,14 +20,10 @@ class _FilterByGenreState extends State<FilterByGenre> {
   bool loadData = true;
   MovieProvider model;
 
-  Future<void> getMovies() async {
-    await model.getByGenre(widget.genre);
-  }
-
   @override
   void initState() {
     model = Provider.of<MovieProvider>(context, listen: false);
-    dropdownValue = widget.genre;
+    dropdownValue = model.currentGenre['label'];
     //getMovies();
     super.initState();
   }
@@ -108,18 +104,17 @@ class _FilterByGenreState extends State<FilterByGenre> {
         color: Colors.deepPurpleAccent,
       ),
       onChanged: (String newValue) async {
-        var key = mapGenreToKey(newValue);
-        print(key);
-        setState(() {
-          dropdownValue = newValue;
-        });
-        await model.getByGenre(key);
+        model.setPendingByGenre();
+        Map _currentCategory = mapGenreToKey(newValue);
+        setState(() => dropdownValue = newValue);
+        await model.getByGenre(_currentCategory);
+        model.setCurrentGenre(_currentCategory);
       },
-      items: category.map<DropdownMenuItem<String>>((value) {
+      items: category.map<DropdownMenuItem<String>>((item) {
         return DropdownMenuItem<String>(
-          value: value['label'],
+          value: item['label'],
           child: Tex(
-            content: value['label'],
+            content: item['label'],
             color: Colors.white,
           ),
         );
@@ -127,11 +122,11 @@ class _FilterByGenreState extends State<FilterByGenre> {
     );
   }
 
-  String mapGenreToKey(String label) {
+  Map mapGenreToKey(String label) {
     var key;
     category.forEach((element) {
       if (element['label'] == label) {
-        key = element['key'].toString();
+        key = element;
       }
     });
     return key;

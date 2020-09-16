@@ -55,6 +55,11 @@ class MovieProvider extends ChangeNotifier {
     pendingReq = [];
   }
 
+  void setPendingByGenre(){
+    pending['getByGenre'] = true;
+    notifyListeners();
+  }
+
 // Get movies by genres
   Future<void> getByGenre(category) async {
     pending['getByGenre'] = true;
@@ -76,6 +81,7 @@ class MovieProvider extends ChangeNotifier {
         var key = category['key'];
         moviesByGenre[key] = res.data;
         currentGenre = category;
+        notifyListeners();
       }
       pending['getByGenre'] = false;
     }).catchError((err) {

@@ -1,5 +1,3 @@
-//import 'package:afrimbox/widgets/menu.dart';
-//import 'package:get/get.dart';
 import 'package:afrimbox/widgets/filterByGenre.dart';
 import 'package:afrimbox/helpers/tex.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:afrimbox/provider/MovieProvider.dart';
 import 'package:afrimbox/controller/moviesController.dart';
 import 'package:sup/sup.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 class Movies extends StatefulWidget {
   // final Map category;
@@ -24,15 +23,11 @@ class _MoviesState extends State<Movies> with AutomaticKeepAliveClientMixin {
   double itemWidth;
   bool loadData = false;
   String title = '';
+  DefaultCacheManager manager = new DefaultCacheManager();
   //MovieProvider model;
 
   @override
   bool get wantKeepAlive => true;
-
-  @override
-  void initState() {
-    //model = Provider.of<MovieProvider>(context, listen: false);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,22 +37,29 @@ class _MoviesState extends State<Movies> with AutomaticKeepAliveClientMixin {
     itemHeight = (size.height - kToolbarHeight - 24) / 2;
     itemWidth = size.width / 2;
 
-    return Consumer<MovieProvider>(builder: (context, model, child) {
-      return _scaffold(model);
-    });
-  }
-
-  Widget _scaffold(model) {
     return Scaffold(
       key: _scaffoldKey,
       appBar: widget.displayAppBar
           ? AppBar(
-              title: Tex(
-              content: model.currentGenre['label'],
-              size: 'h4',
-            ))
+              title: Consumer<MovieProvider>(builder: (context, model, child) {
+                return Tex(
+                  content: model.currentGenre['label'],
+                  size: 'h4',
+                );
+              }),
+            )
           : null,
-      body: buildStack(model),
+      body: Container(
+        child: Consumer<MovieProvider>(builder: (context, model, child) {
+          if (model.pending['getByGenre']) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else {
+            return buildStack(model);
+          }
+        }),
+      ),
     );
   }
 
@@ -69,7 +71,7 @@ class _MoviesState extends State<Movies> with AutomaticKeepAliveClientMixin {
           alignment: Alignment.topRight,
           child: Padding(
             padding: EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-            child: FilterByGenre(genre: model.currentGenre),
+            child: FilterByGenre(),
           ),
         ),
       ],
@@ -77,7 +79,10 @@ class _MoviesState extends State<Movies> with AutomaticKeepAliveClientMixin {
   }
 
   Widget _listMovie(model) {
-    if (model.moviesByGenre[model.currentGenre].isEmpty) {
+    var _key = model.currentGenre['key'];
+    var _movie = model.moviesByGenre[_key];
+
+    if (model.moviesByGenre[_key].isEmpty) {
       return Center(
         child: QuickSup.empty(
           subtitle: "Cette categorie est vide",
@@ -88,9 +93,7 @@ class _MoviesState extends State<Movies> with AutomaticKeepAliveClientMixin {
         crossAxisCount: 3,
         childAspectRatio: (itemWidth / itemHeight),
         children: MoviesController.posterGrid(
-            offset: 0,
-            limit: double.infinity,
-            data: model.moviesByGenre[model.currentGenre]),
+            offset: 0, limit: double.infinity, data: _movie),
       );
     }
   }

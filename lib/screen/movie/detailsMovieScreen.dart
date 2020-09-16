@@ -28,6 +28,7 @@ class _DetailsMovieScreenState extends State<DetailsMovieScreen> {
   MovieProvider model;
   UserProvider userModel;
   bool isFavorite = false;
+  bool loadActors = false;
   SnackBar snackBar = SnackBar(
     content: Text("Aucun trailer n'est disponible pour le moment"),
     backgroundColor: Color.fromRGBO(158, 25, 25, 1),
@@ -44,9 +45,11 @@ class _DetailsMovieScreenState extends State<DetailsMovieScreen> {
   Future<void> init() async {
     await model.getGenres(widget.movie['id'].toString());
     await model.getActors(widget.movie['id'].toString());
-    await model.getByGenre(3295.toString());
+    //await model.getByGenre(3295.toString());
     favorites = [];
-    setState(() {});
+    setState(() {
+      loadActors = true;
+    });
   }
 
   @override
@@ -63,7 +66,7 @@ class _DetailsMovieScreenState extends State<DetailsMovieScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldkey,
-      body: model.actors.length == 0 ? _spinner() : _scaffold(),
+      body: !loadActors ? _spinner() : _scaffold(),
     );
   }
 
@@ -264,7 +267,7 @@ class _DetailsMovieScreenState extends State<DetailsMovieScreen> {
         starCount: 5,
         rating: currentRate,
         size: 20.0,
-        isReadOnly: false,
+        isReadOnly: true,
         color: Colors.yellow,
         borderColor: Colors.black,
         spacing: 0.0);

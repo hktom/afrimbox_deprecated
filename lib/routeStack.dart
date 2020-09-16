@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import './helpers/const.dart';
+import 'package:afrimbox/provider/MovieProvider.dart';
+import 'package:provider/provider.dart';
 
 class RouteStack extends StatefulWidget {
   @override
@@ -15,6 +17,7 @@ class RouteStack extends StatefulWidget {
 
 class _RouteStackState extends State<RouteStack> {
   int _selectedIndex = 0;
+  MovieProvider model;
   List<Widget> _screens = [
     HomeScreen(),
     Movies(displayAppBar: false),
@@ -30,9 +33,17 @@ class _RouteStackState extends State<RouteStack> {
   }
 
   void _onPageChanged(int index) {
+    if (index == 1) {
+      model.setCurrentGenre(category[0]);
+    }
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  void initState() {
+    model = Provider.of<MovieProvider>(context, listen: false);
+    super.initState();
   }
 
   @override
