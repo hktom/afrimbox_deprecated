@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:afrimbox/helpers/const.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 //import 'package:afrimbox/widgets/menu.dart';
 //import 'package:flutter_spinkit/flutter_spinkit.dart';
 
@@ -29,6 +30,8 @@ class _HomeScreenState extends State<HomeScreen>
   int page = 2;
   MovieProvider movieModel;
   ChannelProvider channelModel;
+  RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
 
   //load more
   Future<void> _loadMore(int index) async {
@@ -42,6 +45,13 @@ class _HomeScreenState extends State<HomeScreen>
     await movieModel.get().then((value) async {
       await channelModel.get();
     });
+  }
+
+  void _refresh() async {
+    await movieModel.get().then((value) async {
+      await channelModel.get();
+    });
+    _refreshController.refreshCompleted();
   }
 
   @override
@@ -111,8 +121,14 @@ class _HomeScreenState extends State<HomeScreen>
             child: CircularProgressIndicator(),
           );
         }
-        return CustomScrollView(
-          slivers: _returnSlivers(),
+        return SmartRefresher(
+          controller: _refreshController,
+          onRefresh: _refresh,
+          enablePullUp: true,
+          enablePullDown: true,
+          child: CustomScrollView(
+            slivers: _returnSlivers(),
+          ),
         );
       })),
     );

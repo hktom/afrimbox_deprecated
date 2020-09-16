@@ -4,12 +4,14 @@ import 'package:dio/dio.dart';
 const appUrl = "https://streaming.afrimbox.com";
 //const appImageUrl =
 // "https://streaming.afrimbox.com/App/wp-content/uploads/2020/08/";
-const moviesUrl = 'https://streaming.afrimbox.com/wp-json/wp/v2/movies';
+const moviesUrl =
+    'https://streaming.afrimbox.com/wp-json/wp/v2/movies?per_page=9';
 const moviesByGenreUrl =
-    'https://streaming.afrimbox.com/wp-json/wp/v2/movies?genres=';
+    'https://streaming.afrimbox.com/wp-json/wp/v2/movies?per_page=9&genres=';
 const genresUrl = 'https://streaming.afrimbox.com/wp-json/wp/v2/genres?post=';
 const actorsUrl = 'https://streaming.afrimbox.com/wp-json/wp/v2/dtcast?post=';
 const channelsUrl = 'https://streaming.afrimbox.com/wp-json/wp/v2/chaine_tv';
+const searchUrl = "https://streaming.afrimbox.com/wp-json/wp/v2/search?search";
 
 const defaultChannel =
     'http://iptv.afrimbox.com:25461/movie/afrimbox/showtime/59.mp4';

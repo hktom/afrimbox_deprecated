@@ -55,7 +55,7 @@ class MovieProvider extends ChangeNotifier {
     pendingReq = [];
   }
 
-  void setPendingByGenre(){
+  void setPendingByGenre() {
     pending['getByGenre'] = true;
     notifyListeners();
   }
@@ -63,7 +63,7 @@ class MovieProvider extends ChangeNotifier {
 // Get movies by genres
   Future<void> getByGenre(category) async {
     pending['getByGenre'] = true;
-    if (category['key'] == 1 || category['key'] == 0) {
+    if (category['key'] == '1' || category['key'] == '0') {
       currentGenre = category;
       pending['getByGenre'] = false;
     } else {
@@ -103,6 +103,29 @@ class MovieProvider extends ChangeNotifier {
     }
 
     return index;
+  }
+
+  // pagination
+  Future<int> pagination({int page, category: category}) async {
+    Dio _dio = new Dio();
+    String perpage = "&per_page=${page.toString()}";
+    int pages = page;
+    _dio.options.connectTimeout = 5000; //5s
+    _dio.options.receiveTimeout = 3000;
+    await _dio.get(moviesByGenreUrl + category['key'] + perpage).then((res) {
+      if (res.statusCode == 200) {
+        var key = category['key'];
+        moviesByGenre[key] = res.data;
+        currentGenre = category;
+        pages = pages + 9;
+        notifyListeners();
+      }
+      pending['getByGenre'] = false;
+    }).catchError((err) {
+      print("REQUEST Error ${err.toString()}");
+      pending['getByGenre'] = false;
+    });
+    return pages;
   }
 
   //get genres

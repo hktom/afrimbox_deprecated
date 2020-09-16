@@ -6,6 +6,7 @@ import 'package:afrimbox/provider/MovieProvider.dart';
 import 'package:afrimbox/controller/moviesController.dart';
 import 'package:sup/sup.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class Movies extends StatefulWidget {
   // final Map category;
@@ -22,9 +23,35 @@ class _MoviesState extends State<Movies> with AutomaticKeepAliveClientMixin {
   double itemHeight;
   double itemWidth;
   bool loadData = false;
+  bool _isLoading = false;
   String title = '';
+  int page = 9;
   DefaultCacheManager manager = new DefaultCacheManager();
-  //MovieProvider model;
+  RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
+  MovieProvider movieProvider;
+
+  void _refresh() async {
+    var currentGenre = movieProvider.currentGenre;
+    await movieProvider.getByGenre(currentGenre);
+    _refreshController.refreshCompleted();
+  }
+
+  //load pagination
+  Future<void> _loadMore(int indexPage) async {
+    await movieProvider
+        .pagination(page: indexPage, category: movieProvider.currentGenre)
+        .then((value) {
+      page = value;
+      setState(() => _isLoading = false);
+    });
+  }
+
+  @override
+  void initState() {
+    movieProvider = Provider.of<MovieProvider>(context, listen: false);
+    super.initState();
+  }
 
   @override
   bool get wantKeepAlive => true;
@@ -89,11 +116,28 @@ class _MoviesState extends State<Movies> with AutomaticKeepAliveClientMixin {
         ),
       );
     } else {
-      return GridView.count(
-        crossAxisCount: 3,
-        childAspectRatio: (itemWidth / itemHeight),
-        children: MoviesController.posterGrid(
-            offset: 0, limit: double.infinity, data: _movie),
+      return SmartRefresher(
+        enablePullUp: false,
+        enablePullDown: true,
+        controller: _refreshController,
+        onRefresh: _refresh,
+        child: NotificationListener<ScrollNotification>(
+          onNotification: (ScrollNotification scrollInfo) {
+            if (!_isLoading &&
+                scrollInfo.metrics.pixels >=
+                    scrollInfo.metrics.maxScrollExtent) {
+              print("load more");
+              _loadMore(page);
+              setState(() => _isLoading = true);
+            }
+          },
+          child: GridView.count(
+            crossAxisCount: 3,
+            childAspectRatio: (itemWidth / itemHeight),
+            children: MoviesController.posterGrid(
+                offset: 0, limit: double.infinity, data: _movie),
+          ),
+        ),
       );
     }
   }

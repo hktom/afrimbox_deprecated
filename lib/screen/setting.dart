@@ -95,14 +95,14 @@ class _SettingState extends State<Setting> with AutomaticKeepAliveClientMixin {
                   await setLight();
                 }
               }),
-          Divider(),
-          TileSwicth(
-              icon: Icons.notifications_active,
-              title: "Notification",
-              value: false,
-              onChanged: () async {
-                print("Active Notification");
-              }),
+          // Divider(),
+          // TileSwicth(
+          //     icon: Icons.notifications_active,
+          //     title: "Notification",
+          //     value: false,
+          //     onChanged: () async {
+          //       print("Active Notification");
+          //     }),
           Divider(),
           TileSwicth(
               icon: Icons.beenhere,
