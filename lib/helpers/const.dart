@@ -1,4 +1,5 @@
 import 'package:intl/intl.dart';
+import 'package:dio/dio.dart';
 
 const appUrl = "https://streaming.afrimbox.com";
 //const appImageUrl =
@@ -12,35 +13,40 @@ const channelsUrl = 'https://streaming.afrimbox.com/wp-json/wp/v2/chaine_tv';
 
 const defaultChannel =
     'http://iptv.afrimbox.com:25461/movie/afrimbox/showtime/59.mp4';
-//'http://zmky-nextcloud.sandslash.seedbox.link/s/esm5JcjaGRo7eot/download';
-//http://iptv.afrimbox.com:25461/movie/Afrimbox/\$2y\$10\$Gs/59.mp4
 
-String appImageUrl(date, img) {
-  DateTime dateTime = DateTime.parse(date);
-  String dateformat = DateFormat("yyyy/MM").format(dateTime);
-  String url = "https://streaming.afrimbox.com/App/wp-content/uploads/";
-  return url + dateformat + img;
+Future<String> moviePoster(movie) async {
+  String imgUrl = "";
+  String mediaUrl = movie["_links"]["wp:featuredmedia"][0]["href"];
+  try {
+    await Dio().get(mediaUrl).then((res) {
+      imgUrl = res.data["media_details"]["sizes"]["medium"]["source_url"];
+    });
+  } catch (e) {
+    print("GET MOVIE MEDIA URL ERR ${e.toString()}");
+  }
+
+  return imgUrl;
 }
 
 const List<Map> category = [
-  {'label': 'Tous les films', 'key': 0},
-  {'label': 'Populaires', 'key': 1},
-  {'label': 'Action', 'key': 3295},
-  {'label': 'Animation', 'key': 3302},
-  {'label': 'Aventure', 'key': 3304},
-  {'label': 'Comédie', 'key': 3257},
-  {'label': 'Crime', 'key': 3318},
-  {'label': 'Documentaire', 'key': 3435},
-  {'label': 'Drame', 'key': 3273},
-  {'label': 'Familial', 'key': 3303},
-  {'label': 'Fantastique', 'key': 3527},
-  {'label': 'Guerre', 'key': 3692},
-  {'label': 'Histoire', 'key': 3386},
-  {'label': 'Horreur', 'key': 3291},
-  {'label': 'Musique', 'key': 3514},
-  {'label': 'Mystère', 'key': 3317},
-  {'label': 'Romance', 'key': 3332},
-  {'label': 'Science-Fiction', 'key': 3305},
-  {'label': 'Téléfilm', 'key': 3552},
-  {'label': 'Thriller', 'key': 3293}
+  {'label': 'Tous les films', 'key': '0'},
+  {'label': 'Populaires', 'key': '1'},
+  {'label': 'Action', 'key': '49'},
+  {'label': 'Animation', 'key': '79'},
+  {'label': 'Aventure', 'key': '50'},
+  {'label': 'Comédie', 'key': '51'},
+  {'label': 'Crime', 'key': '320'},
+  {'label': 'Documentaire', 'key': '1538'},
+  {'label': 'Drame', 'key': '28'},
+  {'label': 'Familial', 'key': '77'},
+  {'label': 'Fantastique', 'key': '78'},
+  {'label': 'Guerre', 'key': '614'},
+  {'label': 'Histoire', 'key': '613'},
+  {'label': 'Horreur', 'key': '14'},
+  {'label': 'Musique', 'key': '421'},
+  {'label': 'Mystère', 'key': '15'},
+  {'label': 'Romance', 'key': '29'},
+  {'label': 'Science-Fiction', 'key': '48'},
+  {'label': 'Thriller', 'key': '16'}
+  //{'label': 'Téléfilm', 'key': 3552},
 ];

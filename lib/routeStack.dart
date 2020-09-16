@@ -17,7 +17,7 @@ class _RouteStackState extends State<RouteStack> {
   int _selectedIndex = 0;
   List<Widget> _screens = [
     HomeScreen(),
-    Movies(displayAppBar: false, genre: category[0]['label']),
+    Movies(displayAppBar: false),
     Channels(displayAppBar: false),
     SubscriptionPage(),
     Setting()

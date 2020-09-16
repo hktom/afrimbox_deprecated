@@ -19,18 +19,25 @@ class _CustomCardState extends State<CustomCard> {
 
   String image = '';
   String placeholder = 'assets/movie_placeholder.png';
+  bool imageLoaded = false;
 
-  String setImage() {
+  Future<void> setImage() async {
     if (widget.movie['dt_poster'] != null) {
-      return appImageUrl(widget.movie["modified"], widget.movie['dt_poster']);
+      await moviePoster(widget.movie).then((value) => setState(() {
+            image = value;
+            imageLoaded = true;
+          }));
     } else {
-      return placeholder;
+      image = placeholder;
+      setState(() {
+        imageLoaded = true;
+      });
     }
   }
 
   @override
   void initState() {
-    image = setImage();
+    setImage();
     super.initState();
   }
 
@@ -43,28 +50,7 @@ class _CustomCardState extends State<CustomCard> {
         height: 250,
         child: Stack(
           children: <Widget>[
-            CachedNetworkImage(
-              width: double.infinity,
-              fit: BoxFit.cover,
-              alignment: Alignment.topCenter,
-              imageUrl: appImageUrl(
-                  widget.movie["modified"], widget.movie['dt_poster']),
-              placeholder: (context, url) => Container(
-                color: Colors.grey[300],
-                child: Image.asset(placeholder,
-                    width: double.infinity,
-                    height: 300,
-                    fit: BoxFit.cover,
-                    alignment: Alignment.center),
-              ),
-              errorWidget: (context, url, error) => Container(
-                  color: Colors.grey[300],
-                  child: Image.asset(placeholder,
-                      width: double.infinity,
-                      height: 300,
-                      fit: BoxFit.cover,
-                      alignment: Alignment.center)),
-            ),
+            imageLoaded ? _moviePoster() : _imagePlaceholder(),
             Container(
               color: Color.fromRGBO(0, 0, 0, 0.1),
               width: double.infinity,
@@ -84,6 +70,40 @@ class _CustomCardState extends State<CustomCard> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _imagePlaceholder() {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(8.0),
+      child: Image.asset(placeholder,
+          width: double.infinity,
+          fit: BoxFit.cover,
+          alignment: Alignment.center),
+    );
+  }
+
+  Widget _moviePoster() {
+    return CachedNetworkImage(
+      width: double.infinity,
+      fit: BoxFit.cover,
+      alignment: Alignment.topCenter,
+      imageUrl: image,
+      placeholder: (context, url) => Container(
+        color: Colors.grey[300],
+        child: Image.asset(placeholder,
+            width: double.infinity,
+            height: 300,
+            fit: BoxFit.cover,
+            alignment: Alignment.center),
+      ),
+      errorWidget: (context, url, error) => Container(
+          color: Colors.grey[300],
+          child: Image.asset(placeholder,
+              width: double.infinity,
+              height: 300,
+              fit: BoxFit.cover,
+              alignment: Alignment.center)),
     );
   }
 }

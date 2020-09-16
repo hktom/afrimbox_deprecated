@@ -3,6 +3,7 @@ import 'package:afrimbox/controller/moviesController.dart';
 import 'package:afrimbox/helpers/tex.dart';
 import 'package:afrimbox/screen/channel/channels.dart';
 import 'package:afrimbox/screen/movie/movies.dart';
+import 'package:afrimbox/widgets/homeCard.dart';
 import 'package:flutter/material.dart';
 import 'package:afrimbox/provider/MovieProvider.dart';
 import 'package:afrimbox/provider/ChannelProvider.dart';
@@ -22,23 +23,25 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen>
     with AutomaticKeepAliveClientMixin {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-  bool loadData = false;
+  bool _isLoading = false;
   var connectivity;
   bool isOnline = true;
-  int counter = 2;
+  int page = 2;
   MovieProvider movieModel;
   ChannelProvider channelModel;
 
   //load more
-  Future<void> loadMore(int index) async {
-    counter = await movieModel.loadMore(counter: index);
-    setState(() {});
+  Future<void> _loadMore(int index) async {
+    await movieModel.loadMore(index).then((value) {
+      page = value;
+      setState(() => _isLoading = false);
+    });
   }
 
   Future<void> getMoviesChannels() async {
-    await movieModel.get();
-    await channelModel.get();
-    setState(() {});
+    await movieModel.get().then((value) async {
+      await channelModel.get();
+    });
   }
 
   @override
@@ -96,9 +99,11 @@ class _HomeScreenState extends State<HomeScreen>
     return Container(
       child: NotificationListener<ScrollNotification>(
           onNotification: (ScrollNotification scrollInfo) {
-        if (scrollInfo.metrics.pixels >=
-            scrollInfo.metrics.maxScrollExtent - 400) {
-          loadMore(counter);
+        if (!_isLoading &&
+            scrollInfo.metrics.pixels >= scrollInfo.metrics.maxScrollExtent) {
+          print("load more");
+          setState(() => _isLoading = true);
+          _loadMore(page);
         }
       }, child: Consumer<MovieProvider>(builder: (context, model, child) {
         if (model.pending['get']) {
@@ -113,23 +118,33 @@ class _HomeScreenState extends State<HomeScreen>
     );
   }
 
+  void updateCurrentGenre(currentCategory) {
+    movieModel.setCurrentGenre(currentCategory);
+    Get.to(Movies(displayAppBar: true));
+  }
+
   List<Widget> _returnSlivers() {
     List<Widget> slivers = [];
     slivers.add(offLineBar());
     slivers.add(lastMovie());
     slivers.add(sliverTitle("Nos chaines", null));
     slivers.add(listChannels());
-    slivers.add(sliverTitle("Films populaires", category[1]['label']));
-    slivers.add(listMovies(1));
+    //slivers.add(sliverTitle("Films populaires", category[1]['label']));
+    //slivers.add(listMovies(1));
 
-    for (var i = 2; i < movieModel.moviesByGenre.length; i++) {
-      var genre = category[i]['key'];
-      if (movieModel.moviesByGenre[genre.toString()] != null &&
-          !movieModel.moviesByGenre[genre.toString()].isEmpty) {
-        slivers.add(sliverTitle(category[i]['label'], category[i]['label']));
-        slivers.add(listMovies(genre));
+    movieModel.moviesByGenre.forEach((key, value) {
+      if (key != '0') {
+        Map _category = _returnCategory(key);
+        slivers.add(
+          SliverToBoxAdapter(
+              child: HomeCard(
+            updateCurrentGenre: updateCurrentGenre,
+            data: value,
+            category: _category,
+          )),
+        );
       }
-    }
+    });
 
     if (movieModel.pending['getByGenre']) {
       slivers.add(SliverToBoxAdapter(
@@ -141,6 +156,16 @@ class _HomeScreenState extends State<HomeScreen>
     slivers.add(SliverPadding(padding: EdgeInsets.only(top: 50)));
 
     return slivers;
+  }
+
+  Map _returnCategory(genreKey) {
+    Map _category = {};
+    category.forEach((element) {
+      if (element['key'].toString() == genreKey) {
+        _category = element;
+      }
+    });
+    return _category;
   }
 
   Widget sliverTitle(String title, String genre) {
@@ -155,11 +180,7 @@ class _HomeScreenState extends State<HomeScreen>
           ),
           trailing: IconButton(
             onPressed: () {
-              if (genre != null) {
-                Get.to(Movies(genre: genre, displayAppBar: true));
-              } else {
-                Get.to(Channels(displayAppBar: true));
-              }
+              Get.to(Channels(displayAppBar: true));
             },
             icon: FaIcon(
               FontAwesomeIcons.th,

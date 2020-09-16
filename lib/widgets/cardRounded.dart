@@ -29,6 +29,7 @@ class _CardRoundedState extends State<CardRounded> {
   //String imageUrlPrefix = ApiUrl.urlImage;
   String image = '';
   String placeholder = '';
+  bool imageLoaded = false;
 
   String setImagePlaceholder() {
     if (widget.isChannel) {
@@ -38,20 +39,26 @@ class _CardRoundedState extends State<CardRounded> {
     }
   }
 
-  String setImage() {
+  Future<void> setImage() async {
     if (widget.isChannel && widget.movie['better_featured_image'] != null) {
-      return widget.movie['better_featured_image']['source_url'];
+      image = widget.movie['better_featured_image']['source_url'];
     } else if (widget.movie['dt_poster'] != null) {
-      return appImageUrl(widget.movie["modified"], widget.movie['dt_poster']);
+      await moviePoster(widget.movie).then((value) => setState(() {
+            image = value;
+            imageLoaded = true;
+          }));
     } else {
-      return placeholder;
+      image = placeholder;
+      setState(() {
+        imageLoaded = true;
+      });
     }
   }
 
   @override
   void initState() {
     placeholder = setImagePlaceholder();
-    image = setImage();
+    setImage();
     super.initState();
   }
 
@@ -69,32 +76,42 @@ class _CardRoundedState extends State<CardRounded> {
         margin: widget.margin,
         height: widget.height,
         width: widget.width,
-        // decoration: BoxDecoration(
-        //   color: Colors.white,
-        //   borderRadius: BorderRadius.circular(10),
-        // ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(8.0),
-          child: CachedNetworkImage(
-            width: double.infinity,
-            fit: BoxFit.cover,
-            alignment: Alignment.center,
-            imageUrl: this.image,
-            placeholder: (context, url) => Container(
-              color: Colors.grey[300],
-              child: Image.asset(placeholder,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                  alignment: Alignment.center),
-            ),
-            errorWidget: (context, url, error) => Container(
-              color: Colors.grey[300],
-              child: Image.asset(placeholder,
-                  width: double.infinity,
-                  fit: BoxFit.cover,
-                  alignment: Alignment.center),
-            ),
-          ),
+        child: imageLoaded ? _imagePoster() : _imagePlaceholder(),
+      ),
+    );
+  }
+
+  Widget _imagePlaceholder() {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(8.0),
+      child: Image.asset(placeholder,
+          width: double.infinity,
+          fit: BoxFit.cover,
+          alignment: Alignment.center),
+    );
+  }
+
+  Widget _imagePoster() {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(8.0),
+      child: CachedNetworkImage(
+        width: double.infinity,
+        fit: BoxFit.cover,
+        alignment: Alignment.center,
+        imageUrl: image,
+        placeholder: (context, url) => Container(
+          color: Colors.grey[300],
+          child: Image.asset(placeholder,
+              width: double.infinity,
+              fit: BoxFit.cover,
+              alignment: Alignment.center),
+        ),
+        errorWidget: (context, url, error) => Container(
+          color: Colors.grey[300],
+          child: Image.asset(placeholder,
+              width: double.infinity,
+              fit: BoxFit.cover,
+              alignment: Alignment.center),
         ),
       ),
     );

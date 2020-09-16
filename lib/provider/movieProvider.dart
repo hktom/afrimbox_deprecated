@@ -1,4 +1,5 @@
 import 'package:afrimbox/helpers/const.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
@@ -13,21 +14,29 @@ class MovieProvider extends ChangeNotifier {
   var currentGenre;
   var pendingReq = [];
   Map<String, bool> pending = {'get': false, 'getByGenre': false};
-  Dio dio = new Dio();
+  //Dio dio = new Dio();
 // get All movies
+
+  void setCurrentGenre(category) {
+    this.currentGenre = category;
+    notifyListeners();
+  }
+
   Future<void> get() async {
     pending['get'] = true;
-    var response =
-        await dio.get(moviesUrl).whenComplete(() => pending['get'] = false);
-    if (response.statusCode == 200) {
-      movies = response.data;
-      currentGenre = '0';
-      moviesByGenre['0'] = movies;
-      moviesByGenre['1'] = _setPopularMovies(response.data);
-      print("MOVIE API REQUEST STATUS 200");
-    } else {
-      print("MOVIE API REQUEST STATUS 404");
-    }
+    await Dio().get(moviesUrl).catchError((err) {
+      print("MOVIE GET ERR ${err.toString()}");
+      pending['get'] = false;
+    }).then((res) {
+      if (res.statusCode == 200) {
+        movies = res.data;
+        currentGenre = '0';
+        moviesByGenre['0'] = movies;
+        moviesByGenre['1'] = _setPopularMovies(res.data);
+      }
+      pending['get'] = false;
+    });
+
     notifyListeners();
   }
 
@@ -47,56 +56,47 @@ class MovieProvider extends ChangeNotifier {
   }
 
 // Get movies by genres
-  Future<void> getByGenre(String genre) async {
-    //await this.get();
-    if (int.parse(genre) == 0) {
-      pending['getByGenre'] = true;
-      moviesByGenre[genre] = moviesByGenre['0'];
-      currentGenre = genre;
-      pending['getByGenre'] = false;
-    } else if (int.parse(genre) == 1) {
-      pending['getByGenre'] = true;
-      moviesByGenre[genre] = moviesByGenre['1'];
-      currentGenre = genre;
+  Future<void> getByGenre(category) async {
+    pending['getByGenre'] = true;
+    if (category['key'] == 1 || category['key'] == 0) {
+      currentGenre = category;
       pending['getByGenre'] = false;
     } else {
-      await this._callBackGetByGenre(genre);
+      await this._getByGenre(category);
     }
     notifyListeners();
   }
 
-  Future<void> _callBackGetByGenre(String genre) async {
-    pending['getByGenre'] = true;
-    notifyListeners();
-    var response = await dio
-        .get(moviesByGenreUrl + genre)
-        .whenComplete(() => pending['getByGenre'] = false);
-    if (response.statusCode == 200) {
-      moviesByGenre[genre] = response.data;
-      currentGenre = genre;
-      print("MOVIE By Genre $genre API REQUEST STATUS 200");
-    } else {
-      print("MOVIE By Genre $genre REQUEST STATUS 404");
-    }
-    pending['getByGenre'] = false;
-    notifyListeners();
+  Future<void> _getByGenre(category) async {
+    Dio _dio = new Dio();
+    _dio.options.connectTimeout = 5000; //5s
+    _dio.options.receiveTimeout = 3000;
+    await _dio.get(moviesByGenreUrl + category['key']).then((res) {
+      if (res.statusCode == 200) {
+        var key = category['key'];
+        moviesByGenre[key] = res.data;
+        currentGenre = category;
+      }
+      pending['getByGenre'] = false;
+    }).catchError((err) {
+      print("REQUEST Error ${err.toString()}");
+      pending['getByGenre'] = false;
+    });
   }
 
   //inifinite Scroll load More Movies
-  Future<int> loadMore({int counter}) async {
-    if (counter >= category.length) {
-      return counter;
+  Future<int> loadMore(int index) async {
+    if (index >= category.length) {
+      return index;
     }
 
-    var genre = category[counter]['key'].toString();
-
-    if (!pendingReq.contains(genre)) {
-      pendingReq.add(genre);
-      await this.getByGenre(genre);
-      return counter + 1;
+    if (!pendingReq.contains(category[index]['key'])) {
+      pendingReq.add(category[index]['key']);
+      await this.getByGenre(category[index]);
+      return index + 1;
     }
 
-    return counter;
+    return index;
   }
 
   //get genres

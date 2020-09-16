@@ -24,18 +24,26 @@ class _MovieDetailCardAppBarState extends State<MovieDetailCardAppBar> {
   var unescape = new HtmlUnescape();
   String image = '';
   String placeholder = 'assets/movie_placeholder.png';
+  bool imageLoaded = false;
 
-  String setImage() {
+  Future<void> setImage() async {
     if (widget.movie['dt_poster'] != null) {
-      return appImageUrl(widget.movie["modified"], widget.movie['dt_poster']);
+      await moviePoster(widget.movie).then((value) => setState(() {
+            image = value;
+            imageLoaded = true;
+          }));
     } else {
-      return placeholder;
+      image = placeholder;
+      setState(() {
+        imageLoaded = true;
+      });
     }
+    setState(() {});
   }
 
   @override
   void initState() {
-    image = setImage();
+    setImage();
     super.initState();
   }
 
@@ -116,6 +124,10 @@ class _MovieDetailCardAppBarState extends State<MovieDetailCardAppBar> {
   }
 
   Widget _background() {
+    if (!imageLoaded) {
+      return Image.asset(placeholder,
+          height: 300, fit: BoxFit.cover, alignment: Alignment.topCenter);
+    }
     return CachedNetworkImage(
       width: double.infinity,
       height: 300,
