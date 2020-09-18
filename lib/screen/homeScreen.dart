@@ -1,11 +1,11 @@
 //import 'package:afrimbox/widgets/loadingSpinner.dart';
 import 'package:afrimbox/controller/moviesController.dart';
 import 'package:afrimbox/helpers/tex.dart';
+import 'package:afrimbox/provider/moviesProvider.dart';
 import 'package:afrimbox/screen/channel/channels.dart';
 import 'package:afrimbox/screen/movie/movies.dart';
 import 'package:afrimbox/widgets/homeCard.dart';
 import 'package:flutter/material.dart';
-import 'package:afrimbox/provider/MovieProvider.dart';
 import 'package:afrimbox/provider/ChannelProvider.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
@@ -28,7 +28,7 @@ class _HomeScreenState extends State<HomeScreen>
   var connectivity;
   bool isOnline = true;
   int page = 2;
-  MovieProvider movieModel;
+  MoviesProvider movieModel;
   ChannelProvider channelModel;
   RefreshController _refreshController =
       RefreshController(initialRefresh: false);
@@ -59,7 +59,7 @@ class _HomeScreenState extends State<HomeScreen>
 
   @override
   initState() {
-    movieModel = Provider.of<MovieProvider>(context, listen: false);
+    movieModel = Provider.of<MoviesProvider>(context, listen: false);
     channelModel = Provider.of<ChannelProvider>(context, listen: false);
     movieModel.resetPendingReq();
     connectivity = Connectivity()
@@ -115,7 +115,7 @@ class _HomeScreenState extends State<HomeScreen>
           setState(() => _isLoading = true);
           _loadMore(page);
         }
-      }, child: Consumer<MovieProvider>(builder: (context, model, child) {
+      }, child: Consumer<MoviesProvider>(builder: (context, model, child) {
         if (model.pending['get']) {
           return Center(
             child: CircularProgressIndicator(),
@@ -124,7 +124,7 @@ class _HomeScreenState extends State<HomeScreen>
         return SmartRefresher(
           controller: _refreshController,
           onRefresh: _refresh,
-          enablePullUp: true,
+          enablePullUp: false,
           enablePullDown: true,
           child: CustomScrollView(
             slivers: _returnSlivers(),

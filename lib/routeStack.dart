@@ -1,3 +1,4 @@
+import 'package:afrimbox/provider/moviesProvider.dart';
 import 'package:afrimbox/screen/channel/channels.dart';
 import 'package:afrimbox/screen/homeScreen.dart';
 import 'package:afrimbox/screen/movie/movies.dart';
@@ -7,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import './helpers/const.dart';
-import 'package:afrimbox/provider/MovieProvider.dart';
 import 'package:provider/provider.dart';
 
 class RouteStack extends StatefulWidget {
@@ -17,7 +17,7 @@ class RouteStack extends StatefulWidget {
 
 class _RouteStackState extends State<RouteStack> {
   int _selectedIndex = 0;
-  MovieProvider model;
+  MoviesProvider model;
   List<Widget> _screens = [
     HomeScreen(),
     Movies(displayAppBar: false),
@@ -42,7 +42,7 @@ class _RouteStackState extends State<RouteStack> {
   }
 
   void initState() {
-    model = Provider.of<MovieProvider>(context, listen: false);
+    model = Provider.of<MoviesProvider>(context, listen: false);
     super.initState();
   }
 
@@ -56,9 +56,9 @@ class _RouteStackState extends State<RouteStack> {
         ),
         actions: <Widget>[
           IconButton(
-              icon: FaIcon(FontAwesomeIcons.userCircle),
+              icon: FaIcon(FontAwesomeIcons.search),
               onPressed: () {
-                Get.toNamed('/profile');
+                Get.toNamed('/search');
               })
         ],
       ),

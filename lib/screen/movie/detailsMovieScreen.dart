@@ -1,3 +1,4 @@
+import 'package:afrimbox/provider/moviesProvider.dart';
 import 'package:afrimbox/widgets/buttonIconText.dart';
 import 'package:afrimbox/widgets/movieDetailCardAppBar.dart';
 import 'package:afrimbox/provider/userProvider.dart';
@@ -8,15 +9,15 @@ import 'package:get/get.dart';
 import 'package:html_unescape/html_unescape.dart';
 import 'package:flutter_widget_from_html_core/flutter_widget_from_html_core.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
-import 'package:afrimbox/provider/MovieProvider.dart';
 import 'package:provider/provider.dart';
 import 'package:afrimbox/controller/moviesController.dart';
 import 'package:toast/toast.dart';
 //import 'package:afrimbox/helpers/const.dart';
 
 class DetailsMovieScreen extends StatefulWidget {
-  final Map movie;
-  DetailsMovieScreen({Key key, this.movie}) : super(key: key);
+  Map movie;
+  String movieUrl;
+  DetailsMovieScreen({Key key, this.movie, this.movieUrl}) : super(key: key);
   @override
   _DetailsMovieScreenState createState() => _DetailsMovieScreenState();
 }
@@ -25,7 +26,7 @@ class _DetailsMovieScreenState extends State<DetailsMovieScreen> {
   final GlobalKey<ScaffoldState> _scaffoldkey = new GlobalKey<ScaffoldState>();
   var unescape = new HtmlUnescape();
   var favorites = [];
-  MovieProvider model;
+  MoviesProvider model;
   UserProvider userModel;
   bool isFavorite = false;
   bool loadActors = false;
@@ -43,6 +44,9 @@ class _DetailsMovieScreenState extends State<DetailsMovieScreen> {
 
   // get genres
   Future<void> init() async {
+    if (widget.movie.isEmpty) {
+      widget.movie = await model.getOne(widget.movieUrl);
+    }
     await model.getGenres(widget.movie['id'].toString());
     await model.getActors(widget.movie['id'].toString());
     //await model.getByGenre(3295.toString());
@@ -54,7 +58,7 @@ class _DetailsMovieScreenState extends State<DetailsMovieScreen> {
 
   @override
   void initState() {
-    model = Provider.of<MovieProvider>(context, listen: false);
+    model = Provider.of<MoviesProvider>(context, listen: false);
     model.setActors();
     userModel = Provider.of<UserProvider>(context, listen: false);
     isFavorite = userModel.isMovieInFavories(widget.movie);
@@ -66,7 +70,7 @@ class _DetailsMovieScreenState extends State<DetailsMovieScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldkey,
-      body: !loadActors ? _spinner() : _scaffold(),
+      body: loadActors && widget.movie.isNotEmpty ? _scaffold() : _spinner(),
     );
   }
 

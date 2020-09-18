@@ -1,8 +1,8 @@
+import 'package:afrimbox/provider/moviesProvider.dart';
 import 'package:afrimbox/widgets/filterByGenre.dart';
 import 'package:afrimbox/helpers/tex.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:afrimbox/provider/MovieProvider.dart';
 import 'package:afrimbox/controller/moviesController.dart';
 import 'package:sup/sup.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
@@ -29,7 +29,7 @@ class _MoviesState extends State<Movies> with AutomaticKeepAliveClientMixin {
   DefaultCacheManager manager = new DefaultCacheManager();
   RefreshController _refreshController =
       RefreshController(initialRefresh: false);
-  MovieProvider movieProvider;
+  MoviesProvider movieProvider;
 
   void _refresh() async {
     var currentGenre = movieProvider.currentGenre;
@@ -49,7 +49,7 @@ class _MoviesState extends State<Movies> with AutomaticKeepAliveClientMixin {
 
   @override
   void initState() {
-    movieProvider = Provider.of<MovieProvider>(context, listen: false);
+    movieProvider = Provider.of<MoviesProvider>(context, listen: false);
     super.initState();
   }
 
@@ -68,7 +68,7 @@ class _MoviesState extends State<Movies> with AutomaticKeepAliveClientMixin {
       key: _scaffoldKey,
       appBar: widget.displayAppBar
           ? AppBar(
-              title: Consumer<MovieProvider>(builder: (context, model, child) {
+              title: Consumer<MoviesProvider>(builder: (context, model, child) {
                 return Tex(
                   content: model.currentGenre['label'],
                   size: 'h4',
@@ -77,7 +77,7 @@ class _MoviesState extends State<Movies> with AutomaticKeepAliveClientMixin {
             )
           : null,
       body: Container(
-        child: Consumer<MovieProvider>(builder: (context, model, child) {
+        child: Consumer<MoviesProvider>(builder: (context, model, child) {
           if (model.pending['getByGenre']) {
             return Center(
               child: CircularProgressIndicator(),
@@ -116,21 +116,20 @@ class _MoviesState extends State<Movies> with AutomaticKeepAliveClientMixin {
         ),
       );
     } else {
-      return SmartRefresher(
-        enablePullUp: false,
-        enablePullDown: true,
-        controller: _refreshController,
-        onRefresh: _refresh,
-        child: NotificationListener<ScrollNotification>(
-          onNotification: (ScrollNotification scrollInfo) {
-            if (!_isLoading &&
-                scrollInfo.metrics.pixels >=
-                    scrollInfo.metrics.maxScrollExtent) {
-              print("load more");
-              _loadMore(page);
-              setState(() => _isLoading = true);
-            }
-          },
+      return NotificationListener<ScrollNotification>(
+        onNotification: (ScrollNotification scrollInfo) {
+          if (!_isLoading &&
+              scrollInfo.metrics.pixels >= scrollInfo.metrics.maxScrollExtent) {
+            print("load more");
+            _loadMore(page);
+            setState(() => _isLoading = true);
+          }
+        },
+        child: SmartRefresher(
+          enablePullUp: true,
+          enablePullDown: true,
+          controller: _refreshController,
+          onRefresh: _refresh,
           child: GridView.count(
             crossAxisCount: 3,
             childAspectRatio: (itemWidth / itemHeight),

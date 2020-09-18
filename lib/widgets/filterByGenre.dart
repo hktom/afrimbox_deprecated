@@ -1,7 +1,7 @@
 import 'package:afrimbox/helpers/tex.dart';
+import 'package:afrimbox/provider/moviesProvider.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:afrimbox/provider/MovieProvider.dart';
 import 'package:provider/provider.dart';
 import 'package:afrimbox/helpers/const.dart';
 
@@ -18,11 +18,11 @@ class _FilterByGenreState extends State<FilterByGenre> {
   String dropdownValue = "All";
   bool showFilter = false;
   bool loadData = true;
-  MovieProvider model;
+  MoviesProvider model;
 
   @override
   void initState() {
-    model = Provider.of<MovieProvider>(context, listen: false);
+    model = Provider.of<MoviesProvider>(context, listen: false);
     dropdownValue = model.currentGenre['label'];
     //getMovies();
     super.initState();

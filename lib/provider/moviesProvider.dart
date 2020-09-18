@@ -1,11 +1,10 @@
 import 'package:afrimbox/helpers/const.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'dart:convert' as convert;
 
-class MovieProvider extends ChangeNotifier {
+class MoviesProvider extends ChangeNotifier {
+  //property
   var movies = [];
   var actors = [];
   var genres = [];
@@ -13,15 +12,25 @@ class MovieProvider extends ChangeNotifier {
   var moviesArchive = [];
   var currentGenre;
   var pendingReq = [];
+  var searchMovie = [];
   Map<String, bool> pending = {'get': false, 'getByGenre': false};
-  //Dio dio = new Dio();
-// get All movies
+
+  get http => null;
 
   void setCurrentGenre(category) {
     this.currentGenre = category;
     notifyListeners();
   }
 
+  void resetPendingReq() => pendingReq = [];
+  void setActors() => this.actors = [];
+
+  void setPendingByGenre() {
+    pending['getByGenre'] = true;
+    notifyListeners();
+  }
+
+  // get all movies
   Future<void> get() async {
     pending['get'] = true;
     await Dio().get(moviesUrl).catchError((err) {
@@ -40,7 +49,19 @@ class MovieProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  //set popular movies
+  Future<Map> getOne(url) async {
+    Map movie = {};
+    await Dio().get(url).catchError((err) {
+      print("MOVIE GET ERR ${err.toString()}");
+    }).then((res) {
+      if (res.statusCode == 200) {
+        movie = res.data;
+      }
+    });
+    return movie;
+  }
+
+  //set popular movie
   dynamic _setPopularMovies(List data) {
     var popular = [];
     data.forEach((element) {
@@ -51,16 +72,7 @@ class MovieProvider extends ChangeNotifier {
     return popular;
   }
 
-  void resetPendingReq() {
-    pendingReq = [];
-  }
-
-  void setPendingByGenre() {
-    pending['getByGenre'] = true;
-    notifyListeners();
-  }
-
-// Get movies by genres
+  // Get movies by genres
   Future<void> getByGenre(category) async {
     pending['getByGenre'] = true;
     if (category['key'] == '1' || category['key'] == '0') {
@@ -108,11 +120,17 @@ class MovieProvider extends ChangeNotifier {
   // pagination
   Future<int> pagination({int page, category: category}) async {
     Dio _dio = new Dio();
-    String perpage = "&per_page=${page.toString()}";
     int pages = page;
+    String _url = "";
+    String perpage = "&per_page=${page.toString()}";
+    if (category['key'] == '0' || category['key'] == '1') {
+      _url = moviesUrl + perpage;
+    } else {
+      _url = moviesByGenreUrl + category['key'] + perpage;
+    }
     _dio.options.connectTimeout = 5000; //5s
     _dio.options.receiveTimeout = 3000;
-    await _dio.get(moviesByGenreUrl + category['key'] + perpage).then((res) {
+    await _dio.get(_url).then((res) {
       if (res.statusCode == 200) {
         var key = category['key'];
         moviesByGenre[key] = res.data;
@@ -125,49 +143,60 @@ class MovieProvider extends ChangeNotifier {
       print("REQUEST Error ${err.toString()}");
       pending['getByGenre'] = false;
     });
+
     return pages;
+  }
+
+  // search
+  Future<void> search(value) async {
+    if (value != null) {
+      pending['search'] = true;
+      await Dio().get(searchUrl).then((res) {
+        if (res.statusCode == 200) {
+          searchMovie = res.data;
+          notifyListeners();
+        }
+        pending['search'] = false;
+      }).catchError((err) {
+        print("REQUEST Error ${err.toString()}");
+        pending['search'] = false;
+      });
+    }
   }
 
   //get genres
   Future<void> getGenres(String movieId) async {
-    var response = await http.get(genresUrl + movieId);
-    if (response.statusCode == 200) {
-      var jsonResponse = convert.jsonDecode(response.body);
-      genres = jsonResponse;
-      print("MOVIE By Genre API REQUEST STATUS 200");
-    } else {
-      print("MOVIE By Genre REQUEST STATUS 404");
-    }
+    await Dio().get(genresUrl + movieId).then((res) {
+      if (res.statusCode == 200) {
+        genres = res.data;
+      }
+    }).catchError((err) {
+      print("MOVIE By Genre API Err ${err.toString()}");
+    });
     notifyListeners();
   }
 
   //Get movies Archive
   Future<void> filterArchive(String genre) async {
-    var response = await http.get(moviesByGenreUrl + genre);
-    if (response.statusCode == 200) {
-      var jsonResponse = convert.jsonDecode(response.body);
-      moviesArchive = jsonResponse;
-      print("MOVIE By Genre API REQUEST STATUS 200");
-    } else {
-      print("MOVIE By Genre REQUEST STATUS 404");
-    }
+    await Dio().get(moviesByGenreUrl + genre).then((res) {
+      if (res.statusCode == 200) {
+        moviesArchive = res.data;
+      }
+    }).catchError((err) {
+      print("MOVIE FILTER ARCHIVE API Err ${err.toString()}");
+    });
     notifyListeners();
   }
 
   // Get movies actors
   Future<void> getActors(String movieId) async {
-    var response = await http.get(actorsUrl + movieId);
-    if (response.statusCode == 200) {
-      var jsonResponse = convert.jsonDecode(response.body);
-      actors = jsonResponse;
-      print("MOVIE Actors API REQUEST STATUS 200");
-    } else {
-      print("MOVIE By Genre REQUEST STATUS 404");
-    }
+    await Dio().get(actorsUrl + movieId).then((res) {
+      if (res.statusCode == 200) {
+        actors = res.data;
+      }
+    }).catchError((err) {
+      print("MOVIE ACTOR API Err ${err.toString()}");
+    });
     notifyListeners();
-  }
-
-  void setActors() {
-    this.actors = [];
   }
 }
