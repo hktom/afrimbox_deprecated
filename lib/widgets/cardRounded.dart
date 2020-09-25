@@ -27,9 +27,9 @@ class CardRounded extends StatefulWidget {
 
 class _CardRoundedState extends State<CardRounded> {
   //String imageUrlPrefix = ApiUrl.urlImage;
-  String image = '';
+  //String image = '';
+  //bool imageLoaded = false;
   String placeholder = '';
-  bool imageLoaded = false;
 
   String setImagePlaceholder() {
     if (widget.isChannel) {
@@ -39,26 +39,9 @@ class _CardRoundedState extends State<CardRounded> {
     }
   }
 
-  Future<void> setImage() async {
-    if (widget.isChannel && widget.movie['better_featured_image'] != null) {
-      image = widget.movie['better_featured_image']['source_url'];
-    } else if (widget.movie['dt_poster'] != null) {
-      await moviePoster(widget.movie).then((value) => setState(() {
-            image = value;
-            imageLoaded = true;
-          }));
-    } else {
-      image = placeholder;
-      setState(() {
-        imageLoaded = true;
-      });
-    }
-  }
-
   @override
   void initState() {
     placeholder = setImagePlaceholder();
-    setImage();
     super.initState();
   }
 
@@ -76,22 +59,24 @@ class _CardRoundedState extends State<CardRounded> {
         margin: widget.margin,
         height: widget.height,
         width: widget.width,
-        child: imageLoaded ? _imagePoster() : _imagePlaceholder(),
+        child: _poster(widget.isChannel),
       ),
     );
   }
 
-  Widget _imagePlaceholder() {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(8.0),
-      child: Image.asset(placeholder,
-          width: double.infinity,
-          fit: BoxFit.cover,
-          alignment: Alignment.center),
-    );
-  }
+  Widget _poster(isChannel) {
+    var image = placeholder;
+    if (isChannel) {
+      if (widget.movie['better_featured_image'] != null) {
+        image = widget.movie['better_featured_image']["source_url"];
+      }
 
-  Widget _imagePoster() {
+      print("Channel $image");
+    } else {
+      image = widget.movie["_embedded"]["wp:featuredmedia"][0]["media_details"]
+          ["sizes"]["medium"]["source_url"];
+    }
+
     return ClipRRect(
       borderRadius: BorderRadius.circular(8.0),
       child: CachedNetworkImage(

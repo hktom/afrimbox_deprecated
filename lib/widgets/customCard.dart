@@ -17,27 +17,27 @@ class CustomCard extends StatefulWidget {
 class _CustomCardState extends State<CustomCard> {
   //String imageUrlPrefix = ApiUrl.urlImage;
 
-  String image = '';
+  //String image = '';
   String placeholder = 'assets/movie_placeholder.png';
-  bool imageLoaded = false;
+  //bool imageLoaded = false;
 
-  Future<void> setImage() async {
-    if (widget.movie['dt_poster'] != null) {
-      await moviePoster(widget.movie).then((value) => setState(() {
-            image = value;
-            imageLoaded = true;
-          }));
-    } else {
-      image = placeholder;
-      setState(() {
-        imageLoaded = true;
-      });
-    }
-  }
+  // Future<void> setImage() async {
+  //   if (widget.movie['dt_poster'] != null) {
+  //     await moviePoster(widget.movie).then((value) => setState(() {
+  //           image = value;
+  //           imageLoaded = true;
+  //         }));
+  //   } else {
+  //     image = placeholder;
+  //     setState(() {
+  //       imageLoaded = true;
+  //     });
+  //   }
+  // }
 
   @override
   void initState() {
-    setImage();
+    // setImage();
     super.initState();
   }
 
@@ -50,7 +50,7 @@ class _CustomCardState extends State<CustomCard> {
         height: 250,
         child: Stack(
           children: <Widget>[
-            imageLoaded ? _moviePoster() : _imagePlaceholder(),
+            _moviePoster(widget.movie),
             Container(
               color: Color.fromRGBO(0, 0, 0, 0.1),
               width: double.infinity,
@@ -73,22 +73,13 @@ class _CustomCardState extends State<CustomCard> {
     );
   }
 
-  Widget _imagePlaceholder() {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(8.0),
-      child: Image.asset(placeholder,
-          width: double.infinity,
-          fit: BoxFit.cover,
-          alignment: Alignment.center),
-    );
-  }
-
-  Widget _moviePoster() {
+  Widget _moviePoster(movie) {
     return CachedNetworkImage(
       width: double.infinity,
       fit: BoxFit.cover,
       alignment: Alignment.topCenter,
-      imageUrl: image,
+      imageUrl: movie["_embedded"]["wp:featuredmedia"][0]["media_details"]
+          ["sizes"]["medium"]["source_url"],
       placeholder: (context, url) => Container(
         color: Colors.grey[300],
         child: Image.asset(placeholder,

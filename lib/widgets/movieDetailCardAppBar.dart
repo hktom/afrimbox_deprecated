@@ -22,28 +22,12 @@ class MovieDetailCardAppBar extends StatefulWidget {
 class _MovieDetailCardAppBarState extends State<MovieDetailCardAppBar> {
   //String imageUrlPrefix = ApiUrl.urlImage;
   var unescape = new HtmlUnescape();
-  String image = '';
+  //String image = '';
   String placeholder = 'assets/movie_placeholder.png';
-  bool imageLoaded = false;
-
-  Future<void> setImage() async {
-    if (widget.movie['dt_poster'] != null) {
-      await moviePoster(widget.movie).then((value) => setState(() {
-            image = value;
-            imageLoaded = true;
-          }));
-    } else {
-      image = placeholder;
-      setState(() {
-        imageLoaded = true;
-      });
-    }
-    setState(() {});
-  }
+  //bool imageLoaded = false;
 
   @override
   void initState() {
-    setImage();
     super.initState();
   }
 
@@ -53,7 +37,7 @@ class _MovieDetailCardAppBarState extends State<MovieDetailCardAppBar> {
       height: 350,
       child: Stack(
         children: <Widget>[
-          _background(),
+          _background(widget.movie),
           _filter(),
           _appBar(),
           _columnTitleGenres(),
@@ -123,17 +107,14 @@ class _MovieDetailCardAppBarState extends State<MovieDetailCardAppBar> {
     );
   }
 
-  Widget _background() {
-    if (!imageLoaded) {
-      return Image.asset(placeholder,
-          height: 300, fit: BoxFit.cover, alignment: Alignment.topCenter);
-    }
+  Widget _background(movie) {
     return CachedNetworkImage(
       width: double.infinity,
       height: 300,
       fit: BoxFit.cover,
       alignment: Alignment.topCenter,
-      imageUrl: image,
+      imageUrl: movie["_embedded"]["wp:featuredmedia"][0]["media_details"]
+          ["sizes"]["medium"]["source_url"],
       placeholder: (context, url) => Container(
         color: Colors.grey[300],
         child: Image.asset(placeholder,

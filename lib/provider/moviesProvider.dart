@@ -164,18 +164,6 @@ class MoviesProvider extends ChangeNotifier {
     }
   }
 
-  //get genres
-  Future<void> getGenres(String movieId) async {
-    await Dio().get(genresUrl + movieId).then((res) {
-      if (res.statusCode == 200) {
-        genres = res.data;
-      }
-    }).catchError((err) {
-      print("MOVIE By Genre API Err ${err.toString()}");
-    });
-    notifyListeners();
-  }
-
   //Get movies Archive
   Future<void> filterArchive(String genre) async {
     await Dio().get(moviesByGenreUrl + genre).then((res) {
@@ -188,15 +176,25 @@ class MoviesProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Get movies actors
-  Future<void> getActors(String movieId) async {
-    await Dio().get(actorsUrl + movieId).then((res) {
-      if (res.statusCode == 200) {
-        actors = res.data;
+  //get genres
+  getGenres(Map movie) {
+    genres = [];
+    movie["_embedded"]["wp:term"][0].forEach((element) {
+      if (element["taxonomy"] == "genres") {
+        genres.add(element);
       }
-    }).catchError((err) {
-      print("MOVIE ACTOR API Err ${err.toString()}");
     });
-    notifyListeners();
+  }
+
+  // Get movies actors
+  getActors(Map movie) {
+    actors = [];
+    movie["_embedded"]["wp:term"][0].forEach((element) {
+      if (element["taxonomy"] == "dtcast" ||
+          element["taxonomy"] == "dtdirector") {
+        print(element);
+        actors.add(element);
+      }
+    });
   }
 }

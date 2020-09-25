@@ -15,8 +15,8 @@ import 'package:toast/toast.dart';
 //import 'package:afrimbox/helpers/const.dart';
 
 class DetailsMovieScreen extends StatefulWidget {
-  Map movie;
-  String movieUrl;
+  final Map movie;
+  final String movieUrl;
   DetailsMovieScreen({Key key, this.movie, this.movieUrl}) : super(key: key);
   @override
   _DetailsMovieScreenState createState() => _DetailsMovieScreenState();
@@ -42,27 +42,15 @@ class _DetailsMovieScreenState extends State<DetailsMovieScreen> {
     content: Text("Ce film a été retiré de vos favoris"),
   );
 
-  // get genres
-  Future<void> init() async {
-    if (widget.movie.isEmpty) {
-      widget.movie = await model.getOne(widget.movieUrl);
-    }
-    await model.getGenres(widget.movie['id'].toString());
-    await model.getActors(widget.movie['id'].toString());
-    //await model.getByGenre(3295.toString());
-    favorites = [];
-    setState(() {
-      loadActors = true;
-    });
-  }
-
   @override
   void initState() {
     model = Provider.of<MoviesProvider>(context, listen: false);
     model.setActors();
     userModel = Provider.of<UserProvider>(context, listen: false);
     isFavorite = userModel.isMovieInFavories(widget.movie);
-    init();
+    model.getGenres(widget.movie);
+    model.getActors(widget.movie);
+    //init();
     super.initState();
   }
 
@@ -70,15 +58,7 @@ class _DetailsMovieScreenState extends State<DetailsMovieScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldkey,
-      body: loadActors && widget.movie.isNotEmpty ? _scaffold() : _spinner(),
-    );
-  }
-
-  Widget _spinner() {
-    return Container(
-      child: Center(
-        child: CircularProgressIndicator(),
-      ),
+      body: _scaffold(),
     );
   }
 
