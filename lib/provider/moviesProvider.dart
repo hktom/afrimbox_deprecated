@@ -32,9 +32,9 @@ class MoviesProvider extends ChangeNotifier {
 
   // get all movies
   Future<void> getMovies() async {
-    pending['get'] = true;
     //movies = [];
-    await Dio().get(moviesUrl).catchError((err) {
+    pending['get'] = true;
+    await Dio().get(moviesUrl+'&per_page=9').catchError((err) {
       print("MOVIE GET ERR ${err.toString()}");
       pending['get'] = false;
     }).then((res) {

@@ -12,6 +12,9 @@ import 'package:dynamic_theme/dynamic_theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:settings_ui/settings_ui.dart';
 import 'package:card_settings/card_settings.dart';
+import 'package:adaptive_dialog/adaptive_dialog.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:giffy_dialog/giffy_dialog.dart';
 
 class Setting extends StatefulWidget {
   @override
@@ -23,6 +26,7 @@ class _SettingState extends State<Setting> with AutomaticKeepAliveClientMixin {
   UserProvider userProvider;
   bool themeIsLight = true;
   SharedPreferences prefs;
+  bool isAdulteMode = false;
 
   Future<void> checkCurrentTheme() async {
     prefs = await SharedPreferences.getInstance();
@@ -46,6 +50,43 @@ class _SettingState extends State<Setting> with AutomaticKeepAliveClientMixin {
     setState(() => themeIsLight = true);
   }
 
+  void _showDialog() {
+    showDialog(
+        context: context,
+        builder: (_) => AssetGiffyDialog(
+              image: Image.asset('assets/gif14.gif'),
+              title: Text(
+                'Adulte Mode',
+                style: TextStyle(fontSize: 22.0, fontWeight: FontWeight.w600),
+              ),
+              description: Text(
+                "En activant ce mode vous confirmez que vous avez plus de 18ans et que vous acceptez de visualiser les contenus reservés aux adultes",
+                textAlign: TextAlign.center,
+                style: TextStyle(),
+              ),
+              entryAnimation: EntryAnimation.RIGHT,
+              onOkButtonPressed: () {
+                _activeAdulteMode(true);
+                Get.back();
+              },
+              buttonOkColor: Colors.purpleAccent,
+            ));
+  }
+
+  _activeAdulteMode(value) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('adulteMode', value);
+    setState(() => isAdulteMode = value);
+  }
+
+  _checkAdulteMode() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    isAdulteMode = prefs.getBool('adulteMode') == null
+        ? false
+        : prefs.getBool('adulteMode');
+    setState(() {});
+  }
+
   @override
   bool get wantKeepAlive => true;
 
@@ -53,6 +94,7 @@ class _SettingState extends State<Setting> with AutomaticKeepAliveClientMixin {
   void initState() {
     checkCurrentTheme();
     userProvider = Provider.of<UserProvider>(context, listen: false);
+    _checkAdulteMode();
     super.initState();
   }
 
@@ -95,21 +137,17 @@ class _SettingState extends State<Setting> with AutomaticKeepAliveClientMixin {
                   await setLight();
                 }
               }),
-          // Divider(),
-          // TileSwicth(
-          //     icon: Icons.notifications_active,
-          //     title: "Notification",
-          //     value: false,
-          //     onChanged: () async {
-          //       print("Active Notification");
-          //     }),
           Divider(),
           TileSwicth(
               icon: Icons.beenhere,
               title: "Mode adult",
-              value: false,
-              onChanged: () async {
-                print("Active mode adult");
+              value: isAdulteMode,
+              onChanged: () {
+                if (!isAdulteMode) {
+                  _showDialog();
+                } else {
+                  _activeAdulteMode(false);
+                }
               }),
         ],
       ),

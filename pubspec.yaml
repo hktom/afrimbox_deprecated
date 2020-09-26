@@ -27,7 +27,7 @@ dependencies:
   get: ^2.12.5
   font_awesome_flutter: ^8.8.1
   cached_network_image: ^2.2.0+1
-  shared_preferences: ^0.5.7+3
+  shared_preferences: ^0.5.12
   dynamic_theme: ^1.0.1
   http: ^0.12.1
   flutter_placeholder_textlines: ^1.0.4
@@ -67,6 +67,9 @@ dependencies:
   pull_to_refresh: ^1.6.1
   flutter_cache_manager: ^1.4.2
   material_floating_search_bar: ^0.1.7
+  adaptive_dialog: ^0.7.5+3
+  giffy_dialog: ^1.8.0
+  
 
 dev_dependencies:
   flutter_test:
