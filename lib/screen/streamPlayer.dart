@@ -1,12 +1,14 @@
-import 'package:afrimbox/helpers/const.dart';
+import 'package:afrimbox/helpers/tex.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import 'package:flick_video_player/flick_video_player.dart';
 
 class StreamPlayer extends StatefulWidget {
-  final Map streamUrl;
+  final String streamUrl;
   final bool isChannel;
-  StreamPlayer({Key key, this.streamUrl, this.isChannel: false})
+  final String streamTitle;
+  StreamPlayer(
+      {Key key, this.streamUrl, this.isChannel: false, this.streamTitle})
       : super(key: key);
   @override
   _StreamPlayerState createState() => _StreamPlayerState();
@@ -26,11 +28,11 @@ class _StreamPlayerState extends State<StreamPlayer> {
 
   @override
   void initState() {
-    String _url = widget.isChannel
-        ? widget.streamUrl['flux_240p']
-        : widget.streamUrl['flux_movie'];
+    // String _url = widget.isChannel
+    //     ? widget.streamUrl['flux_240p']
+    //     : widget.streamUrl['flux_movie'];
     flickManager = FlickManager(
-      videoPlayerController: VideoPlayerController.network(_url),
+      videoPlayerController: VideoPlayerController.network(widget.streamUrl),
     );
     super.initState();
   }
@@ -50,6 +52,7 @@ class _StreamPlayerState extends State<StreamPlayer> {
         appBar: _appBar
             ? AppBar(
                 backgroundColor: Colors.black,
+                title: Tex(content: widget.streamTitle, color: Colors.white),
               )
             : null,
         body: Center(

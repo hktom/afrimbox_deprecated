@@ -13,8 +13,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:afrimbox/helpers/const.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-//import 'package:afrimbox/widgets/menu.dart';
-//import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -42,26 +40,21 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   Future<void> getMoviesChannels() async {
-    await movieModel.get().then((value) async {
-      await channelModel.get();
+    await movieModel.getMovies();
+    await channelModel.getChannels().then((value) {
+      this.setState(() {});
     });
   }
 
   void _refresh() async {
-    await movieModel.get().then((value) async {
-      await channelModel.get();
-    });
+    await movieModel.getMovies();
+    await channelModel.getChannels();
     _refreshController.refreshCompleted();
+    this.setState(() {});
   }
 
-  @override
-  bool get wantKeepAlive => true;
-
-  @override
-  initState() {
-    movieModel = Provider.of<MoviesProvider>(context, listen: false);
-    channelModel = Provider.of<ChannelProvider>(context, listen: false);
-    movieModel.resetPendingReq();
+// Check connectivity
+  _connectivity() {
     connectivity = Connectivity()
         .onConnectivityChanged
         .listen((ConnectivityResult result) {
@@ -73,7 +66,17 @@ class _HomeScreenState extends State<HomeScreen>
         setState(() => isOnline = false);
       }
     });
-    //getMovies();
+  }
+
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
+  initState() {
+    movieModel = Provider.of<MoviesProvider>(context, listen: false);
+    channelModel = Provider.of<ChannelProvider>(context, listen: false);
+    movieModel.resetPendingReq();
+    _connectivity();
     super.initState();
   }
 
@@ -108,19 +111,27 @@ class _HomeScreenState extends State<HomeScreen>
   Widget _scaffold() {
     return Container(
       child: NotificationListener<ScrollNotification>(
-          onNotification: (ScrollNotification scrollInfo) {
-        if (!_isLoading &&
-            scrollInfo.metrics.pixels >= scrollInfo.metrics.maxScrollExtent) {
-          print("load more");
-          setState(() => _isLoading = true);
-          _loadMore(page);
-        }
-      }, child: Consumer<MoviesProvider>(builder: (context, model, child) {
-        if (model.pending['get']) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        }
+        onNotification: (ScrollNotification scrollInfo) {
+          if (!_isLoading &&
+              scrollInfo.metrics.pixels >= scrollInfo.metrics.maxScrollExtent) {
+            print("load more");
+            setState(() => _isLoading = true);
+            _loadMore(page);
+          }
+          return true;
+        },
+        child: _consumer(),
+      ),
+    );
+  }
+
+  Widget _consumer() {
+    return Consumer<MoviesProvider>(builder: (context, model, child) {
+      if (model.movies.isEmpty) {
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      } else {
         return SmartRefresher(
           controller: _refreshController,
           onRefresh: _refresh,
@@ -130,11 +141,11 @@ class _HomeScreenState extends State<HomeScreen>
             slivers: _returnSlivers(),
           ),
         );
-      })),
-    );
+      }
+    });
   }
 
-  void updateCurrentGenre(currentCategory) {
+  void _updateCurrentGenre(currentCategory) {
     movieModel.setCurrentGenre(currentCategory);
     Get.to(Movies(displayAppBar: true));
   }
@@ -145,8 +156,6 @@ class _HomeScreenState extends State<HomeScreen>
     slivers.add(lastMovie());
     slivers.add(sliverTitle("Nos chaines", null));
     slivers.add(listChannels());
-    //slivers.add(sliverTitle("Films populaires", category[1]['label']));
-    //slivers.add(listMovies(1));
 
     movieModel.moviesByGenre.forEach((key, value) {
       if (key != '0') {
@@ -154,7 +163,7 @@ class _HomeScreenState extends State<HomeScreen>
         slivers.add(
           SliverToBoxAdapter(
               child: HomeCard(
-            updateCurrentGenre: updateCurrentGenre,
+            updateCurrentGenre: _updateCurrentGenre,
             data: value,
             category: _category,
           )),

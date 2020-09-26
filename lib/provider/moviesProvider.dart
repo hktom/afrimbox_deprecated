@@ -1,21 +1,21 @@
 import 'package:afrimbox/helpers/const.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'dart:convert' as convert;
 
 class MoviesProvider extends ChangeNotifier {
   //property
-  var movies = [];
-  var actors = [];
-  var genres = [];
-  var moviesByGenre = {};
-  var moviesArchive = [];
+  List movies = [];
+  List actors = [];
+  List genres = [];
+  List moviesArchive = [];
+  List pendingReq = [];
+  List searchMovie = [];
+  Map moviesByGenre = {};
   var currentGenre;
-  var pendingReq = [];
-  var searchMovie = [];
+
   Map<String, bool> pending = {'get': false, 'getByGenre': false};
 
-  get http => null;
+  //get http => null;
 
   void setCurrentGenre(category) {
     this.currentGenre = category;
@@ -31,8 +31,9 @@ class MoviesProvider extends ChangeNotifier {
   }
 
   // get all movies
-  Future<void> get() async {
+  Future<void> getMovies() async {
     pending['get'] = true;
+    //movies = [];
     await Dio().get(moviesUrl).catchError((err) {
       print("MOVIE GET ERR ${err.toString()}");
       pending['get'] = false;
@@ -45,7 +46,6 @@ class MoviesProvider extends ChangeNotifier {
       }
       pending['get'] = false;
     });
-
     notifyListeners();
   }
 
@@ -189,12 +189,13 @@ class MoviesProvider extends ChangeNotifier {
   // Get movies actors
   getActors(Map movie) {
     actors = [];
-    movie["_embedded"]["wp:term"][0].forEach((element) {
-      if (element["taxonomy"] == "dtcast" ||
-          element["taxonomy"] == "dtdirector") {
-        print(element);
-        actors.add(element);
-      }
+    movie["_embedded"]["wp:term"].forEach((array) {
+      array.forEach((element) {
+        if (element["taxonomy"] == "dtcast" ||
+            element["taxonomy"] == "dtdirector") {
+          actors.add(element);
+        }
+      });
     });
   }
 }

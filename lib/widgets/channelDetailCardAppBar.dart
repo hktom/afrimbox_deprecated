@@ -1,7 +1,8 @@
 import 'package:afrimbox/provider/userProvider.dart';
 import 'package:afrimbox/screen/StreamPlayer.dart';
+import 'package:afrimbox/widgets/img.dart';
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+// import 'package:cached_network_image/cached_network_image.dart';
 import 'package:afrimbox/helpers/tex.dart';
 import 'package:get/get.dart';
 import 'package:html_unescape/html_unescape.dart';
@@ -9,9 +10,8 @@ import 'package:provider/provider.dart';
 
 class ChannelDetailCardAppBar extends StatefulWidget {
   final Map channel;
-  final List genres;
-  ChannelDetailCardAppBar({Key key, this.channel, this.genres})
-      : super(key: key);
+  //final List genres;
+  ChannelDetailCardAppBar({Key key, this.channel}) : super(key: key);
 
   @override
   _ChannelDetailCardAppBarState createState() =>
@@ -30,7 +30,7 @@ class _ChannelDetailCardAppBarState extends State<ChannelDetailCardAppBar> {
     if (widget.channel['better_featured_image'] != null) {
       return widget.channel['better_featured_image']['source_url'];
     } else {
-      return placeholder;
+      return null;
     }
   }
 
@@ -71,12 +71,12 @@ class _ChannelDetailCardAppBarState extends State<ChannelDetailCardAppBar> {
         child: FloatingActionButton(
           //backgroundColor: Colors.yellow,
           onPressed: () {
-            print("SHOw Channel");
             if (bundleActive > 0) {
               if (widget.channel['acf'] != '') {
                 Get.to(StreamPlayer(
-                  isChannel:true,
-                  streamUrl: widget.channel['acf'],
+                  streamTitle: unescape.convert(widget.channel['slug']),
+                  isChannel: true,
+                  streamUrl: widget.channel['acf']['flux_tv'],
                 ));
               }
             } else {
@@ -89,24 +89,6 @@ class _ChannelDetailCardAppBarState extends State<ChannelDetailCardAppBar> {
     );
   }
 
-  // Widget _listGenres() {
-  //   return Align(
-  //     alignment: Alignment.bottomLeft,
-  //     child: Container(
-  //       height: 40,
-  //       padding: EdgeInsets.zero,
-  //       margin: EdgeInsets.only(left: 10, right: 10, bottom: 60),
-  //       child: ListView(
-  //         padding: EdgeInsets.zero,
-  //         //shrinkWrap: true,
-  //         scrollDirection: Axis.horizontal,
-  //         children: channelsController.genres(
-  //             offset: 0, limit: double.infinity, data: widget.genres),
-  //       ),
-  //     ),
-  //   );
-  // }
-
   Widget _title() {
     return Align(
       alignment: Alignment.bottomLeft,
@@ -114,7 +96,7 @@ class _ChannelDetailCardAppBarState extends State<ChannelDetailCardAppBar> {
           width: MediaQuery.of(context).size.width * 0.80,
           margin: EdgeInsets.only(bottom: 100, left: 10),
           child: Tex(
-            content: unescape.convert(widget.channel['title']['rendered']),
+            content: unescape.convert(widget.channel['slug']),
             size: 'h2',
             bold: FontWeight.bold,
             color: Colors.white,
@@ -123,29 +105,7 @@ class _ChannelDetailCardAppBarState extends State<ChannelDetailCardAppBar> {
   }
 
   Widget _background() {
-    return CachedNetworkImage(
-      width: double.infinity,
-      height: 300,
-      fit: BoxFit.cover,
-      alignment: Alignment.topCenter,
-      imageUrl: image,
-      placeholder: (context, url) => Container(
-        color: Colors.grey[300],
-        child: Image.asset(placeholder,
-            width: double.infinity,
-            height: 300,
-            fit: BoxFit.cover,
-            alignment: Alignment.center),
-      ),
-      errorWidget: (context, url, error) => Container(
-        color: Colors.grey[300],
-        child: Image.asset(placeholder,
-            width: double.infinity,
-            height: 300,
-            fit: BoxFit.cover,
-            alignment: Alignment.center),
-      ),
-    );
+    return Img(url: image, placeholder: placeholder, height: 300);
   }
 
   Widget _filter() {

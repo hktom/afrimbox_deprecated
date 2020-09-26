@@ -5,8 +5,6 @@ const moviesUrl =
 const moviesByGenreUrl =
     'https://streaming.afrimbox.com/wp-json/wp/v2/movies?_embed=wp:featuredmedia,wp:term&per_page=9&genres=';
 
-//const genresUrl = 'https://streaming.afrimbox.com/wp-json/wp/v2/genres?post=';
-//const actorsUrl = 'https://streaming.afrimbox.com/wp-json/wp/v2/dtcast?post=';
 const channelsUrl =
     'https://streaming.afrimbox.com/wp-json/wp/v2/chaine_tv?_embed=wp:term&per_page=9';
 const searchUrl =

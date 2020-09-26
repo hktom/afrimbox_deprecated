@@ -1,14 +1,10 @@
 import 'package:afrimbox/controller/moviesController.dart';
-import 'package:afrimbox/screen/movie/trailerPlayerScreen.dart';
 import 'package:afrimbox/screen/streamPlayer.dart';
+import 'package:afrimbox/widgets/img.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:afrimbox/helpers/tex.dart';
 import 'package:get/get.dart';
 import 'package:html_unescape/html_unescape.dart';
-import 'package:badges/badges.dart';
-import 'package:afrimbox/helpers/const.dart';
 
 class MovieDetailCardAppBar extends StatefulWidget {
   final Map movie;
@@ -20,11 +16,8 @@ class MovieDetailCardAppBar extends StatefulWidget {
 }
 
 class _MovieDetailCardAppBarState extends State<MovieDetailCardAppBar> {
-  //String imageUrlPrefix = ApiUrl.urlImage;
   var unescape = new HtmlUnescape();
-  //String image = '';
   String placeholder = 'assets/movie_placeholder.png';
-  //bool imageLoaded = false;
 
   @override
   void initState() {
@@ -56,7 +49,10 @@ class _MovieDetailCardAppBarState extends State<MovieDetailCardAppBar> {
           onPressed: () {
             if (widget.movie['acf']['flux_movie'] != null) {
               Get.to(StreamPlayer(
-                  streamUrl: widget.movie['acf'], isChannel: false));
+                  streamTitle:
+                      unescape.convert(widget.movie['title']['rendered']),
+                  streamUrl: widget.movie['acf']['flux_movie'],
+                  isChannel: false));
             }
           },
           child: Icon(Icons.play_arrow),
@@ -108,30 +104,14 @@ class _MovieDetailCardAppBarState extends State<MovieDetailCardAppBar> {
   }
 
   Widget _background(movie) {
-    return CachedNetworkImage(
-      width: double.infinity,
-      height: 300,
-      fit: BoxFit.cover,
-      alignment: Alignment.topCenter,
-      imageUrl: movie["_embedded"]["wp:featuredmedia"][0]["media_details"]
-          ["sizes"]["medium"]["source_url"],
-      placeholder: (context, url) => Container(
-        color: Colors.grey[300],
-        child: Image.asset(placeholder,
-            width: double.infinity,
-            height: 300,
-            fit: BoxFit.cover,
-            alignment: Alignment.center),
-      ),
-      errorWidget: (context, url, error) => Container(
-        color: Colors.grey[300],
-        child: Image.asset(placeholder,
-            width: double.infinity,
-            height: 300,
-            fit: BoxFit.cover,
-            alignment: Alignment.center),
-      ),
-    );
+    var _image = placeholder;
+    if (widget.movie["_embedded"]["wp:featuredmedia"] != null) {
+      _image = widget.movie["_embedded"]["wp:featuredmedia"][0]["media_details"]
+          ["sizes"]["medium"]["source_url"];
+    } else {
+      _image = null;
+    }
+    return Img(url: _image, placeholder: placeholder, height: 300);
   }
 
   Widget _filter() {

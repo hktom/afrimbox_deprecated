@@ -1,9 +1,8 @@
 import 'package:afrimbox/screen/channel/channelDetailScreen.dart';
 import 'package:afrimbox/screen/movie/detailsMovieScreen.dart';
+import 'package:afrimbox/widgets/img.dart';
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:get/get.dart';
-import 'package:afrimbox/helpers/const.dart';
 
 class CardRounded extends StatefulWidget {
   final Map movie;
@@ -26,9 +25,6 @@ class CardRounded extends StatefulWidget {
 }
 
 class _CardRoundedState extends State<CardRounded> {
-  //String imageUrlPrefix = ApiUrl.urlImage;
-  //String image = '';
-  //bool imageLoaded = false;
   String placeholder = '';
 
   String setImagePlaceholder() {
@@ -65,40 +61,22 @@ class _CardRoundedState extends State<CardRounded> {
   }
 
   Widget _poster(isChannel) {
-    var image = placeholder;
+    var _image = placeholder;
     if (isChannel) {
       if (widget.movie['better_featured_image'] != null) {
-        image = widget.movie['better_featured_image']["source_url"];
+        _image = widget.movie['better_featured_image']["source_url"];
+      } else {
+        _image = null;
       }
-
-      print("Channel $image");
     } else {
-      image = widget.movie["_embedded"]["wp:featuredmedia"][0]["media_details"]
-          ["sizes"]["medium"]["source_url"];
+      if (widget.movie["_embedded"]["wp:featuredmedia"] != null) {
+        _image = widget.movie["_embedded"]["wp:featuredmedia"][0]
+            ["media_details"]["sizes"]["medium"]["source_url"];
+      } else {
+        _image = null;
+      }
     }
 
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(8.0),
-      child: CachedNetworkImage(
-        width: double.infinity,
-        fit: BoxFit.cover,
-        alignment: Alignment.center,
-        imageUrl: image,
-        placeholder: (context, url) => Container(
-          color: Colors.grey[300],
-          child: Image.asset(placeholder,
-              width: double.infinity,
-              fit: BoxFit.cover,
-              alignment: Alignment.center),
-        ),
-        errorWidget: (context, url, error) => Container(
-          color: Colors.grey[300],
-          child: Image.asset(placeholder,
-              width: double.infinity,
-              fit: BoxFit.cover,
-              alignment: Alignment.center),
-        ),
-      ),
-    );
+    return Img(url: _image, placeholder: placeholder, height: 300);
   }
 }

@@ -11,21 +11,15 @@ class MoviesController {
   static List myCard({
     int offset,
     double limit,
-    data,
+    List data,
   }) {
     List<Widget> items = [];
 
-    if (data.length <= 0) {
+    if (data.isEmpty) {
       items.add(PlaceHolders(type: 1));
     }
 
-    for (var i = offset; i < data.length; i++) {
-      items.add(CustomCard(
-        movie: data[i],
-      ));
-
-      if (i >= limit) break;
-    }
+    items.add(CustomCard(movie: data[0]));
     return items;
   }
 
@@ -33,7 +27,7 @@ class MoviesController {
   static List myChannels({
     int offset,
     double limit,
-    data,
+    List data,
   }) {
     List<Widget> items = [];
 

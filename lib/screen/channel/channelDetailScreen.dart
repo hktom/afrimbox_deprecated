@@ -38,11 +38,13 @@ class _ChannelDetailScreenState extends State<ChannelDetailScreen> {
     return Scaffold(
       body: CustomScrollView(slivers: <Widget>[
         SliverToBoxAdapter(
-          child: _appBar(),
+          child: ChannelDetailCardAppBar(
+            channel: widget.channel,
+          ),
         ),
-        SliverToBoxAdapter(
-          child: _description(),
-        ),
+        // SliverToBoxAdapter(
+        //   child: _description(),
+        // ),
         SliverToBoxAdapter(
           child: _listActionsButton(),
         ),
@@ -52,17 +54,17 @@ class _ChannelDetailScreenState extends State<ChannelDetailScreen> {
     );
   }
 
-  Widget sliverTitle(String title) {
-    return SliverPadding(
-        padding: EdgeInsets.symmetric(vertical: 2, horizontal: 0),
-        sliver: SliverToBoxAdapter(
-            child: ListTile(
-          leading: Tex(
-            content: title,
-            size: 'h5',
-          ),
-        )));
-  }
+  // Widget _sliverTitle(String title) {
+  //   return SliverPadding(
+  //       padding: EdgeInsets.symmetric(vertical: 2, horizontal: 0),
+  //       sliver: SliverToBoxAdapter(
+  //           child: ListTile(
+  //         leading: Tex(
+  //           content: title,
+  //           size: 'h5',
+  //         ),
+  //       )));
+  // }
 
   Widget _listActionsButton() {
     return Container(
@@ -142,12 +144,6 @@ class _ChannelDetailScreenState extends State<ChannelDetailScreen> {
               //HtmlWidget(widget.channel['content']['rendered']),
               //Tex(content: .toString()), //description
             ]));
-  }
-
-  Widget _appBar() {
-    return ChannelDetailCardAppBar(
-      channel: widget.channel,
-    );
   }
 
   Widget listFavoritechannels() {

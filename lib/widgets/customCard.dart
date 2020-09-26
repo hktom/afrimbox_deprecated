@@ -1,8 +1,7 @@
 import 'package:afrimbox/screen/movie/detailsMovieScreen.dart';
+import 'package:afrimbox/widgets/img.dart';
 import 'package:flutter/material.dart';
 import 'package:afrimbox/helpers/tex.dart';
-import 'package:afrimbox/helpers/const.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:get/get.dart';
 
 class CustomCard extends StatefulWidget {
@@ -15,29 +14,10 @@ class CustomCard extends StatefulWidget {
 }
 
 class _CustomCardState extends State<CustomCard> {
-  //String imageUrlPrefix = ApiUrl.urlImage;
-
-  //String image = '';
   String placeholder = 'assets/movie_placeholder.png';
-  //bool imageLoaded = false;
-
-  // Future<void> setImage() async {
-  //   if (widget.movie['dt_poster'] != null) {
-  //     await moviePoster(widget.movie).then((value) => setState(() {
-  //           image = value;
-  //           imageLoaded = true;
-  //         }));
-  //   } else {
-  //     image = placeholder;
-  //     setState(() {
-  //       imageLoaded = true;
-  //     });
-  //   }
-  // }
 
   @override
   void initState() {
-    // setImage();
     super.initState();
   }
 
@@ -74,27 +54,14 @@ class _CustomCardState extends State<CustomCard> {
   }
 
   Widget _moviePoster(movie) {
-    return CachedNetworkImage(
-      width: double.infinity,
-      fit: BoxFit.cover,
-      alignment: Alignment.topCenter,
-      imageUrl: movie["_embedded"]["wp:featuredmedia"][0]["media_details"]
-          ["sizes"]["medium"]["source_url"],
-      placeholder: (context, url) => Container(
-        color: Colors.grey[300],
-        child: Image.asset(placeholder,
-            width: double.infinity,
-            height: 300,
-            fit: BoxFit.cover,
-            alignment: Alignment.center),
-      ),
-      errorWidget: (context, url, error) => Container(
-          color: Colors.grey[300],
-          child: Image.asset(placeholder,
-              width: double.infinity,
-              height: 300,
-              fit: BoxFit.cover,
-              alignment: Alignment.center)),
-    );
+    var _image = placeholder;
+    if (widget.movie["_embedded"]["wp:featuredmedia"] != null) {
+      _image = widget.movie["_embedded"]["wp:featuredmedia"][0]["media_details"]
+          ["sizes"]["medium"]["source_url"];
+    } else {
+      _image = null;
+    }
+
+    return Img(url: _image, placeholder: placeholder, height: 300);
   }
 }
