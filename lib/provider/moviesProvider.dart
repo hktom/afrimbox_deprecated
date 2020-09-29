@@ -1,8 +1,11 @@
+import 'package:afrimbox/controller/firestoreController.dart';
 import 'package:afrimbox/helpers/const.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 class MoviesProvider extends ChangeNotifier {
+  FireStoreController fireStoreController = new FireStoreController();
   //property
   List movies = [];
   List actors = [];
@@ -12,6 +15,7 @@ class MoviesProvider extends ChangeNotifier {
   List searchMovie = [];
   Map moviesByGenre = {};
   var currentGenre;
+  var firebaseMovies = [];
 
   Map<String, bool> pending = {'get': false, 'getByGenre': false};
 
@@ -34,7 +38,7 @@ class MoviesProvider extends ChangeNotifier {
   Future<void> getMovies() async {
     //movies = [];
     pending['get'] = true;
-    await Dio().get(moviesUrl+'&per_page=9').catchError((err) {
+    await Dio().get(moviesUrl + '&per_page=9').catchError((err) {
       print("MOVIE GET ERR ${err.toString()}");
       pending['get'] = false;
     }).then((res) {
@@ -186,6 +190,16 @@ class MoviesProvider extends ChangeNotifier {
     });
   }
 
+  _getGenres(Map movie) {
+    List _genres = [];
+    movie["_embedded"]["wp:term"][0].forEach((element) {
+      if (element["taxonomy"] == "genres") {
+        genres.add(element);
+      }
+    });
+    return _genres;
+  }
+
   // Get movies actors
   getActors(Map movie) {
     actors = [];
@@ -197,5 +211,92 @@ class MoviesProvider extends ChangeNotifier {
         }
       });
     });
+  }
+
+  // get all movies from firebase
+  Future<bool> getFirebaseMovies() async {
+    try {
+      firebaseMovies = await fireStoreController.getDocuments('movies');
+      notifyListeners();
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  // check if user has already view the movie
+  bool hasUserAlreadyViewTheMovie({String userId, String movieId}) {
+    bool _return = false;
+    try {
+      firebaseMovies.forEach((_movie) {
+        _movie['viewers'].forEach((viewer) {
+          if (viewer['id'] == userId && _movie['id'] == movieId) {
+            _return = true;
+          }
+        });
+      });
+    } catch (e) {
+      return false;
+    }
+
+    return _return;
+  }
+
+  bool hasMovieGotViews({String movieId}) {
+    bool _res = false;
+    firebaseMovies.forEach((element) {
+      if (element['id'] == movieId && element['total_view'] != null) {
+        _res = true;
+      }
+    });
+    return _res;
+  }
+
+  //add new view
+  Future<void> addView({String userId, Map movie}) async {
+    movie.remove('_embedded');
+    movie['viewers'] = [
+      {'id': userId, 'created_at': DateTime.now()}
+    ];
+    movie['total_view'] = 1;
+    return await fireStoreController.insertDocument(
+        collection: 'movies', data: movie, doc: movie['id'].toString());
+  }
+
+  //update movie view
+  Future<void> updateView({String userId, int count, String movieId}) async {
+    Map _movie;
+    firebaseMovies.forEach((element) {
+      if (element['id'] == movieId) {
+        _movie = element.data;
+      }
+    });
+
+    _movie['viewers'].add({'id': userId, 'created_at': DateTime.now()});
+    _movie['total_view'] += 1;
+    return fireStoreController.updateDocument(
+        collection: 'movies', doc: _movie['id'], data: _movie);
+  }
+
+  //get total count
+  Future<int> getMovieTotalView({Map movie}) async {
+    List _movie = await fireStoreController.getDocument(
+        collection: 'movies', doc: movie['id']);
+    return _movie[0]['total_view'];
+  }
+
+  // reduce movie to save in firebase
+  Map<String, dynamic> movieReducer(Map movie) {
+    Map<String, dynamic> _movie = {};
+    _movie['id'] = movie['id'].toString();
+    _movie['title'] = movie['title'];
+    _movie['content'] = movie['content'];
+    _movie['acf'] = movie['acf'];
+    if (movie["_embedded"]["wp:featuredmedia"] != null) {
+      _movie['featuremedia'] = movie["_embedded"]["wp:featuredmedia"][0]
+          ["media_details"]["sizes"]["medium"]["source_url"];
+    }
+    _movie['genres'] = _getGenres(movie);
+    return _movie;
   }
 }

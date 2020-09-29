@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 import 'package:afrimbox/controller/moviesController.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:toast/toast.dart';
+import 'package:share/share.dart';
 
 class ChannelDetailScreen extends StatefulWidget {
   final Map channel;
@@ -71,21 +72,24 @@ class _ChannelDetailScreenState extends State<ChannelDetailScreen> {
       padding: EdgeInsets.symmetric(horizontal: 20),
       child: Row(
         children: <Widget>[
-          Expanded(
-            flex: 1,
-            child: FlatButton(
-                padding: EdgeInsets.zero,
-                child: ButtonIconText(icon: Icons.language, text: 'url'),
-                onPressed: () {
-                  _launchURL(widget.channel['link']);
-                }),
-          ),
+          // Expanded(
+          //   flex: 1,
+          //   child: FlatButton(
+          //       padding: EdgeInsets.zero,
+          //       child: ButtonIconText(icon: Icons.language, text: 'url'),
+          //       onPressed: () {
+          //         _launchURL(widget.channel['link']);
+          //       }),
+          // ),
           Expanded(
             flex: 1,
             child: FlatButton(
                 padding: EdgeInsets.zero,
                 child: ButtonIconText(icon: Icons.share, text: 'Partager'),
-                onPressed: () {}),
+                onPressed: () {
+                  Share.share(widget.channel['link'],
+                      subject: widget.channel['title']['rendered']);
+                }),
           ),
           Expanded(
             flex: 1,

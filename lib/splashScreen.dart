@@ -1,4 +1,5 @@
 import 'package:afrimbox/controller/firestoreController.dart';
+import 'package:afrimbox/provider/moviesProvider.dart';
 import 'package:afrimbox/provider/userProvider.dart';
 import 'package:afrimbox/screen/user/createProfile.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +15,7 @@ class _SplashScreenState extends State<SplashScreen> {
   FireStoreController fireStoreController = new FireStoreController();
   var result;
   UserProvider model;
+  MoviesProvider moviesProvider;
 
   Future<void> _checkSession() async {
     result = await model.checkLogin();
@@ -38,6 +40,8 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     model = Provider.of<UserProvider>(context, listen: false);
+    moviesProvider = Provider.of<MoviesProvider>(context, listen: false);
+    //moviesProvider.getFirebaseMovies();
     model.getCoupons();
     _checkSession();
     super.initState();

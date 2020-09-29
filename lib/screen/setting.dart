@@ -138,17 +138,17 @@ class _SettingState extends State<Setting> with AutomaticKeepAliveClientMixin {
                 }
               }),
           Divider(),
-          TileSwicth(
-              icon: Icons.beenhere,
-              title: "Mode adult",
-              value: isAdulteMode,
-              onChanged: () {
-                if (!isAdulteMode) {
-                  _showDialog();
-                } else {
-                  _activeAdulteMode(false);
-                }
-              }),
+          // TileSwicth(
+          //     icon: Icons.beenhere,
+          //     title: "Mode adult",
+          //     value: isAdulteMode,
+          //     onChanged: () {
+          //       if (!isAdulteMode) {
+          //         _showDialog();
+          //       } else {
+          //         _activeAdulteMode(false);
+          //       }
+          //     }),
         ],
       ),
     );

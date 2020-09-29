@@ -175,14 +175,14 @@ class _DetailsMovieScreenState extends State<DetailsMovieScreen> {
                   }
                 }),
           ),
-          Expanded(
-            flex: 1,
-            child: FlatButton(
-                padding: EdgeInsets.zero,
-                child: ButtonIconText(
-                    icon: Icons.file_download, text: 'Télecharger'),
-                onPressed: () {}),
-          ),
+          // Expanded(
+          //   flex: 1,
+          //   child: FlatButton(
+          //       padding: EdgeInsets.zero,
+          //       child: ButtonIconText(
+          //           icon: Icons.file_download, text: 'Télecharger'),
+          //       onPressed: () {}),
+          // ),
         ],
       ),
     );

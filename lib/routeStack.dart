@@ -54,13 +54,13 @@ class _RouteStackState extends State<RouteStack> {
           'assets/afrimbox-png.png',
           width: 100,
         ),
-        actions: <Widget>[
-          IconButton(
-              icon: FaIcon(FontAwesomeIcons.search),
-              onPressed: () {
-                Get.toNamed('/search');
-              })
-        ],
+        // actions: <Widget>[
+        //   IconButton(
+        //       icon: FaIcon(FontAwesomeIcons.search),
+        //       onPressed: () {
+        //         Get.toNamed('/search');
+        //       })
+        // ],
       ),
       body: PageView(
         controller: pageController,

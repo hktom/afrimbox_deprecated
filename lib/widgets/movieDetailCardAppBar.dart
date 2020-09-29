@@ -49,6 +49,7 @@ class _MovieDetailCardAppBarState extends State<MovieDetailCardAppBar> {
           onPressed: () {
             if (widget.movie['acf']['flux_movie'] != null) {
               Get.to(StreamPlayer(
+                  movie: widget.movie,
                   streamTitle:
                       unescape.convert(widget.movie['title']['rendered']),
                   streamUrl: widget.movie['acf']['flux_movie'],
