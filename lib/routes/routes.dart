@@ -8,6 +8,7 @@ import 'package:afrimbox/screen/mobileAuthScreen.dart';
 import 'package:afrimbox/screen/movie/movies.dart';
 import 'package:afrimbox/screen/movie/searchScreen.dart';
 import 'package:afrimbox/screen/setting.dart';
+import 'package:afrimbox/screen/subscription/subscriptionPage.dart';
 import 'package:afrimbox/screen/user/payment.dart';
 import 'package:afrimbox/screen/user/profile.dart';
 import 'package:afrimbox/screen/user/updateProfile.dart';
@@ -32,5 +33,6 @@ class Routes {
     '/Payment': (context) => Payment(),
     '/updateProfile': (context) => UpdateProfile(),
     '/setting': (context) => Setting(),
+    '/subscription': (context) => SubscriptionPage(),
   };
 }

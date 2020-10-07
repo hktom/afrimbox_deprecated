@@ -97,12 +97,12 @@ class _ChannelsState extends State<Channels>
       body: Consumer<ChannelProvider>(builder: (context, model, child) {
         return NotificationListener<ScrollNotification>(
             onNotification: (ScrollNotification scrollInfo) {
-              if (!_isLoading &&
-                  scrollInfo.metrics.pixels >=
-                      scrollInfo.metrics.maxScrollExtent) {
-                setState(() => _isLoading = true);
-                _loadMore();
-              }
+              // if (!_isLoading &&
+              //     scrollInfo.metrics.pixels >=
+              //         scrollInfo.metrics.maxScrollExtent) {
+              //   setState(() => _isLoading = true);
+              //   _loadMore();
+              // }
               return true;
             },
             child: SmartRefresher(

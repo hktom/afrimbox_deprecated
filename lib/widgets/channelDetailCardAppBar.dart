@@ -25,6 +25,16 @@ class _ChannelDetailCardAppBarState extends State<ChannelDetailCardAppBar> {
   int bundleActive = 0;
   String image = '';
   String placeholder = 'assets/channel_placeholder.png';
+  String channelTitle = '';
+
+  _getChannelTitle() {
+    try {
+      channelTitle = unescape.convert(widget.channel['title']['rendered']);
+    } catch (e) {
+      channelTitle = unescape.convert(widget.channel['slug']);
+    }
+    setState(() {});
+  }
 
   String setImage() {
     if (widget.channel['better_featured_image'] != null) {
@@ -43,6 +53,7 @@ class _ChannelDetailCardAppBarState extends State<ChannelDetailCardAppBar> {
   void initState() {
     image = setImage();
     getRemainDays();
+    _getChannelTitle();
     super.initState();
   }
 
@@ -74,7 +85,7 @@ class _ChannelDetailCardAppBarState extends State<ChannelDetailCardAppBar> {
             if (bundleActive > 0) {
               if (widget.channel['acf'] != '') {
                 Get.to(StreamPlayer(
-                  streamTitle: unescape.convert(widget.channel['slug']),
+                  streamTitle: channelTitle,
                   isChannel: true,
                   streamUrl: widget.channel['acf']['flux_tv'],
                 ));

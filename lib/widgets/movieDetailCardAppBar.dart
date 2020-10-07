@@ -1,10 +1,12 @@
 import 'package:afrimbox/controller/moviesController.dart';
+import 'package:afrimbox/provider/userProvider.dart';
 import 'package:afrimbox/screen/streamPlayer.dart';
 import 'package:afrimbox/widgets/img.dart';
 import 'package:flutter/material.dart';
 import 'package:afrimbox/helpers/tex.dart';
 import 'package:get/get.dart';
 import 'package:html_unescape/html_unescape.dart';
+import 'package:provider/provider.dart';
 
 class MovieDetailCardAppBar extends StatefulWidget {
   final Map movie;
@@ -18,10 +20,18 @@ class MovieDetailCardAppBar extends StatefulWidget {
 class _MovieDetailCardAppBarState extends State<MovieDetailCardAppBar> {
   var unescape = new HtmlUnescape();
   String placeholder = 'assets/movie_placeholder.png';
+  int bundleActive = 0;
+  UserProvider model;
+
+  getRemainDays() {
+    model = Provider.of<UserProvider>(context, listen: false);
+    bundleActive = model.subscriptionRemainDays();
+  }
 
   @override
   void initState() {
     super.initState();
+    getRemainDays();
   }
 
   @override
@@ -47,13 +57,17 @@ class _MovieDetailCardAppBarState extends State<MovieDetailCardAppBar> {
         margin: EdgeInsets.only(bottom: 24, right: 10),
         child: FloatingActionButton(
           onPressed: () {
-            if (widget.movie['acf']['flux_movie'] != null) {
-              Get.to(StreamPlayer(
-                  movie: widget.movie,
-                  streamTitle:
-                      unescape.convert(widget.movie['title']['rendered']),
-                  streamUrl: widget.movie['acf']['flux_movie'],
-                  isChannel: false));
+            if (bundleActive > 0) {
+              if (widget.movie['acf']['flux_movie'] != null) {
+                Get.to(StreamPlayer(
+                    movie: widget.movie,
+                    streamTitle:
+                        unescape.convert(widget.movie['title']['rendered']),
+                    streamUrl: widget.movie['acf']['flux_movie'],
+                    isChannel: false));
+              }
+            } else {
+              Get.toNamed('/subscription');
             }
           },
           child: Icon(Icons.play_arrow),
