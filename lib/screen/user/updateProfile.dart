@@ -119,7 +119,7 @@ class _UpdateProfileState extends State<UpdateProfile> {
       initialValue: {
         'field': '',
       },
-      autovalidate: true,
+      autovalidateMode: AutovalidateMode.always,
       child: Column(
         children: <Widget>[
           FormBuilderTextField(

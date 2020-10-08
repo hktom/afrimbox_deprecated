@@ -70,8 +70,6 @@ dependencies:
   adaptive_dialog: ^0.7.5+3
   giffy_dialog: ^1.8.0
   share: ^0.6.5+2
-  
-  
 
 dev_dependencies:
   flutter_test:

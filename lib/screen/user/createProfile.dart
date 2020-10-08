@@ -214,7 +214,7 @@ class _CreateProfileState extends State<CreateProfile> {
       initialValue: {
         'phoneNumber': '',
       },
-      autovalidate: true,
+      autovalidateMode: AutovalidateMode.always,
       child: Column(
         children: <Widget>[
           FormBuilderPhoneField(
@@ -241,7 +241,7 @@ class _CreateProfileState extends State<CreateProfile> {
       initialValue: {
         'email': '',
       },
-      autovalidate: true,
+      autovalidateMode: AutovalidateMode.always,
       child: Column(
         children: <Widget>[
           FormBuilderTextField(
@@ -268,7 +268,7 @@ class _CreateProfileState extends State<CreateProfile> {
       initialValue: {
         'name': '',
       },
-      autovalidate: true,
+      autovalidateMode: AutovalidateMode.always,
       child: Column(
         children: <Widget>[
           FormBuilderTextField(
