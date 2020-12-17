@@ -67,14 +67,14 @@ class _SubscriptionPageState extends State<SubscriptionPage>
             _subscription(
                 color: Color.fromRGBO(255, 187, 52, 1),
                 type: 2,
-                price: 1000,
+                price: 1250,
                 description:
                     "Abonnement Premium \n Films, Séries et Chaines TV",
                 session: '96 heures / 4 jours '),
             _subscription(
                 color: Color.fromRGBO(166, 116, 247, 1),
                 type: 3,
-                price: 2500,
+                price: 3000,
                 description:
                     "Abonnement Premium + \n Uniquement pour les films et séries plus: Bons carburant, Bons restaurant, Bons Momo",
                 session: '10 jours'),

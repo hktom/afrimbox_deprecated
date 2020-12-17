@@ -14,7 +14,7 @@ class ChannelProvider extends ChangeNotifier {
     channels = [];
     adultChannels = [];
     print("GET CHANNEL $channelsUrl &per_page=9");
-    var response = await http.get(channelsUrl + '&per_page=70');
+    var response = await http.get(channelsUrl + '&per_page=100');
     if (response.statusCode == 200) {
       var jsonResponse = convert.jsonDecode(response.body);
       List _channels = jsonResponse;

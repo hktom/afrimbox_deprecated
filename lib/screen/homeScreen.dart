@@ -236,7 +236,7 @@ class _HomeScreenState extends State<HomeScreen>
         child: ListView(
           scrollDirection: Axis.horizontal,
           children: MoviesController.myChannels(
-              offset: 0, limit: double.infinity, data: channelModel.channels),
+              offset: 0, limit: 20, data: channelModel.channels),
         ),
       ),
     );

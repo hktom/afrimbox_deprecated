@@ -14,14 +14,14 @@ class InputText extends StatefulWidget {
 
   InputText(
       {Key key,
-      this.type:TextInputType.text,
+      this.type: TextInputType.text,
       this.initialValue = "",
       this.field,
       this.fieldIcon,
       this.fieldHint,
       this.enabled = true,
       this.password = false,
-      this.confirmPassword=true,
+      this.confirmPassword = true,
       this.autofocus = false})
       : super(key: key);
 
@@ -30,12 +30,11 @@ class InputText extends StatefulWidget {
 }
 
 class _InputTextState extends State<InputText> {
-
-  void _addUserInfo(text){
+  void _addUserInfo(text) {
     //Provider.of<LoginProvider>(context, listen: false).addUserInfo(field:widget.field, info: text);
   }
 
-  String _confirmPassword(password2){
+  String _confirmPassword(password2) {
     //String password=Provider.of<LoginProvider>(context, listen: false).userInfo['password'];
 
     // if(password==password2){
@@ -45,7 +44,6 @@ class _InputTextState extends State<InputText> {
     // {
     //   return "ce mot de passe ne correspond pas au premier";
     // }
-
   }
 
   @override
@@ -79,17 +77,13 @@ class _InputTextState extends State<InputText> {
         validator: (value) {
           if (value.isEmpty) {
             return "${widget.field} ne peut pas rester vide";
-          }
-          else
-          {
-            if(widget.confirmPassword){
+          } else {
+            if (widget.confirmPassword) {
               _confirmPassword(value);
-            }
-            else{
+            } else {
               return null;
             }
           }
-          
         },
       ),
     );
